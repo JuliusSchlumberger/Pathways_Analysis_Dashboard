@@ -8,9 +8,9 @@ from callbacks import toggle_glossary, toggle_tabs, update_alternatives, add_leg
     toggle_performance_explanation, toggle_performance_figure, update_performance, \
     update_multi_sector_interactions, update_interaction_plot, submit_responses, update_survey_tab_title, generate_session_id, toggle_termsconditions, update_surveys, viewport_size
 
-
 from dashapp import app
 
+server = app.server
 app.layout = dbc.Container([
         dcc.Interval(id='interval-component', interval=1000, n_intervals=0),  # checks every second
         dcc.Location(id='url', refresh=False),
