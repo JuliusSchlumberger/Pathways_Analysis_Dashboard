@@ -1,0 +1,54 @@
+/* Header styling */
+.header-background {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white; /* Text color */
+}
+
+/* Custom button styling */
+.custom-button-outline {
+    border-color: #f8f9fa; /* Light color for outline */
+    color: #f8f9fa; /* Light text color */
+}
+.custom-button-outline:hover {
+    background-color: #f8f9fa; /* Light background on hover */
+    color: #007bff; /* Primary text color on hover */
+}
+
+/* assets/style.css */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow: auto; /* Prevent scrollbars */
+}
+
+/* Ensure that the container fills the viewport */
+#root, .container-fluid, .row, .col {
+    margin: 0;
+    padding: 0;
+}
+
+.text {
+    font-size: 11px;
+}
+
+.row {
+    margin: 0; /* Reset default row margins */
+}
+
+.col {
+    padding: 0; /* Reset default column paddings */
+}
+
+.compact-sidebar .nav-link,
+.compact-sidebar .h4 {
+    padding-left: 5px; /* Reduced padding */
+    padding-right: 5px; /* Reduced padding */
+    font-size: 14px;
+}
+
+.compact-sidebar .nav {
+    margin-bottom: 0; /* Remove extra space at the bottom */
+}
+
+
