@@ -40,9 +40,18 @@ payload = {
 headers = {
     "Authorization": f"token {GITHUB_TOKEN}"
 }
+
+# Check if the file already exists
+response = requests.get(GITHUB_API_URL, headers=headers)
+if response.status_code == 200:
+    # File exists, get the SHA and include it in the payload
+    sha = response.json()['sha']
+    payload['sha'] = sha
+
+# Make the request to create or update the file on GitHub
 response = requests.put(GITHUB_API_URL, json=payload, headers=headers)
 
-if response.status_code == 201:
+if response.status_code in [200, 201]:
     print("Data exported to survey_responses.csv and uploaded to GitHub")
 else:
     print("Failed to upload to GitHub", response.json())
