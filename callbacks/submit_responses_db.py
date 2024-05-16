@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output, State
 from dashapp import app
 
 # Replace with your actual Heroku Postgres connection URL
-DATABASE_URL = "postgresql://fsyzkozjzbneio:1dfc8383fa5c7bec0dc4e2abc9c3b14a07f9e9b9376129e4bba0f67960914625@ec2-52-72-109-141.compute-1.amazonaws.com:5432/d7usfk66t0qvat"
+DATABASE_URL = "postgresql://u5s15stvo89j49:p2095dee64da9073d0b5a81bff8f603ddc5c38cee18ffe9be010c065b0d79593e@ccaml3dimis7eh.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com:5432/d5hi0d744nm4al"
 
 # Set up SQLAlchemy
 engine = create_engine(DATABASE_URL)
