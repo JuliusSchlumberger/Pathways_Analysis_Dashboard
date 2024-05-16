@@ -1,6 +1,7 @@
 import dash
 from dash import html, dcc, callback, Input, Output, State, callback_context
 import dash_bootstrap_components as dbc
+
 from components import survey
 # from callbacks import to_store
 
@@ -8,13 +9,7 @@ dash.register_page(__name__, path='/alternative_pathways')
 
 
 visualization = dbc.Col([
-    # dbc.Col([
-    #     dbc.Row(dcc.Graph(id='alternatives-graph', responsive=True), style={'flex': '1', 'alignItems': 'top'}),
-    # ], width=12),
-    # dbc.Col([
-    #         dbc.Row(html.Img(id='alternatives-image', src='', style={'alignItems': 'center'})),
-    # ], width=2),
-    dbc.Row(dcc.Graph(id='alternatives-graph', responsive=True), style={'flex': '1', 'alignItems': 'top'}),
+    dbc.Row(id='alternatives-graph', style={'alignItems': 'top'}),
     # dbc.Row(html.Img(id='alternatives-image', src='', style={'alignItems': 'center'}), style={'height': '20%'}),
 ], style={'display': 'flex', 'flexDirection': 'column', 'height': '100vh'}, width=8)
 

@@ -1,20 +1,14 @@
-import dash
-from dash import html, dcc, callback, Input, Output, State, callback_context
-import dash_bootstrap_components as dbc
-import plotly.io as pio
-import plotly.graph_objects as go  # Import Plotly's graph_objects module
-
 from dashapp import app
-
 import dash
-from dash import dcc, html, Input, Output, State, callback_context
-import plotly.graph_objects as go
+from dash import dcc, html, Input, Output, State
 import plotly.io as pio
+import json
+from utilities.generate_missing_message import generate_missing_input_message
 
 
 @app.callback(
     [
-        Output('performance-graph', 'figure'),
+        Output('performance-graph', 'children'),
         Output('storage-pathways_performance', 'data'),
         Output('timehorizon', 'value'),
         Output('scenarios', 'value'),
@@ -25,12 +19,13 @@ import plotly.io as pio
         Input('timehorizon', 'value'),
         Input('scenarios', 'value'),
         Input('performance_metric', 'value'),
-        Input('options', 'value')
+        Input('options', 'value'),
+        Input('viewport-size', 'data')
     ],
     [State('storage-pathways_performance', 'data'),
      State('storage-alternative_pathways', 'data'),]
 )
-def update_performance_graph(timehorizon, scenarios, performance_metric, options, stored_data_performance, stored_data_alternatives):
+def update_performance_graph(timehorizon, scenarios, performance_metric, options,viewport_data,  stored_data_performance, stored_data_alternatives):
     if all(input_value is not None for input_value in
                [timehorizon, scenarios, performance_metric, options]):   # if this is not empty
         stored_data_performance['timehorizon'] = timehorizon
@@ -38,95 +33,62 @@ def update_performance_graph(timehorizon, scenarios, performance_metric, options
         stored_data_performance['performance_metric'] = performance_metric
         stored_data_performance['options'] = options
     else:
-        if any(input_value is None for input_value in
-               [stored_data_performance['timehorizon'], stored_data_performance['scenarios'],
-                stored_data_performance['performance_metric'], stored_data_performance['options']]):
-            return go.Figure(), dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update
+        stored_data_performance['timehorizon'] = timehorizon
+        stored_data_performance['scenarios'] = scenarios
+        stored_data_performance['performance_metric'] = performance_metric
+        stored_data_performance['options'] = options
+        message = generate_missing_input_message(
+            ('Risk Owner - Hazard Pair', stored_data_alternatives.get('risk_owner_hazard', None)),
+            ('Timehorizon', stored_data_performance.get('timehorizon', None)),
+            ('Climate Scenarios', stored_data_performance.get('scenarios', None)),
+            ('Performance Indicator', stored_data_performance.get('performance_metric', None)))
+        if message:
+            return [html.Div(message,
+                             style={'color': 'red', 'fontSize': '20px', 'fontWeight': 'bold', 'marginTop': '20px',
+                                    'textAlign': 'center'})], dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update
 
     # Assume we have necessary details in stored_data_performance to generate the figure
     scenario_str = '&'.join(stored_data_performance['scenarios']) if len(stored_data_performance['scenarios'])>1 else stored_data_performance['scenarios'][0]
     file_path = f'assets/figures/{stored_data_performance["options"]}/' \
                 f'{stored_data_alternatives["risk_owner_hazard"]}/' \
                 f'plot_{stored_data_performance["timehorizon"]}_{scenario_str}_{stored_data_performance["performance_metric"]}.json'
+
     with open(file_path, 'r') as f:
         fig = pio.from_json(f.read())
-    return fig, stored_data_performance, stored_data_performance['timehorizon'], stored_data_performance['scenarios'], \
+
+    current_width = fig.layout.width
+    current_height = fig.layout.height
+    if current_height != None and current_width != None:
+        size = json.loads(viewport_data)
+        width, height = size['width'], size['height']
+        scale_factor = min(width / 1920, height / 927)  # Assuming 1920px is the standard width for full scale
+
+        # Scale the dimensions
+        scaled_width = current_width * scale_factor
+        scaled_height = current_height * scale_factor
+        fig.update_layout(
+            width=scaled_width,
+            height=scaled_height,
+            autosize=False,  # Ensure that the size is set explicitly based on scaled dimensions
+            title_font_size=18 * scale_factor,
+            font_size=14 * scale_factor,
+        )
+        # Scale annotation font sizes
+        if 'annotations' in fig.layout:
+            new_annotations = []
+            for annotation in fig.layout.annotations:
+                if annotation.font:
+                    new_size = annotation.font.size * scale_factor if annotation.font.size else 12
+                else:
+                    new_size = 12 * scale_factor  # Default font size if not set
+
+                new_annotations.append(
+                    annotation.update(
+                        font=dict(
+                            size=new_size
+                        )
+                    )
+                )
+            fig.update_layout(annotations=new_annotations)
+    return [dcc.Graph(figure=fig, responsive=True)], stored_data_performance, stored_data_performance['timehorizon'], stored_data_performance['scenarios'], \
            stored_data_performance['performance_metric'], stored_data_performance['options']
-
-#
-#
-# @app.callback(
-#     [
-#         Output('performance-graph', 'figure'),
-#         Output('storage-pathways_performance', 'data'),
-#         Output('timehorizon', 'value'),
-#         Output('scenarios', 'value'),
-#         Output('performance_metric', 'value'),
-#         Output('options', 'value')
-#     ],
-#     [
-#         Input('timehorizon', 'value'),
-#         Input('scenarios', 'value'),
-#         Input('performance_metric', 'value'),
-#         Input('options', 'value')
-#     ],
-#     [
-#         State('storage-alternative_pathways', 'data'),
-#         State('storage-pathways_performance', 'data')
-#     ],
-# )
-# def update_performance_graph(timehorizon, scenarios, performance_metric, options, stored_data_alternatives, stored_data_performance):
-#     ctx = dash.callback_context
-#
-#     # Initialize stored data if it's not present
-#     if not stored_data_performance:
-#         stored_data_performance = {}
-#
-#     # Update stored data from inputs if available
-#     inputs = [timehorizon, scenarios, performance_metric, options]
-#     keys = ['timehorizon', 'scenarios', 'performance_metric', 'options']
-#     for key, input_value in zip(keys, inputs):
-#         if input_value is not None:
-#             stored_data_performance[key] = input_value
-#         elif key not in stored_data_performance:
-#             stored_data_performance[key] = None  # Use a default or previous state
-#
-#     # Handle missing data and early exit if necessary
-#     if any(value is None for value in [stored_data_alternatives.get('risk_owner_hazard'), *inputs]):
-#         return go.Figure(), stored_data_performance, timehorizon, scenarios, performance_metric, options
-#
-#     # Assume all needed inputs are specified correctly
-#     if scenarios:
-#         scenario_str = '&'.join(scenarios) if isinstance(scenarios, list) and len(scenarios) > 1 else scenarios[0]
-#     else:
-#         scenario_str = 'default_scenario'  # Set a default or handle empty scenario list
-#
-#     file_path = f'assets/figures/{stored_data_performance.get("options", "default_type")}/{stored_data_alternatives.get("risk_owner_hazard", "default_hazard")}/plot_{stored_data_performance.get("timehorizon", "default_time")}_{scenario_str}_{stored_data_performance.get("performance_metric", "default_metric")}.json'
-#
-#     try:
-#         with open(file_path, 'r') as f:
-#             fig = pio.from_json(f.read())
-#     except FileNotFoundError:
-#         fig = go.Figure()
-#
-#     return fig, stored_data_performance, timehorizon, scenarios, performance_metric, options
-
-# @app.callback(
-#     [Output('timehorizon', 'value'),
-#    Output('scenarios', 'value'),
-#    Output('performance_metric', 'value'),
-#    Output('options', 'value')],
-#     Input('url', 'pathname'),
-# State('storage-pathways_performance', 'data')
-# )
-# def uptade_performance_entries(pathname,storage_data):
-#     print('update_entrie', storage_data)
-#     # Identify which input triggered the callback
-#     trigger_id = callback_context.triggered[0]['prop_id'].split('.')[0]
-#     if pathname == '/pathways_performance':
-#         print('tester', storage_data['performance_metric'], storage_data['timehorizon'])
-#
-#         return 60, storage_data['scenarios'],storage_data['performance_metric'],storage_data['options']
-#     else:
-#         print('second_check')
-#         return dash.no_update, dash.no_update, dash.no_update, dash.no_update

@@ -6,8 +6,8 @@ dash.register_page(__name__, path='/pathways_performance')
 
 
 visualization = dbc.Col([
-    dbc.Row(dcc.Graph(id='performance-graph', responsive=True), style={'flex': '1'}),
-    dbc.Row(html.Img(id='alternatives-image', src='', style={'align': 'middle'}), style={'height': '20%'}),
+    dbc.Row(id='performance-graph', style={'alignItems': 'top'}),
+    dbc.Row(html.Img(id='alternatives-image', src='', style={'align': 'middle'}), style={'height': '20%', 'alignItems': 'bottom'}),
 ], style={'display': 'flex', 'flexDirection': 'column', 'height': '80vh'}, width=8)
 
 
