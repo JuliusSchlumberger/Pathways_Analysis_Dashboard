@@ -1,10 +1,17 @@
+import os
 import pandas as pd
 from sqlalchemy import create_engine
+import requests
+import base64
 
-# Replace with your actual Heroku Postgres connection URL
-DATABASE_URL = "postgresql://fsyzkozjzbneio:1dfc8383fa5c7bec0dc4e2abc9c3b14a07f9e9b9376129e4bba0f67960914625@ec2-52-72-109-141.compute-1.amazonaws.com:5432/d7usfk66t0qvat"
+# Fetch the database URL from environment variables
+DATABASE_URL = os.getenv('DATABASE_URL')
 
-# Set up SQLAlchemy engine
+# Adjust the URL format if necessary
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# Set up SQLAlchemy
 engine = create_engine(DATABASE_URL)
 
 # Query the database
@@ -12,5 +19,30 @@ query = "SELECT * FROM survey_responses"
 df = pd.read_sql_query(query, engine)
 
 # Export to CSV
-df.to_csv('survey_responses.csv', index=False)
-print("Data exported to survey_responses.csv")
+csv_content = df.to_csv(index=False)
+
+# GitHub upload details
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+GITHUB_REPO = os.getenv('GITHUB_REPO')
+GITHUB_API_URL = f'https://api.github.com/repos/{GITHUB_REPO}/contents/survey_responses.csv'
+message = "Add survey responses CSV"
+
+# Encode CSV content to base64
+encoded_content = base64.b64encode(csv_content.encode()).decode()
+
+# Prepare the request payload
+payload = {
+    "message": message,
+    "content": encoded_content
+}
+
+# Make the request to GitHub API
+headers = {
+    "Authorization": f"token {GITHUB_TOKEN}"
+}
+response = requests.put(GITHUB_API_URL, json=payload, headers=headers)
+
+if response.status_code == 201:
+    print("Data exported to survey_responses.csv and uploaded to GitHub")
+else:
+    print("Failed to upload to GitHub", response.json())
