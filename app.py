@@ -6,7 +6,7 @@ from components import sidebar, content, header, TermsConditions
 import dash
 from callbacks import toggle_glossary, toggle_tabs, update_alternatives, add_legend, \
     toggle_performance_explanation, toggle_performance_figure, update_performance, \
-    update_multi_sector_interactions, update_interaction_plot, submit_responses, update_survey_tab_title, generate_session_id, toggle_termsconditions, update_surveys, viewport_size
+    update_multi_sector_interactions, update_interaction_plot, submit_responses_db, update_survey_tab_title, generate_session_id, toggle_termsconditions, update_surveys, viewport_size
 
 from dashapp import app
 
