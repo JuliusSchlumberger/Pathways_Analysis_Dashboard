@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import dash
 from dash.dependencies import Input, Output, State
-
+from dashapp import app
 
 # Replace with your actual Heroku Postgres connection URL
 DATABASE_URL = "postgresql://fsyzkozjzbneio:1dfc8383fa5c7bec0dc4e2abc9c3b14a07f9e9b9376129e4bba0f67960914625@ec2-52-72-109-141.compute-1.amazonaws.com:5432/d7usfk66t0qvat"
