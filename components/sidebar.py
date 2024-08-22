@@ -13,7 +13,7 @@ sidebar = dbc.Col([
                     [
                         dbc.NavLink("Introduction", href="/", active="exact", id='navigation-introduction'),
                         dbc.NavLink("1. Alternative Pathways", href="/alternative_pathways", active="exact", id='navigation-alternative_pathways'),
-                        dbc.NavLink("2. Pathway Performance", href="/pathways_performance", active="exact", id='navigation-pathways_performance'),
+                        dbc.NavLink("2. Pathway Robustness", href="/pathways_robustness", active="exact", id='navigation-pathways_robustness'),
                         dbc.NavLink("3. Measure timings", href="/measure_timings", active="exact", id='navigation-measure_timings'),
                         dbc.NavLink("4. Interaction effects", href="/interaction_effects", active="exact", id='navigation-interaction_effects'),
                     ],
