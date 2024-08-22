@@ -51,4 +51,53 @@ html, body {
     margin-bottom: 0; /* Remove extra space at the bottom */
 }
 
+.active-link {
+    font-weight: bold;
+    color: #FFD700;  /* Gold color */
+    text-decoration: underline;
+}
+.navbar-nav .nav-item {
+    margin: 0 5px;
+}
+.navbar-nav .nav-item .nav-link {
+    border-radius: 15px;
+    padding: 5px 10px;
+}
+.navbar-nav .nav-item .nav-link.active-link {
+    border: 2px solid #FFD700;
+}
+
+/* Custom styles for dcc.Slider */
+.slider-container {
+    margin-top: 10px;
+}
+
+.custom-slider .rc-slider {
+    margin: 0 15px;
+}
+
+.custom-slider .rc-slider-track {
+    background-color: #007bff;
+}
+
+.custom-slider .rc-slider-handle {
+    border: 2px solid #007bff;
+}
+
+.custom-slider .rc-slider-handle:hover,
+.custom-slider .rc-slider-handle:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px #007bff;
+}
+
+.custom-slider .rc-slider-rail {
+    background-color: #dee2e6;
+}
+
+.custom-slider .rc-slider-mark-text {
+    color: #6c757d;
+}
+
+
+
 

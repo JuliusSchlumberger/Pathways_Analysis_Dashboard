@@ -1,0 +1,145 @@
+from utilities.design_choices import TEXTFIELD_WIDTH, VIZ_STYLE_FIG, LAYOUT_HEIGHT
+from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT
+from utilities.create_suited_question import *
+from utilities.submission_button import submit_answers
+from utilities.instruction_template import create_instructions
+from dashapp import dash
+
+
+dash.register_page(__name__, path='/2-pathways-robustness')
+
+introduction_text = [
+    "Now, let's explore the preformance ",
+    create_highlighted_word('robustness', "robustness_explanation"),
+    " of the considered flood risk ",
+    create_highlighted_word("pathways", "pathways_explanation"),
+    " for the farmer. Robustness is measured across multiple objectives. ",
+    " You can explore the robustness",
+    " of the pathways over different different time horizons and under different ",
+    create_highlighted_word("climate scenarios", 'scenario_explanation'),
+    ". Additionally, other actors are also implementing DRM measure which might have ",
+    create_highlighted_word('interaction effects ', 'interaction_explanation'),
+    " that could influence the performance robustness of the pathways.",
+    interaction_explanation,
+    pathways_explanation,
+    robustness_explanation,
+    scenario_explanation
+    ]
+
+selection_options = html.Div([
+            html.Div([
+                html.Label('a) Timehorizon for Evaluation', className='mb-1'),
+                dbc.Select(
+                    id='timehorizon',
+                    options=[{'label': option, 'value': TIMEHORIZONS[option]} for option in TIMEHORIZONS],
+                )], style={'marginBottom': '20px'}),
+            html.Div([
+                html.Label('b) Climate Scenario', className='mb-1'),
+                dbc.Select(
+                        id='scenarios',
+                        options=[{'label': option, 'value': SCENARIOS[option]} for option in SCENARIOS],
+
+                    )], style={'marginBottom': '20px'}),
+
+            html.Div([
+                html.Label('c) Robustness Indicator', className='mb-1'),
+                dbc.Select(
+                        id='robustness_metric',
+                        options=[{'label': option, 'value': ROBUSTNESS_METRICS[option], 'disabled': True if option != "mean across scenarios" else False
+                            } for option in ROBUSTNESS_METRICS],
+                        value=list(ROBUSTNESS_METRICS.values())[0],
+                )], style={'marginBottom': '20px'}),
+            html.Div([
+                html.Label('Figure type', className='mb-1'),
+                dbc.Select(
+                    id='options',
+                    # # Comment out the rest
+                    options=[
+                        {
+                            'label': label,
+                            'value': value,
+                        }
+                        for label, value in WHICH_OPTIONS.items()
+                    ],
+                    # value=random_default,  # Set the randomized value as the default
+                ),
+            ], style={'marginBottom': '20px'}),
+    html.Div([
+            html.Label('d) Accounting for interactions with...', className='mb-1'),
+            dbc.Select(
+                id='multi_sectoral_interactions_robustness',
+                options=[],
+                # inline=True,
+                className="mb-3"
+            ),
+        ], style={'marginBottom': '20px'}),
+])
+
+fig_explanation = html.Div("This need to be updated",
+                                 id='dynamic-figure-paragraph',
+                                 )
+
+survey_questions = html.Div([
+    html.P([html.I(INTRO_TEXT)]),
+    single_output_question('What does the color represent?',
+                                      'coding-input', 'text'),
+
+    single_output_question('How much Crop Productivity Loss do we expect for Pathway 5 over a timerhorizon of 60 years in the 4 \u2103 climate scenario?',
+                           'crop_loss-input', 'number'),
+
+    multiple_choice('In the 4 \u2103 climate change scenario, which pathway(s) is most robust?',
+                    'robustness-input', OPTION_DICT),
+
+    multiple_choice('Which pathway(s) has the biggest trade-off between Impcated Lifestock and Measure Costs '
+                    'after 100 years in a 1.5 \u2103 climate scenario?',
+                    'tradeoff-input', OPTION_DICT),
+    single_choice('When accounting for the presence of Farmer - Drought strategies, do we experience more synergy or more trade-off effects in a 1.5 \u2103 climate scneario over the next 60 years?',
+                      'general_interactions-input',
+                      {
+                          'more synergy effects': 'synergies',
+                          'more trade-off effects': 'tradeoffs',
+                          'it is not clear': 'notclear'
+                       }),
+    multiple_choice('When accounting for the presence of Farmer - Drought strategies, which pathway(s) show '
+                    'the best robustness regarding Crop Productivity Loss in a 1.5 \u2103 climate scenario over the '
+                    'next 60 years?','interaction_least_productivity_loss-input', OPTION_DICT),
+
+
+multi_likkert_scale("Likkert-Evaluation questions",
+                        'likkert_use-robustness',
+                        ['I totally disagree', '', '', '', 'I totally agree'],
+                        ['I find this figure easy to understand',
+                        'I am confident that I read this figure correctly to inform the decision-choice',
+                        'This visualization provides enough information to justify a potential choice?',
+                        'I would use this visualisation for similar problems'
+]),
+
+    long_text('Please briefly describe one or two challenges you had when reading the figure (if any)', 'robustness_challenge'),
+
+    long_text('Please briefly describe one or two things about this figure you find useful (if any)', 'robustness_advantage'),
+
+
+    # For multiple choice questions, follow a similar pattern
+    *submit_answers('submit-survey-pathways-robustness', 'pathways_robustness-validation'),
+    ])
+
+
+text_field = create_instructions(introduction_text, selection_options, fig_explanation, survey_questions)
+
+
+visualization = dbc.Col([
+    dbc.Row(id='robustness-graph', style={'alignItems': 'top',
+                                          'height': '100%',  # Ensure Row fills the Col height
+                                          'display': 'flex',  # Flex display for row layout
+                                          'flex-grow': '1'  # Allow row to grow and fill space
+                                          }),
+], style=VIZ_STYLE_FIG, width=12-TEXTFIELD_WIDTH)
+
+
+layout_C = dbc.Row(
+    [dbc.Col([
+    text_field
+    ], width=TEXTFIELD_WIDTH),
+     visualization],
+    style={'height': LAYOUT_HEIGHT}
+)

@@ -1,40 +1,52 @@
 from dash import dcc, html
 import dash_bootstrap_components as dbc
+from assets.static_inputs import PAGES
 
-
-# Assume GLOSSARY_TERMS is defined somewhere, e.g.,
-GLOSSARY_TERMS={
-    'Disaster Risk Management': 'Strategies and practices to reduce vulnerabilities and manage the impacts of natural hazards.',
-    'Pathway': 'A sequence of measures that are implemented to adjust to future changes.',
-    'Multi-Risk Setting': 'A context in which multiple hazards interact and impacts to and responses by different actors influence each other.',
-    'Sectoral Risk Owner': 'Individuals or entities responsible for managing risks in specific sectors, such as a shipping company, farmer, or municipality.',
-    'Climate Scenarios': 'Plausible time-series of e.g. precipitation intensity or river discharge for different warming scenarios. '
-                         'Multiple time-series per climate scenario to capture uncertainty and natural variability.',
-    'Performance': 'Evaluated regarding a set of criteria using indicators to deal with uncertainty in and across climate scenarios.',
-    'Trade-offs': 'Compromises made when choosing between two or more competing options.',
-    'Interactions': 'Pathways of different sectoral risk owners can interfere with or benefit from each other, leading to changes in performance or available options.'
-}
-
-# Define the header with an additional modal for the glossary
-header = dbc.Row(
-    [   dbc.Col(html.H3("Dashboard For Pathways Analysis (Sectoral Risk Owner)", className="mb-2 header-background"), width=10),
-        dbc.Col(dbc.Button("Help", color="primary", className="mb-2 custom-button-outline", outline=True, style={'width': '100%'}), width=1, className="text-right header-background"),
-        dbc.Col(dbc.Button("Glossary", id="open-glossary", color="primary", className="mb-2 custom-button-outline", outline=True, style={'width': '100%'}), width=1, className="text-right header-background"),
-         # Modal definition
-        dbc.Modal(
-            [
-                dbc.ModalHeader(dbc.ModalTitle("Glossary")),
-                dbc.ModalBody(html.Ul([html.Li([html.B(f"{term}"), f": {definition}"]) for term, definition in GLOSSARY_TERMS.items()])),
-                dbc.ModalFooter(
-                    dbc.Button("Close", id="close-glossary", className="ms-auto")
-                ),
-            ],
-            id="glossary-modal",
-            is_open=False,
+# Header with navigation links
+header = dbc.Col(
+    [
+        dbc.Row(
+            html.H3("Pathways Analysis Dashboard", className="me-2 bg-primary text-light"),
+            style={'marginLeft': '0.2vw', 'marginRight': '0.2vw', 'marginTop': '0.2vh', 'marginBottom': '0vw',
+                   'paddingLeft': '0.2vw', 'paddingRight': '0.2vw', 'paddingTop': '0.2vh', 'paddingBottom': '0vw',
+                   'height': '8vh'}
         ),
-    ],
-    align="center",
-    className="mb-1 header-background",
-    style={'height': '10vh', 'color':"primary"}
-)
+        dbc.Row(
+            dbc.Container(
+                dbc.Row(
+                    [
+                        dbc.Col(
+                            [
+                                dbc.Button("Back", id='prev-btn', n_clicks=0, color="secondary", className="ms-2",
+                                           style={'height': '6vh'}),
+                                dbc.Button("Next", id='next-btn', n_clicks=0, color="secondary", className="ms-2",
+                                           style={'height': '6vh'}),
+                                html.Div(style={'marginRight': '7vw',}),
+                                *[item
+                            for page in PAGES
+                                for item in
+                                  (html.Div(style={'borderLeft': '1px solid white', 'height': '80%'}),
+                                      html.Div(page['title'], id=f"step-{page['step']}-link", style={'color': 'white', 'paddingTop': '1.vh', 'marginRight': '1vw','marginLeft': '1vw'}),
+                                html.Div(style={'borderLeft': '1px solid white', 'height': '80%'}))
+                            ],
+                            # style={'padding': '2vh'},
+                            # width="auto"
 
+                            ],
+                        width="auto",
+                        style={'display': 'flex', 'alignItems': 'center'}
+                    )
+                    ],
+                    justify="between",
+                    style={'margin': '0px', 'padding': '0px', 'height': '7.5vh'}
+                ),
+                fluid=True
+            ), className="bg-primary",
+            style={'marginLeft': '0.3vw', 'marginRight': '0.3vw', 'marginTop': '0vh', 'marginBottom': '0vw',
+                   'paddingLeft': '0.3vw', 'paddingRight': '0.3vw', 'paddingTop': '0vh', 'paddingBottom': '0vw',}
+        )
+    ],
+    style={
+           'padding': '0px', 'height': '17vh'},
+    width=12
+)

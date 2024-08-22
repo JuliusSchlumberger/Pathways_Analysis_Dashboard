@@ -1,234 +1,165 @@
-import dash
-from dash import dcc, html
-import dash_bootstrap_components as dbc
+from dash import html
+from utilities.create_modal import create_modal, create_modal_with_image
 
-
-introduction = html.Div([
-    html.P(
-        "This dashboard is designed to test how different visualizations can be used to for the evaluation of Disaster Risk Management pathways in a multi-risk setting."
-        "The dashboard is set in a synthetic case study. In the case study "
-        "three sectoral risk owners (farmer, shipping company and a municipality) want to identify pathways to adapt to increasing risk of floods and droughts due to climate change. "
-        "One of the main question is what are the most appropriate pathways for these sectoral risk owners, considering "
-        "the interactions between pathways of different sectoral risk owners. "
-        "The objective is to identify combination of pathways that serve all sectoral risk owners and minimize tradeoffs. "),
-    html.P([
-               "This dashboard is designed to support a sectoral risk owners in the evaluation of their pathway options. Key insights include:",
-               html.Br(),
-               "1. Identify what alternative pathway options are on the table.",
-               html.Br(),
-               "2. Assess the performance of different pathways across various scenarios and time horizons.",
-               html.Br(),
-               "3. Understand the influence of other risk owners' pathways on one's own."]),
-    html.P(
-        "As a user, you will take the role of a sectoral risk owner and use the visualizations to extract some information relevant for evaluating pathways. "
-        "You can specify time horizons, climate scenarios, performance indicators of interest, and select what interactions with pathways from other risk owners should be explored."),
-], style={'height': '80vh', 'overflow-y': 'auto'})
-
-DASHBOARD_EXPLANATION = {
-    'detailed_explanation_CI': ["The performance of pathways is tested in a wide range of computational experiments. "
-                           "Instead of showing the results for all experiments, you can choose between different "
-                           "performance indicators, that aggregate the results of each performance criterion into fewer values.",
-                            "You selected 'Confidence Intervals' as an performance indicator. Accordingly, "
-                           "you can explore the certainty of results within the set of experiments.",
-                            html.Br(),html.Br(),
-                            "For example: If you want to be 95% certain about the achieved performance, 95% of all " 
-                            "experiments are considered and the worst performance across these experiments is shown. " 
-                            "It corresponds to the most conservative performance indication of the pathway. " 
-                            "Likewise, being 5% certain about the achieved performance, corresponds to an optimistic" 
-                            " perspective, where only the best 5% of the experiments are considered and the worst " 
-                            "performance across these scenarios is shown."],
-'detailed_explanation_otherPerformance': ["The performance of pathways is tested in a wide range of computational experiments. "
-                           "Instead of showing the results for all experiments, you can choose between different "
-                           "performance indicators, that aggregate the results of each performance criterion into fewer values.",
-                          "You selected 'Robustness Indicator' and an performance indicator. Here, "
-                          "we compute robustness across the realizations in terms of the mean results "
-                          "and the standard deviation across the computational experiments. As such, "
-                          "you don't get insights into the factual performance. Instead the values shown"
-                          "are indications which pathways have a preferred expected performance and a low variability."],
+GLOSSARY_TERMS={
+    'Disaster Risk Management': 'Strategies and practices to reduce vulnerabilities and manage the impacts of natural hazards.',
+    'Pathway': 'A sequence of measures that are implemented to adjust to future changes.',
+    'Multi-Risk Setting': 'A context in which multiple hazards interact and impacts to and responses by different actors influence each other.',
+    'Sectoral Risk Owner': 'Individuals or entities responsible for managing risks in specific sectors, such as a shipping company, farmer, or municipality.',
+    'Climate Scenarios': 'Plausible time-series of e.g. precipitation intensity or river discharge for different warming scenarios. '
+                         'Multiple time-series per climate scenario to capture uncertainty and natural variability.',
+    'Robustness': 'Evaluated regarding a set of criteria using indicators to deal with uncertainty in and across climate scenarios.',
+    'Trade-offs': 'Compromises made when choosing between two or more competing options.',
+    'Interactions': 'Pathways of different sectoral risk owners can interfere with or benefit from each other, leading to changes in robustness or available options.'
 }
 
-
-
-
-general_introduction_alternatives= [
-        "In the first section of the dashboard you learn about your pathways options as sectoral risk owner to deal with a specific hazard. ",
-        html.Br(),
-        html.B('(1)'), " Explore what measures are part of the different pathways options.",
-        html.Br(),
-        html.B('(2)'), " Explore how the sequences of measures are implemented in the selected time horizon and under different climate scenarios.",
-        html.Br(),
-        html.Br(),
-         "Select your role as sectoral risk owner and respective parameters for the evaluation."
-    ]
-
-ROH_DICT = {
-    'farmer - flood': 'flood_agr',
-    'farmer - drought': 'drought_agr',
-    'ship company - drought': 'drought_shp',
-    'municipality - flood': 'flood_urb'
-}
-
-alternative_pathways = html.Div([
-    # html.H4('Explanation', style={'marginBottom': '1%'}),
-    html.P(html.I('Make choices regarding the visualization and get some additional information here.')),
-
-    html.Div(general_introduction_alternatives, style={'marginBottom': '1%'}),
-    dbc.Row([
-        dbc.Col(html.Label('a) Select Risk Owner - Hazard', className='mb-1'), width=5),
-        dbc.Col(dcc.Dropdown(
-            id='risk_owner_hazard',
-            options=[{'label': option, 'value': ROH_DICT[option]} for option in ROH_DICT],
-        ), width=6),
-    ], style={'alignItems': 'start'}),
-], style={'height': '80vh', 'overflow-y': 'auto'})
-
-
-
-general_introduction_performance= [
-        "In the second section of the dashboard, you can explore the performance of the pathways in the selected time horizon and under different climate scenarios:",
-        html.Br(),
-        html.B('(1)'), " Explore the performance of different pathways options across the performance criteria.",
-        html.Br(),
-        html.B('(2)'), " Explore how the performance evaluation changes for differernt performance indicators. ",
-    ]
-
-
-WHICH_OPTIONS = {
-    'Parallel Coordinates Plot': 'PCP',
-    'Stacked Bar': 'StackedBar',
-    'Heatmap': 'Heatmap'
-}
-
-TIMEHORIZONS = {
-    'next 20 years': 20,
-    'next 60 years': 60,
-    'next 100 years': 100
-}
-
-
-SCENARIOS = {
-    'historic': 'D',
-    '1.5 Deg': 'G',
-    '4 Deg': 'Wp'
-}
-
-PERFORMANCE_METRICS = {
-    '5% confidence interval': '5%',
-    '50% confidence interval': '50%',
-    '95% confidence interval': '95%',
-    'expected performance': 'average'
-}
-
-
-pathways_performance = html.Div(
+# Word explanations
+pathways_explanation = create_modal(
+    "pathways_explanation",
+    "Pathways",
     [
-        html.Div([
-            # html.H3('2. Pathways Performance Analysis', style={'marginBottom': '1%'}),
-            html.P(html.I('Make choices regarding the visualization and get some additional information here.')),
-            html.Div(general_introduction_performance, style={'marginBottom': '1%'}),
+        html.P("Adaptation pathways are flexible plans that outline different options for responding to changing "
+               "conditions, like climate change, over time. They help decision-makers choose actions now while "
+               "keeping future options open, allowing adjustments as circumstances evolve. This approach ensures "
+               "that we can adapt effectively without locking into a single strategy too early."),
+        html.P("Pathways are created using so called Adaptation Tipping Points which determine when additional "
+               "measures are needed, e.g. to keep flood damages below an acceptable/desirable threshold while sea "
+               "level rise.")
+    ]
+)
 
-            # Use two columns inside a single row for each label-control pair for compact arrangement.
-            dbc.Row([
-                dbc.Col(html.Label('a) dev: Plot Alternatives', className='mb-1'), width=5),
-                dbc.Col(dcc.Dropdown(
-                    id='options',
-                    options=[{'label': option, 'value': WHICH_OPTIONS[option]} for option in WHICH_OPTIONS],
-                ), width=6),
-            ], style={'marginBottom': '2vh', 'alignItems': 'start'}),
+robustness_explanation = create_modal(
+    "robustness_explanation",
+    "Robustness",
+    [
+        html.P("Performance robustness refers to how well a DRM strategy continues to work effectively under a wide "
+               "range of possible future conditions. In the context of adaptation pathways, it means choosing options "
+               "that will remain reliable and successful even as the environment or circumstances change, reducing the "
+               "risk of failure over time."),
+        html.P("Performance robustness can be calculated to explore how a strategy performs across a wide range of "
+               "scenarios, such as different climate projections or economic changes. The robustness is then "
+               "quantified by measuring how consistently the strategy meets key objectives (like reducing risks or "
+               "costs) across all these scenarios, often using statistical methods like the mean and variance of "
+               "performance metrics, or by counting the number of scenarios where the strategy achieves a "
+               "satisfactory outcome.")
+    ]
+)
 
-            dbc.Row([
-                dbc.Col(html.Label('b) Timehorizon for Evaluation', className='mb-1'), width=5),
-                dbc.Col(dcc.Dropdown(
-                    id='timehorizon',
-                    options=[{'label': option, 'value': TIMEHORIZONS[option]} for option in TIMEHORIZONS],
-                ), width=6),
-            # ], style={'marginBottom': '2vh', 'alignItems': 'start'}),
-            ], style={'marginBottom': '2vh', 'alignItems': 'start'}),
+scenario_explanation = create_modal(
+    "scenario_explanation",
+    "Climate Scenarios",
+    [
+        "A scenario is a plausible description of how the future may develop based on key driving forces (e.g. climate "
+        "change). For the analysis here, we distinguish between three climate scenarios: 'historic' climate, with 1.5 "
+        "\u2103 warming and with 4 \u2103 warming until 2100. Climate change alone does not detmerine the relevant "
+        "hazard-drivers (e.g. precipitation). Randomness and other phenomena determine precipitation patterns over "
+        "the coming 100 years. As a consequence, there are multiple plausible time-series (e.g. precipitation) within "
+        "each scenario. It is across these variations within each climate scenario we determine the robustness."
+    ]
+)
 
-            dbc.Row([
-                dbc.Col(html.Label('c) Climate Scenarios', className='mb-1'), width=5),
-                dbc.Col(dcc.Checklist(
-                    id='scenarios',
-                    options=[{'label': option, 'value': SCENARIOS[option]} for option in SCENARIOS],
-                    inline=True, inputStyle={"marginRight": "1vh", "marginLeft": "1vh"},
-                ), width=6),
-            ], style={'marginBottom': '2vh', 'alignItems': 'start'}),
+interaction_explanation = create_modal(
+    "interaction_explanation",
+    "Interactions",
+    [
+        html.P("The interaction between measures can have different effects: they can increase the risks and related "
+               "impacts (trade-off. Example: implementing drought-resilient crops leads to higher flood-related "
+               "productivity losses) or contribute to reducing risks and impacts (synergy. Example: room for the river "
+               "has the primary purpose to reduce flood risk, and a secondary effect on groundwater recharge reducing "
+               "drought risk) for another sector or hazard. This influences not only the performance robustness of a "
+               "pathway but can also influence when measures need to be implemented."),
+        html.P(
+            html.B(
+                "At this stage of the analysis, we are only interested to identify the flood risk pathways for farmers "
+               "which work best with most pathways of other actors. At a later stage we can also investigate which "
+               "specific combinations of pathways work best for all actors and hazard considered. "
+            )
+        )
+    ]
+)
 
-            dbc.Row([
-                dbc.Col(html.Label('d) Performance Indicator', className='mb-1'), width=6),
-                dbc.Col(dcc.Dropdown(
-                    id='performance_metric',
-                    options=[{'label': option, 'value': PERFORMANCE_METRICS[option]} for option in PERFORMANCE_METRICS],
-                ), width=5),
-            ], style={'marginBottom': '2vh', 'alignItems': 'start'}),
-
-            # Modal buttons span almost the entire row
-            dbc.Row([
-                dbc.Col(dbc.Button("Show Explanation Performance Analysis", id="open-modal-performance_analysis", className="me-2", n_clicks=0), width={"size": 11, "offset": 0}),
-                dbc.Modal([
-                    dbc.ModalHeader(dbc.ModalTitle("Performance Analysis Explanation")),
-                    dbc.ModalBody(id="modal-body-performance_analysis"),  # Content will be set dynamically
-                    dbc.ModalFooter(
-                        dbc.Button("Close", id="close-modal-performance_analysis", className="ms-auto", n_clicks=0)
-                    ),
-                ], id="performance_analysis-modal", is_open=False),
-            ], style={'marginBottom': '2vh', 'alignItems': 'start'}),
-
-            dbc.Row([
-                dbc.Col(dbc.Button("Show Explanation Performance Figure", id="open-modal-performance_figure", className="me-2", n_clicks=0), width={"size": 11, "offset": 0}),
-                dbc.Modal([
-                        dbc.ModalHeader(dbc.ModalTitle("Figure Explanation")),
-                        dbc.ModalBody(id="modal-body-performance_figure"),  # Content will be set dynamically
-                        dbc.ModalFooter(
-                            dbc.Button("Close", id="close-modal-performance_figure", className="ms-auto", n_clicks=0)
-                        ),
-                    ], id="performance_figure-modal", is_open=False),
-            ], style={'marginBottom': '2vh', 'alignItems': 'start'}),
-        ], style={'height': '80vh', 'overflow-y': 'auto'}),
+timing_explanation = create_modal(
+    "timing_explanation",
+    "How the timing of decision-points is identified",
+    [
+        html.P("Pathways map show expected timings of decision-points using approaches similar to how the robustness "
+            "performance is determined. Statistics can be used to identify these timings based on the scenarios "
+            "underlying the analysis."),
+        html.P("Here, we used the median to derive the expected timings, but other approaches could be used as well.")
+    ]
+)
+personal_information_explanation = create_modal(
+    'personalinformation_explanation',
+    'Reason for collecting personal information',
+    [
+        # html.P("We collect details on your age and gender to ensure a diverse representation in our dataset, enabling
+        # a more comprehensive understanding of how different demographic groups perceive and interact with our
+        # visualization techniques. This information will solely be used for analytical purposes to identify
+        # potential patterns or biases and will not be linked to individual responses or disclosed in any identifying
+        # manner."),
+        html.P("We ask a question regarding visual impairments solely to ensure our designs are inclusive and to "
+               "understand any potential challenges participants might experience. Your feedback will be used to "
+               "enhance the accessibility of our visual tools."),
+        html.P('Furthermore, we collect information on your expertise and type of work to enable understanding of how '
+               'different demographic groups perceive and interact with our visualization techniques. We want to '
+               'establish your familiarity with visualizations and using them to extract information about alternative '
+               'options to inform a decision.')
     ]
 )
 
 
-general_introduction= [
-         "In the third section, you can explore how your pathways options and performance are affected by other sectoral risk owner pathways:", html.Br(),
-        html.B("(1)"), " Observe changes in the pathways options when considering interaction effects.", html.Br(),
-        html.B("(2)"), " Observe changes in the performance when considering interaction effects."
-    ]
 
-ROH_DICT = {
-    'farmer - flood': 'flood_agr',
-    'farmer - drought': 'drought_agr',
-    'ship company - drought': 'drought_shp',
-    'municipality - flood': 'flood_urb'
-}
-
-INTERACTION_VIZ = {
-    # 'Pathways Options': 'image',
-    'Pathways Performance': 'graph'
-}
-
-interaction_effects = html.Div(
+Stacked_Bar_Chart_explanation = create_modal_with_image(
+    'Stacked_Bar_Chart_explanation',
+    'What is a Stacked Bar Chart?',
+    'assets/figures/explanation/stacked_bar_graph.png',
     [
-        # html.H3('3. Multi-Risk Interaction Insights', style={'marginBottom': '1%'}),
-        html.P(html.I('Make choices regarding the visualization and get some additional information here.')),
-
-        html.Div(general_introduction, style={'marginBottom': '2%'}),
-        dbc.Row([
-            dbc.Col([
-                html.Label('a) Multi-sectoral interactions (multiple-choice)', className='mb-1'),
-                dcc.Checklist(id='multi_sectoral_interactions', style={'marginRight': '0'}),
-            ], width=6, style={'marginBottom': '1%', 'alignItems': 'start'}),
-        ], style={'marginBottom': '1%', 'alignItems': 'start'}),
-        dbc.Row([
-            dbc.Col([
-                html.Label('b) Explore interaction effects on...', className='mb-1')
-            ], width=8),
-            dbc.Col([
-                dcc.Dropdown(id='interaction_plot_options',
-                             options=[{'label': option, 'value': INTERACTION_VIZ[option]} for option in INTERACTION_VIZ],
-                             style={'width': '100%', 'alignItems': 'start'}),
-            ]),
-        ], style={'marginBottom': '1%', 'alignItems': 'start'}),
+        f'Copied from Datavizcatalogue. Further information about stacked bars can be found here: ',
+        html.A('https://datavizcatalogue.com/methods/stacked_bar_graph.html',
+               href='https://datavizcatalogue.com/methods/stacked_bar_graph.html',
+               target="_blank")
     ],
-    style={'height': '80vh', 'overflow-y': 'auto'},
 )
+
+Parallel_Coordinates_Plot_explanation = create_modal_with_image(
+    'Parallel_Coordinates_Plot_explanation',
+    'What is a Parallel Coordinates Plot?',
+    'assets/figures/explanation/parallel_coordinates.svg',
+    [
+        f'Copied from Datavizcatalogue. Further information about parallel coordinate plots can be found here: ',
+        html.A('https://datavizcatalogue.com/methods/parallel_coordinates.html',
+               href='https://datavizcatalogue.com/methods/parallel_coordinates.html',
+               target="_blank")
+    ],
+)
+
+Heatmap_explanation = create_modal_with_image(
+    'Heatmap_explanation',
+    'What is a Heatmap?',
+    'assets/figures/explanation/heatmap.svg',
+    [
+        f'Copied from Datavizcatalogue. Further information about heatmaps can be found here: ',
+        html.A('https://datavizcatalogue.com/methods/heatmap.html',
+               href='https://datavizcatalogue.com/methods/heatmap.html',
+               target="_blank")
+    ],
+)
+
+Pathways_Map_explanation = create_modal_with_image(
+    'Pathways_Map_explanation',
+    'What is a Pathways Map?',
+    'assets/figures/explanation/pathways_map.png',
+    [
+        f'Copied from Haasnoot et al. (2013). Further information about heatmaps can be found here: ',
+        html.A('https://www.deltares.nl/en/expertise/areas-of-expertise/sea-level-rise/dynamic-adaptive-policy-pathways',
+               href='https://www.deltares.nl/en/expertise/areas-of-expertise/sea-level-rise/dynamic-adaptive-policy-pathways',
+               target="_blank")],)
+
+matching_dict = {
+    'Stacked_Bar_Chart_explanation': Stacked_Bar_Chart_explanation,
+    'Parallel_Coordinates_Plot_explanation': Parallel_Coordinates_Plot_explanation,
+    'Heatmap_explanation': Heatmap_explanation,
+    'Pathways_Map_explanation': Pathways_Map_explanation
+}
+
+
