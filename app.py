@@ -1,10 +1,10 @@
 import dash_bootstrap_components as dbc
 from dash import dcc, Input, Output, html, ClientsideFunction, clientside_callback
 from pages import *
-from components import sidebar, content, header, TermsConditions
+from components import header, TermsConditions
 # from callbacks import toggle_tabs
 import dash
-from callbacks import (navigation_pages, update_alternatives, add_legend, \
+from callbacks import (navigation_pages, update_alternatives, \
     toggle_robustness_figure, update_robustness, \
     update_multi_sector_interactions, update_interaction_plot, submit_responses_db, update_pathways,\
      toggle_termsconditions, update_surveys, toggle_word_explanations, update_figure_description, update_drop_down, to_store,
@@ -22,10 +22,7 @@ app.layout = dbc.Container([
         header.header,
         html.Div(id='page-content'),
         html.Div(id='document-title', style={'display': 'none'}),  # Hidden div for setting the document title
-        # dash.page_container,  # This will display the content of the current page
         # TermsConditions.TermConditions,
-
-
 ],
     fluid=True,  # Change to 100vh to fill the screen height
 )
