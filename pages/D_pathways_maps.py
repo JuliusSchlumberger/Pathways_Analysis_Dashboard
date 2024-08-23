@@ -13,16 +13,16 @@ introduction_text = [
         'pathways maps ',
         'Pathways_Map_explanation'
     ),
-    "alongside performance robustness because they visually show the sequence and "
-    "timing of decisions. This helps us understand when and how to switch strategies as conditions change. "
-    "While robustness focuses on ensuring a strategy works across different scenarios, pathways maps help us "
-    "plan the best route forward by identifying critical ",
+    "alongside performance robustness because they visualize the sequence and timing of decisions. This helps us "
+    "understand when and how to switch between measures as conditions change. While robustness focuses on ensuring a "
+    "strategy works across different scenarios, pathways maps help us plan the best route forward by identifying "
+    "critical ",
     create_highlighted_word(
         'timings for action.',
         'timing_explanation'),
     html.P(
-        "Pathways maps can look differently depending on which scenario is considered, or depending on which "
-        "interactions with other actors are considered"
+        "Pathways maps can look different depending on which scenario is considered, or depending on which "
+        "interactions are considered."
     ),
     Pathways_Map_explanation,
     timing_explanation
@@ -45,13 +45,14 @@ selection_options = html.Div([
 ])
 
 
-fig_explanation = [html.P("This figures represents a 'Metro-map' through time (starting at the left, moving to right). "
+fig_explanation = [html.P("This figures represents a 'Metro-map' through time (starting at the left, moving to the right). "
                           "The points where lines split or intersect indicate key moments where a decision is needed to "
-                          "either stay on the current path or switch to a new one, ensuring the chosen strategy remains "
-                          "effective as circumstances evolve."),
-                   html.P("It shows how we can get to a certain point in time and what future measures we could implement."),
-                   html.P('You can hover over the markers to see how you get to a certain point to learn what needs to '
-                          'happen at this decision point and what future options you have from this point onwards.')
+                          "either stay on the current path or switch to a new one. This ensures that the chosen "
+                          "pathway remains effective as circumstances evolve."),
+                   html.P("The map shows how we can get to a certain point in time and what future measures we could "
+                          "implement."),
+                   html.P('You can hover over the markers to learn about the type decision-point and click on it to '
+                          'see what future options you have from this point onwards.')
                          ]
 
 survey_questions = html.Div([
@@ -60,18 +61,22 @@ survey_questions = html.Div([
     single_output_question('In which year is the first measure needed in a 1.5 \u2103 climate scenario?',
                            'first_measure-input', 'number'),
 
-single_output_question('What is the maximum number of measures that need to be implemented in a pathway in a 1.5 \u2103 climate scenario?',
+single_output_question(
+    'What is the maximum number of measures that need to be implemented in one pathway in a 1.5 \u2103 climate scenario?',
                            'number_measures-input', 'number'),
 
-    multiple_choice('In a 1.5 \u2103 climate scenario, which pathway(s) seem to be the most flexible alternatives?','most_flexible15-input', OPTION_DICT),
-    multiple_choice('Which pathway(s) seem to be the most flexible alternatives in a 4 \u2103 climate scenario,?','most_flexible4-input', OPTION_DICT),
-    single_choice('What is the general effect of the interactions on the timing of measure implementation when '
-              'accounting for the presence of Farmer - Drought strategies in a 1.5 \u2103 climate scneario?',
+    multiple_choice(
+        'In a 1.5 \u2103 climate scenario, which pathway(s) seem to be the most flexible?',
+        'most_flexible15-input', OPTION_DICT),
+    multiple_choice('Which pathway(s) seem to be the most flexible alternatives in a 4 \u2103 climate scenario?','most_flexible4-input', OPTION_DICT),
+    single_choice(
+        'What is the general effect of the interactions on the timing of measure implementation when '
+              'accounting for the presence of Farmer - Drought strategies in a 4 \u2103 climate scenario?',
               'timing_shifts-input',
               {'measures are implemented mostly earlier': 'earlier',
                'measures are implemented mostly later': 'later',
                'it is not clear': 'notclear'}),
-    single_output_question('How many years did the implementation of "Ditch System" in pathway 1 shift for the presence of Farmer - Drought strategies in a 1.5 \u2103 climate scneario?',
+    single_output_question('How many years did the implementation of "Ditch System" in pathway 1 shift for the presence of Farmer - Drought strategies in a 1.5 \u2103 climate scenario?',
                         'ditch_shift-input', 'number'),
 
     multi_likkert_scale("Likkert-Evaluation questions",
@@ -79,14 +84,14 @@ single_output_question('What is the maximum number of measures that need to be i
                         ['I totally disagree', '', '', '', 'I totally agree'],
                         ['I find this figure easy to understand',
                          'I am confident that I read this figure correctly to inform the decision-choice',
-                         'This visualization provides enough information to justify a potential choice?',
+                         'This visualization provides enough information to justify a `decision',
                          'I would use this visualisation for similar problems'
                          ]),
 
     long_text('Please briefly describe one or two challenges you had when reading the figure (if any)',
               'pathways_challenge'),
 
-    long_text('Please briefly describe one or two things about this figure you find useful (if any)',
+    long_text('Please briefly describe one or two things you find useful about this figure (if any)',
               'pathways_advantage'),
 
     # For multiple choice questions, follow a similar pattern

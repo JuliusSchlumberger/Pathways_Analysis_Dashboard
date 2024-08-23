@@ -22,7 +22,7 @@ introduction_text = [
             html.Br(),
             html.Br(),
             html.B(
-                "To test this dashboard, you will take on the role as a farmer. You will be asked to answer questions "
+                "To test this dashboard, you will take on the role as a farmer interested in managing flood risk. You will be asked to answer questions "
                 "based on visualizations presented."),
             pathways_explanation,
         ]

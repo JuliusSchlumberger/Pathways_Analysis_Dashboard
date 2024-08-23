@@ -17,7 +17,7 @@ def create_instructions(intro_text, choices=False, figure_explanation=False, que
     if choices:
         choices_instruction = [
             html.Hr(style={'borderWidth': "3px", 'borderColor': 'grey'}),
-            html.H4("Specify analysis focus"),
+            html.H4("Specify the focus of the analysis"),
             html.Div(choices, style={'alignItems': 'start'}),
         ]
     else:

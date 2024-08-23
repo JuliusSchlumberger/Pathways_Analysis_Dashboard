@@ -15,11 +15,13 @@ introduction_text = [
     ]
 
 selection_options = html.Div([
-    html.Label('a) Actor and Hazard', className='mb-1'),
+    html.Label('a) Actor and Risk', className='mb-1'),
     dbc.Select(
         id='risk_owner_hazard',
         options=[
-            {'label': option, 'value': ROH_DICT[option], 'disabled': True if option != "Farmer - Flood" else False}
+            # {'label': option, 'value': ROH_DICT[option], 'disabled': True if option != "Farmer - Flood" else False}
+            # for option in ROH_DICT
+            {'label': option, 'value': ROH_DICT[option]}
             for option in ROH_DICT
         ],
         value=list(ROH_DICT.values())[0],  # Optional: pre-select the fixed option
@@ -35,11 +37,20 @@ fig_explanation = [html.P('This figure shows all considered measure sequences. I
 
 survey_questions = html.Div([
     html.P([html.I(INTRO_TEXT)]),
-    single_output_question('How many pathway alternatives do you have?', 'pathway_number-input', 'number'),
+    single_output_question(
+        'How many pathway alternatives do you have?',
+        'pathway_number-input',
+        'number'),
 
-    single_output_question('How many alternative pathways start with measure "flood resilient crops"?', 'f_resilient_crops-input', 'number'),
+    single_output_question(
+        'How many alternative pathways start with measure "flood resilient crops"?',
+        'f_resilient_crops-input',
+        'number'),
 
-    single_output_question('Which measure is considered most often as the long-term measure (being implemented in the far future)?', 'long_term-input', 'text'),
+    single_output_question(
+        'Which measure is considered most often as the long-term measure (being implemented at a later stage)?',
+        'long_term-input',
+        'text'),
 
     single_choice('Which first implemented measure offers the most flexibility with regards to future options?', 'flexibility-input', MEASURE_ALTERNATIVES),
 
@@ -48,13 +59,13 @@ survey_questions = html.Div([
                         ['I totally disagree', '', '', '', 'I totally agree'],
                         ['I find this figure easy to understand',
                         'I am confident that I read this figure correctly to inform the decision-choice',
-                        'This visualization provides enough information to justify a potential choice?',
+                        'This visualization provides enough information to justify your answer',
                         'I would use this visualisation for similar problems'
 ]),
 
     long_text('Please briefly describe one or two challenges you had when reading the figure (if any)', 'alternative_challenge'),
 
-    long_text('Please briefly describe one or two things about this figure you find useful (if any)', 'alternative_advantage'),
+    long_text('Please briefly describe one or two things you find useful about this figure (if any)', 'alternative_advantage'),
 
     # For multiple choice questions, follow a similar pattern
     *submit_answers('submit-survey-alternative_pathways', 'alternative_pathways-validation'),

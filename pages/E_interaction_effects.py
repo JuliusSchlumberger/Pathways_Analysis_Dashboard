@@ -46,14 +46,14 @@ multi_likkert_scale("Likkert-Evaluation questions",
                         ['I totally disagree', '', '', '', 'I totally agree'],
                         ['I find this figure easy to understand',
                          'I am confident that I read this figure correctly to inform the decision-choice',
-                         'This visualization provides enough information to justify a potential choice?',
+                         'This visualization provides enough information to justify a `decision',
                          'I would use this visualisation for similar problems'
                          ]),
 
     long_text('Please briefly describe one or two challenges you had when reading the figure (if any)',
               'interaction_effects_challenge'),
 
-    long_text('Please briefly describe one or two things about this figure you find useful (if any)',
+    long_text('Please briefly describe one or two things you find useful about this figure (if any)',
               'interaction_effects_advantage'),
 
     # For multiple choice questions, follow a similar pattern

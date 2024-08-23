@@ -31,11 +31,11 @@ SCENARIOS = {
 
 ROBUSTNESS_METRICS = {
     'mean across scenario': 'average',
-    'any other metric preferred by stakeholder': 'whatever'
+    # 'any other metric preferred by stakeholder': 'whatever'
 }
 
 INTRO_TEXT = (
-    'Please answer all questions before proceeding. You can also revisit and adjust your answers at a later stage'
+    'Please answer all questions before proceeding. You can also revisit and adjust your answers at a later stage.'
               )
 
 INTERACTION_VIZ = {

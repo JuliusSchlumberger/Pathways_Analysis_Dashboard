@@ -35,10 +35,10 @@ def update_paragraph(url, option):
         elif option == 'StackedBar':
             fig_description = [
                 html.P(
-                    "This figure adds overall the performance robustness of a pathways with regards to multiple "
-                    "objectives by length. The shorter the bar, the higher the robustness. The length of each colored "
-                    "bar for a given pathway is determined relative to the baseline scenario (when no measures are "
-                    "implemented)."
+                    "This figure displays the performance robustness of pathways with regards to multiple "
+                    "objectives. The length of the bar represents the performance robustness. A shorter bar, "
+                    "represents higher robustness. The length of each colored bar for a given pathway is determined "
+                    "relative to the baseline scenario (when no measures are implemented)."
                 ),
             ]
         elif option == 'Heatmap':
