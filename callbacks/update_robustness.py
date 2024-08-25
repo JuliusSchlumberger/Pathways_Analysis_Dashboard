@@ -10,6 +10,11 @@ from assets.static_inputs import CUSTOM_LEGEND_CHANGE
 @app.callback(
     [
         Output('robustness-graph', 'children'),
+        Output('timehorizon', 'value'),
+        Output('scenarios', 'value'),
+        Output('robustness_metric', 'value'),
+        Output('options', 'value', allow_duplicate=True),
+        Output('multi_sectoral_interactions_robustness', 'value', allow_duplicate=True),
         Output('storage-general', 'data', allow_duplicate=True),
     ],
     [
@@ -57,9 +62,9 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
             ('Climate Scenario', stored_data.get('scenarios', None)))
 
         if message:
-            return [html.Div('Make Choices (left side of display), to show visualization.',
+            return html.Div('Specify the focus of the analysis (see left), to see a visualization',
                              style={'color': 'red', 'fontSize': '1vw', 'fontWeight': 'bold', 'marginTop': '20px',
-                                    'textAlign': 'center'})], dash.no_update
+                                    'textAlign': 'center'}), dash.no_update, *[dash.no_update] * 5
         if stored_data.get('interacting_sectors_robustness', None) == None or stored_data.get('interacting_sectors_robustness', None) == ['no_interactions']:
             # Assume we have necessary details in stored_data to generate the figure
             file_path = f'assets/figures/{stored_data["robustness_plot"]}/' \
@@ -72,7 +77,9 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
             fig, _, _ = scale_figure(fig, stored_data)
 
             return ([dcc.Graph(figure=fig, responsive=False, config={
-            'displayModeBar': False})], stored_data)
+            'displayModeBar': False})], stored_data['timehorizon'], stored_data['scenarios'],
+            stored_data['robustness_metric'], stored_data['robustness_plot'], dash.no_update,
+                        stored_data)
 
 
         else:
@@ -108,6 +115,8 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
                                 )]), stored_data)
             else:
                 return ([dcc.Graph(figure=fig, responsive=False, config={
-            'displayModeBar': False})], stored_data)
+            'displayModeBar': False})], stored_data['timehorizon'], stored_data['scenarios'],
+            stored_data['robustness_metric'], stored_data['robustness_plot'], stored_data['interacting_sectors'],
+                        stored_data)
 
-    return dash.no_update, dash.no_update
+    return (dash.no_update, dash.no_update, *[dash.no_update] * 5)

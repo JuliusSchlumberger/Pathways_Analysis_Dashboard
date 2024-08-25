@@ -11,6 +11,7 @@ from dashapp import app
 @app.callback(
     Output('pathways-graph', 'children'),
     Output('scenarios-maps', 'value'),
+    Output('multi_sectoral_interactions_maps', 'value'),
     Output('storage-general', 'data', allow_duplicate=True),
     [Input('url', 'pathname'),
      Input('scenarios-maps', 'value'),
@@ -42,13 +43,15 @@ def update_pathways_graph(pathname, map_scenario, interacting_sectors, stored_da
             ('Climate Scenario', stored_data.get('scenarios', None)))
 
         if message:
-            return [html.Div('Make Choices (left side of display), to show visualization.',
+            return [html.Div('Specify the focus of the analysis (see left), to see a visualization',
                              style={'color': 'red', 'fontSize': '1vw', 'fontWeight': 'bold', 'marginTop': '20px',
-                                    'textAlign': 'center'})], dash.no_update, dash.no_update
+                                    'textAlign': 'center'})],dash.no_update, dash.no_update, dash.no_update
         if stored_data.get('sectoral_interactions_maps', None) == None or stored_data.get(
                 'sectoral_interactions_maps', None) == ['no_interactions']:
             figure_identifier = f'assets/figures/PathwaysMaps/{risk_owner_hazard}/pathways_map_{risk_owner_hazard}_{stored_data["scenarios"]}.json'
+            interactions = 'no'
         else:
+            interactions = 'yes'
             interacting_sector_string = stored_data["risk_owner_hazard"] + '&' + '&'.join(
                 stored_data['sectoral_interactions_maps'])
             figure_identifier = f'assets/figures/PathwaysMaps/' \
@@ -79,5 +82,5 @@ def update_pathways_graph(pathname, map_scenario, interacting_sectors, stored_da
                         "border": "none",   # Remove borders if not needed
                         "overflow": "hidden"  # Prevent scrollbars from appearing
                                }
-                        )]), stored_data['scenarios'], stored_data
-    return dash.no_update, stored_data['scenarios'], stored_data
+                        )]), stored_data['scenarios'],stored_data['sectoral_interactions_maps'] if interactions == 'yes' else dash.no_update, stored_data
+    return dash.no_update, dash.no_update, dash.no_update, stored_data

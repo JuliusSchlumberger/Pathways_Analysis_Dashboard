@@ -16,7 +16,7 @@ def toggle_agree_button(checkbox_value):
 # Callback to handle closing the modal and showing content
 @app.callback(
     Output("termsconditions", "is_open"),
-    Output("content", "style"),
+    # Output("content", "style"),
     Input("close-termsconditions", "n_clicks"),
     Input("close-termsconditions", "disabled"),
     prevent_initial_call=True
@@ -24,6 +24,6 @@ def toggle_agree_button(checkbox_value):
 def toggle_initial_agreement(n, close_disabled):
     if n > 0 and close_disabled == False:   # submit activated
         print('did accept')
-        return False, {'height': '90vh'}   # Hide modal and show content
-    return True, {"display": "none", }  # Default state
+        return False   # Hide modal and show content
+    return True  # Default state
 

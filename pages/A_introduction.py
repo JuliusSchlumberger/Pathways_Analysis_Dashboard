@@ -7,8 +7,31 @@ from assets.static_inputs import INTRO_TEXT
 from utilities.create_suited_question import *
 from utilities.submission_button import submit_answers
 from utilities.instruction_template import create_instructions
+from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
+import plotly.io as pio
+import base64
+from PIL import Image
+from io import BytesIO
+import json
 
 dash.register_page(__name__, path='/0-introduction')
+
+figure_identifier = 'assets/figures/Waasmodel_with_legend.json'
+
+with open(figure_identifier, 'r') as f:
+    data = json.load(f)
+
+# Decode the Base64 string
+img_data = base64.b64decode(data['image'])
+
+# Convert the binary data back into an image
+image = Image.open(BytesIO(img_data))
+
+
+# Convert the image to a Base64 string to embed in HTML
+buffered = BytesIO()
+image.save(buffered, format="PNG")
+img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
 
 introduction_text = [
@@ -62,13 +85,13 @@ survey_questions = html.Div(
         likkert_scale(
             "How often do you use visualizations for analysis?",
             'use_frequency-input',
-            ['never', 'rarely', 'sometimes', 'often', 'every day']
+            ['never', 'rarely', 'sometimes', 'often', 'every\u00A0day']
         ),
 
         multi_likkert_scale_with_explanation(
             "What is your experience with the following visualization techniques?",
             "viztype-input",
-            ['never', 'rarely', 'sometimes', 'often', 'every day'],
+            ['never', 'rarely', 'sometimes', 'often', 'every\u00A0day'],
             ["Stacked Bar Chart", "Parallel Coordinates Plot", "Heatmap", "Pathways Map"]
         ),
         *submit_answers(
@@ -82,18 +105,25 @@ step0_instruction = create_instructions(
     introduction_text,
     False,
     False,
+    False,
     survey_questions
 )
 
 
 visualization = dbc.Col(
     [
+        # dbc.Row(
+        #     dcc.Graph(id='introduction-image', figure=fig, responsive=False, config={'displayModeBar': False})
+        # )
         dbc.Row(
-            html.Img(id='introduction-image', src='assets/figures/Waasmodel.png'),
+            html.Img(id='introduction-image', src=f"data:image/png;base64,{img_str}", style={'max-width': '100%',
+                'height': 'auto',
+                'margin': 'auto'}),
             style={
-                'width': '70%',
-                'justifyContent': 'center',
-                'alignItems': 'center',
+                'height': '78vh',
+                'display': 'flex',
+                # 'justifyContent': 'center',
+                # 'alignItems': 'top',
                 'display': 'flex',
                 'padding': '5%',
             }
@@ -103,7 +133,7 @@ visualization = dbc.Col(
         'height': '78vh',  # Set the height of the column
         'display': 'flex',  # Use Flexbox for alignment
         'justifyContent': 'center',  # Center horizontally
-        'alignItems': 'center',  # Center vertically
+        'alignItems': 'top',  # Center vertically
     },
     width=6
 )
@@ -117,7 +147,10 @@ layout_A = dbc.Row(
             ],
             width=6,
         ),
-        visualization
+        visualization,
+        PROGRESS_MODAL,
+        FINAL_MODAL
+
     ],
 )
 

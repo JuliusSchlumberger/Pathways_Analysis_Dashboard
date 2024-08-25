@@ -10,8 +10,8 @@ pathways_explanation = create_modal(
                "conditions, like climate change, over time. They help decision-makers choose actions now while "
                "keeping future options open, allowing adjustments as circumstances evolve. This approach ensures "
                "that we can adapt effectively without locking into a single pathway too early."),
-        html.P("Pathways are created using so called Adaptation Tipping Points which determine when additional "
-               "measures are needed, e.g. to keep flood damages below an acceptable/desirable threshold while sea "
+        html.P("Pathways are created using so called Adaptation Tipping Points which determine under which conditions "
+               "or when additional measures are needed, e.g. to keep flood damages below an acceptable/desirable threshold while sea "
                "level rises.")
     ]
 )
@@ -134,7 +134,7 @@ Pathways_Map_explanation = create_modal_with_image(
     'What is a Pathways Map?',
     'assets/figures/explanation/pathways_map.png',
     [
-        f'Copied from Haasnoot et al. (2013). Further information about heatmaps can be found here: ',
+        f'Copied from Haasnoot et al. (2013). Further information about pathways maps can be found here: ',
         html.A('https://www.deltares.nl/en/expertise/areas-of-expertise/sea-level-rise/dynamic-adaptive-policy-pathways',
                href='https://www.deltares.nl/en/expertise/areas-of-expertise/sea-level-rise/dynamic-adaptive-policy-pathways',
                target="_blank")],)

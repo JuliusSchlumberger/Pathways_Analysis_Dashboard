@@ -48,7 +48,11 @@ OPTION_DICT = {str(key): key for key in range(8)}
 MEASURE_ALTERNATIVES = {
     ' Ditch System': 'Ditch_System',
     ' Dike Maintenance': 'Dike_Maintenance',
-    ' Flood Resilient Crops': 'Flood_Resilient_Crops'
+    ' Flood Resilient Crops': 'Flood_Resilient_Crops',
+    "Local support conservation scheme": 'local_support',
+    "Small dike elevation increase": 'small_dikes',
+    "Large dike elevation increase": 'large_dikes',
+
 }
 
 LINE_WIDTH_MARKER = 2
@@ -62,10 +66,10 @@ FONTS = {
 }
 
 PAGES = [
-    {"step": 0, "title": "Home", 'url': '/0-introduction'},
-    {"step": 1, "title": "1) Measure Sequences", 'url': '/1-measure-sequences'},
-    {"step": 2, "title": "2) Pathways Robustness", 'url': '/2-pathways-robustness'},
-    {"step": 3, "title": "3) Pathway Maps", 'url': '/3-pathways-maps'},
+    {"step": 0, "title": "Home", 'url': '/0-introduction', 'check': 'completed_introduction'},
+    {"step": 1, "title": "1) Measure Sequences", 'url': '/1-measure-sequences', 'check': 'completed_alternative_pathways'},
+    {"step": 2, "title": "2) Pathways Robustness", 'url': '/2-pathways-robustness', 'check': 'completed_pathways_robustness'},
+    {"step": 3, "title": "3) Pathway Maps", 'url': '/3-pathways-maps', 'check': 'completed_pathways_maps'},
     # {"step": 4, "title": "4) Interaction Effects", 'url': '/4-interaction-effects'},
     # {"step": 5, "title": "[5) Multi-risk Pathways]", 'url': '/5-multi_risk-pathways'}
 ]

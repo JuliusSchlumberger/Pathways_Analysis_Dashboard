@@ -7,9 +7,10 @@ header = dbc.Col(
     [
         dbc.Row(
             html.H3("Pathways Analysis Dashboard", className="me-2 bg-primary text-light"),
+            # align="center",  # Vertically center the content
             style={'marginLeft': '0.2vw', 'marginRight': '0.2vw', 'marginTop': '0.2vh', 'marginBottom': '0vw',
                    'paddingLeft': '0.2vw', 'paddingRight': '0.2vw', 'paddingTop': '0.2vh', 'paddingBottom': '0vw',
-                   'height': '8vh'}
+                   'height': '7vh'}
         ),
         dbc.Row(
             dbc.Container(
@@ -18,9 +19,9 @@ header = dbc.Col(
                         dbc.Col(
                             [
                                 dbc.Button("Back", id='prev-btn', n_clicks=0, color="secondary", className="ms-2",
-                                           style={'height': '6vh'}),
+                                           style={'height': '4vh'}),
                                 dbc.Button("Next", id='next-btn', n_clicks=0, color="secondary", className="ms-2",
-                                           style={'height': '6vh'}),
+                                           style={'height': '4vh'}),
                                 html.Div(style={'marginRight': '7vw',}),
                                 *[item
                             for page in PAGES
@@ -38,7 +39,7 @@ header = dbc.Col(
                     )
                     ],
                     justify="between",
-                    style={'margin': '0px', 'padding': '0px', 'height': '7.5vh'}
+                    style={'margin': '0px', 'padding': '0px', 'height': '5.5vh'}
                 ),
                 fluid=True
             ), className="bg-primary",

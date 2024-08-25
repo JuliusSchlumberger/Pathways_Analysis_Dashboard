@@ -1,6 +1,7 @@
 import json
 from utilities.design_choices import FIGURE_WIDTH
 from assets.static_inputs import FONTS
+from PIL import Image
 
 # def scale_figure(fig, viewport_data):
 #     current_width = fig.layout.width

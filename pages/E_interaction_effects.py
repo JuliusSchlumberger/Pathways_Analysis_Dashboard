@@ -43,7 +43,7 @@ survey_question = html.Div([
 
 multi_likkert_scale("Likkert-Evaluation questions",
                         'likkert_use-interaction_effects',
-                        ['I totally disagree', '', '', '', 'I totally agree'],
+                        ['totally disagree', '', '', '', 'totally\u00A0agree'],
                         ['I find this figure easy to understand',
                          'I am confident that I read this figure correctly to inform the decision-choice',
                          'This visualization provides enough information to justify a `decision',

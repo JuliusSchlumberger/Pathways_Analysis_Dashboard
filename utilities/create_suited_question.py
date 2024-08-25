@@ -55,7 +55,7 @@ def multiple_choice(question, question_id, option_dict):
         ])
     ])
 
-def single_choice(question, question_id, option_dict):
+def single_choice(question, question_id, option_dict, type='Radio'):
     """
     Create a single-choice question using radio buttons.
 
@@ -67,17 +67,26 @@ def single_choice(question, question_id, option_dict):
     Returns:
     dbc.Row: A Dash Bootstrap Components Row containing the single-choice question.
     """
+    if type == 'Radio':
+        type_question = dbc.RadioItems(
+                id=question_id,
+                options=[{'label': key, 'value': element} for key, element in option_dict.items()],
+                inline=True,
+                className="mb-3"
+            )
+    elif type == 'Dropdown':
+        type_question = dbc.Select(
+            id=question_id,
+            options=[
+                {'label': key, 'value': element} for key, element in option_dict.items()
+            ]
+        )
     return dbc.Row([
         dbc.Col([
             dbc.Label([question], html_for=question_id, style={'fontWeight': 'bold'}),
             dbc.FormText(id=f'{question_id}-validation', color='danger', children='This field is required.',
                          style={'display': 'none'}),
-            dbc.RadioItems(
-                id=question_id,
-                options=[{'label': key, 'value': element} for key, element in option_dict.items()],
-                inline=True,
-                className="mb-3"
-            ),
+            type_question,
             html.Hr(style={'borderWidth': "1px", 'borderColor': 'grey'}),
         ])
     ])
@@ -186,7 +195,8 @@ def likkert_scale(question, question_id, input_list):
                     value=None,
                     className="custom-slider"
                 ),
-                className="slider-container"
+                className="slider-container",
+                style={'width': '90%', 'marginLeft': '0px', 'marginRight': '0px'}
             ),
             html.Hr(style={'borderWidth': "1px", 'borderColor': 'grey'}),
         ])
@@ -231,9 +241,10 @@ def multi_likkert_scale_with_explanation(question, question_id, input_list, mult
                 marks={i: label for i, label in enumerate(input_list, start=1)},
                 value=None,
                 # included=False,
-                className="custom-slider"
+                className="custom-slider",
             ),
-                className="slider-container"
+                className="slider-container",
+                style={'width': '90%', 'marginLeft': '0px', 'marginRight': '0px'}
             ),
             html.Br(),
             html.Hr(style={'borderWidth': "1px", 'borderColor': 'grey'}),
@@ -284,7 +295,8 @@ def multi_likkert_scale(question, question_id, input_list, multi_comments):
                     # included=False,
                     className="custom-slider"
                 ),
-                className="slider-container"
+                className="slider-container",
+                style={'width': '90%', 'marginLeft': '0px', 'marginRight': '0px'}
             ),
             html.Br(),
             html.Hr(style={'borderWidth': "1px", 'borderColor': 'grey'}),

@@ -38,7 +38,7 @@
 #
 #
 #     if message:
-#         return [html.Div('Make Choices (left side of display), to show visualization.',
+#         return [html.Div('Specify the focus of the analysis (see left), to see a visualization',
 #                          style={'color': 'red', 'fontSize': '1vw', 'fontWeight': 'bold', 'marginTop': '20px',
 #                                 'textAlign': 'center'})], dash.no_update, dash.no_update, dash.no_update,
 #

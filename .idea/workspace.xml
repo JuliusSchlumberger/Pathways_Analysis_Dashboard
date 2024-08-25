@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c60c66b6-51d2-4150-b49d-e2c284deebe4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/components/progress_modal.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Dashboard_v1.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/PathwaysAnalysis_Dashboard_v1.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/static_inputs.py" beforeDir="false" afterPath="$PROJECT_DIR$/assets/static_inputs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/navigation_pages.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/navigation_pages.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/to_store.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/to_store.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/toggle_termsconditions.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/toggle_termsconditions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/update_alternatives.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_alternatives.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/update_interaction_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_interaction_plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/update_pathways.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_pathways.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/update_robustness.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_robustness.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/validate_answers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/TermsConditions.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/TermsConditions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/explanations.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/explanations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/header.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/header.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/A_introduction.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/A_introduction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/B_alternative_pathways.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/B_alternative_pathways.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/C_pathways_robustness.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/C_pathways_robustness.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/D_pathways_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/D_pathways_maps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/E_interaction_effects.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/E_interaction_effects.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/create_suited_question.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/create_suited_question.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/instruction_template.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/instruction_template.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/scale_figure.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/scale_figure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utilities/validate_and_store_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/validate_and_store_data.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="2lA9RDglLrMkSBtx2skD7gUmiqe" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-975db3bf15a3-31b6be0877a2-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-241.18034.82" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c60c66b6-51d2-4150-b49d-e2c284deebe4" name="Changes" comment="" />
+      <created>1724612004179</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1724612004179</updated>
+    </task>
+    <servers />
+  </component>
+</project>

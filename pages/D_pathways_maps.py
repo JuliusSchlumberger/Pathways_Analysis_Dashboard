@@ -3,6 +3,7 @@ from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTI
 from utilities.create_suited_question import *
 from utilities.submission_button import submit_answers
 from utilities.instruction_template import create_instructions
+from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
 from dashapp import dash
 
 dash.register_page(__name__, path='/3-pathways-maps')
@@ -13,15 +14,15 @@ introduction_text = [
         'pathways maps ',
         'Pathways_Map_explanation'
     ),
-    "alongside performance robustness because they visualize the sequence and timing of decisions. This helps us "
+    "alongside performance robustness because they visualize the sequence, timing of decisions and transfers. This helps us "
     "understand when and how to switch between measures as conditions change. While robustness focuses on ensuring a "
     "strategy works across different scenarios, pathways maps help us plan the best route forward by identifying "
     "critical ",
     create_highlighted_word(
-        'timings for action.',
+        'timings or conditions for action.',
         'timing_explanation'),
     html.P(
-        "Pathways maps can look different depending on which scenario is considered, or depending on which "
+        " and the path-dependency. Pathways maps can look different depending on which scenario is considered, or depending on which "
         "interactions are considered."
     ),
     Pathways_Map_explanation,
@@ -51,55 +52,97 @@ fig_explanation = [html.P("This figures represents a 'Metro-map' through time (s
                           "pathway remains effective as circumstances evolve."),
                    html.P("The map shows how we can get to a certain point in time and what future measures we could "
                           "implement."),
-                   html.P('You can hover over the markers to learn about the type decision-point and click on it to '
-                          'see what future options you have from this point onwards.')
+                   html.P('You can hover over the markers to learn about the type of decision-point below the figure '
+                          'and click on it to see what future options you have from this point onwards.')
                          ]
 
-survey_questions = html.Div([
+testing_viz_questions = html.Div([
     html.P([html.I(INTRO_TEXT)]),
 
-    single_output_question('In which year is the first measure needed in a 1.5 \u2103 climate scenario?',
-                           'first_measure-input', 'number'),
+    single_output_question(
+        'In which year is the first measure needed in a 1.5 \u2103 climate scenario with no pathway interactions considered?',
+        'first_measure-input',
+        'number'
+    ),
 
-single_output_question(
-    'What is the maximum number of measures that need to be implemented in one pathway in a 1.5 \u2103 climate scenario?',
-                           'number_measures-input', 'number'),
+    single_output_question(
+        'What is the maximum number of measures that need to be implemented in one pathway in a '
+        '1.5 \u2103 climate scenario over the 100 years with no pathway interactions considered?',
+        'number_measures-input',
+        'number'
+    ),
 
     multiple_choice(
         'In a 1.5 \u2103 climate scenario, which pathway(s) seem to be the most flexible?',
-        'most_flexible15-input', OPTION_DICT),
-    multiple_choice('Which pathway(s) seem to be the most flexible alternatives in a 4 \u2103 climate scenario?','most_flexible4-input', OPTION_DICT),
+        'most_flexible15-input',
+        OPTION_DICT
+    ),
+
+    multiple_choice(
+        'Which pathway(s) seem to be the most flexible alternatives in a 4 \u2103 climate scenario?',
+        'most_flexible4-input',
+        OPTION_DICT
+    ),
+
     single_choice(
-        'What is the general effect of the interactions on the timing of measure implementation when '
-              'accounting for the presence of Farmer - Drought strategies in a 4 \u2103 climate scenario?',
-              'timing_shifts-input',
-              {'measures are implemented mostly earlier': 'earlier',
-               'measures are implemented mostly later': 'later',
-               'it is not clear': 'notclear'}),
-    single_output_question('How many years did the implementation of "Ditch System" in pathway 1 shift for the presence of Farmer - Drought strategies in a 1.5 \u2103 climate scenario?',
-                        'ditch_shift-input', 'number'),
-
-    multi_likkert_scale("Likkert-Evaluation questions",
-                        'likkert_use-pathways_maps',
-                        ['I totally disagree', '', '', '', 'I totally agree'],
-                        ['I find this figure easy to understand',
-                         'I am confident that I read this figure correctly to inform the decision-choice',
-                         'This visualization provides enough information to justify a `decision',
-                         'I would use this visualisation for similar problems'
-                         ]),
-
-    long_text('Please briefly describe one or two challenges you had when reading the figure (if any)',
-              'pathways_challenge'),
-
-    long_text('Please briefly describe one or two things you find useful about this figure (if any)',
-              'pathways_advantage'),
-
-    # For multiple choice questions, follow a similar pattern
-    *submit_answers('submit-survey-pathways_maps', 'pathways_maps-validation'),
-
+        'When accounting for the presence of Farmer - Drought interactions, what is the general effect on the timing of measure implementation '
+        'in a 4 \u2103 climate scenario?',
+        'timing_shifts-input',
+        {
+            'measures are implemented mostly earlier': 'earlier',
+            'measures are implemented mostly later': 'later',
+            'there are no interaction effects': 'no_effect',
+            'it is not clear': 'notclear'
+        },
+        'Dropdown'
+    ),
+    single_output_question(
+        'When accounting for the presence of Farmer - Drought interactions, by how many years does the '
+        'implementation of "Ditch System" in pathway 1 shift in a 4 \u2103 climate scenario?',
+        'ditch_shift-input',
+        'number'
+    ),
 ])
 
-text_field = create_instructions(introduction_text, selection_options, fig_explanation, survey_questions)
+
+survey_questions = html.Div([
+likkert_scale(
+    'I find this figure easy to understand',
+    'likkert_use-pathways_maps_easy',
+    ['totally disagree', '', '', '', 'totally\u00A0agree'],
+    ),
+
+    likkert_scale(
+    'I am confident that I read this figure correctly to inform the decision-choice',
+    'likkert_use-pathways_maps_confidence',
+    ['totally disagree', '', '', '', 'totally\u00A0agree'],
+    ),
+    likkert_scale(
+        'This visualization provides enough information to justify your answer',
+        'likkert_use-pathways_maps_enough_information',
+        ['totally disagree', '', '', '', 'totally\u00A0agree'],
+        ),
+    likkert_scale(
+        'I would use this visualisation for similar problems',
+        'likkert_use-pathways_maps_scalability',
+        ['totally disagree', '', '', '', 'totally\u00A0agree'],
+    ),
+    long_text(
+        'Please briefly describe one or two challenges you had when reading the figure (if any)',
+        'pathways_challenge'),
+
+    long_text(
+        'Please briefly describe one or two things you find useful about this figure (if any)',
+        'pathways_advantage'),
+
+    # For multiple choice questions, follow a similar pattern
+    *submit_answers(
+        'submit-survey-pathways_maps',
+        'pathways_maps-validation'),
+    ]
+)
+
+text_field = create_instructions(introduction_text, selection_options, fig_explanation, testing_viz_questions, survey_questions)
 
 
 visualization = dbc.Col(
@@ -129,6 +172,8 @@ layout_D = dbc.Row(
             width=TEXTFIELD_WIDTH,
         ),
         visualization,
+        PROGRESS_MODAL,
+        FINAL_MODAL
     ],
     style={'height': LAYOUT_HEIGHT}
 )

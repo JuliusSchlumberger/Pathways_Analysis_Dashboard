@@ -1,6 +1,6 @@
 from dash import html
 
-def create_instructions(intro_text, choices=False, figure_explanation=False, questionaire=False):
+def create_instructions(intro_text, choices=False, figure_explanation=False, testing_viz_questions=False, questionaire=False):
     """
     Create an instructions template for a dashboard application.
 
@@ -34,6 +34,15 @@ def create_instructions(intro_text, choices=False, figure_explanation=False, que
         figure_instruction = [html.Div('')]
 
     # Create questionnaire section if questionaire is provided
+    if testing_viz_questions:
+        testing_viz_instruction = [
+            html.Hr(style={'borderWidth': "3px", 'borderColor': 'grey'}),
+            html.H4("Questions on the visualization"),
+            html.Div(testing_viz_questions, style={'alignItems': 'start'}),
+        ]
+    else:
+        testing_viz_instruction = [html.Div('')]
+
     if questionaire:
         questionaire_instruction = [
             html.Hr(style={'borderWidth': "3px", 'borderColor': 'grey'}),
@@ -48,8 +57,11 @@ def create_instructions(intro_text, choices=False, figure_explanation=False, que
         html.Div(intro_text, style={'marginBottom': '1%'}),
         *choices_instruction,
         *figure_instruction,
+        *testing_viz_instruction,
         *questionaire_instruction,
-    ], style={
+    ],
+        id ='scrollable-column',
+        style={
         'overflow-y': 'auto',
         'height': '78vh',
         'border': '1px solid #ddd',

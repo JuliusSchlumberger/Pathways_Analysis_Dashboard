@@ -3,6 +3,7 @@ from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTI
 from utilities.create_suited_question import *
 from utilities.submission_button import submit_answers
 from utilities.instruction_template import create_instructions
+from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
 from dashapp import dash
 
 
@@ -45,8 +46,9 @@ selection_options = html.Div([
                 html.Label('c) Robustness quantification (default - no choice necessary)', className='mb-1'),
                 dbc.Select(
                         id='robustness_metric',
-                        options=[{'label': option, 'value': ROBUSTNESS_METRICS[option], 'disabled': True if option != "mean across scenarios" else False
-                            } for option in ROBUSTNESS_METRICS],
+                    options=[{'label': option, 'value': ROBUSTNESS_METRICS[option]} for option in ROBUSTNESS_METRICS],
+                        # options=[{'label': option, 'value': ROBUSTNESS_METRICS[option], 'disabled': True if option != "mean across scenarios" else False
+                        #     } for option in ROBUSTNESS_METRICS],
                         # value=list(ROBUSTNESS_METRICS.values())[0],
                 )], style={'marginBottom': '20px'}),
             html.Div([
@@ -79,21 +81,21 @@ fig_explanation = html.Div("This need to be updated",
                                  id='dynamic-figure-paragraph',
                                  )
 
-survey_questions = html.Div([
+testing_viz_questions = html.Div([
     html.P([html.I(INTRO_TEXT)]),
     single_output_question(
         'What do the colors represent in the figure?',
         'coding-input',
         'text'),
 
-    single_output_question('How much Crop Productivity Loss [%] do we expect for Pathway 5 over a time horizon of 60 years in the 4 \u2103 climate scenario?',
+    single_output_question('How much Crop Productivity Loss [%] do we expect for Pathway 5 over a time horizon of 60 years in the 4 \u2103 climate scenario  with no pathway interactions considered?',
                            'crop_loss-input', 'number'),
 
-    multiple_choice('In the 4 \u2103 climate change scenario, which pathway(s) is most robust at the time horizon of 60 years?',
+    multiple_choice('In the 4 \u2103 climate change scenario, which pathway(s) is most robust at the time horizon of 60 years  with no pathway interactions considered?',
                     'robustness-input', OPTION_DICT),
 
     multiple_choice(
-        'Which pathway(s) has the biggest trade-off between Impacted Lifestock and Measure Costs '
+        'Which pathway(s) results in the highest Impacted Lifestock for the highest Measure Costs '
         'after 100 years in a 1.5 \u2103 climate scenario with no pathway interactions considered?',
         'tradeoff-input', 
         OPTION_DICT),
@@ -103,38 +105,59 @@ survey_questions = html.Div([
         {
             'more synergy effects': 'synergies',
             'more trade-off effects': 'tradeoffs',
+            'there are no interaction effects': 'no_effect',
             'it is not clear': 'notclear'
-        }
+        },
+        'Dropdown'
     ),
     multiple_choice(
         'When accounting for the presence of Farmer - Drought strategies, which pathway(s) show the best '
-        'robustness regarding Crop Productivity Loss in a 1.5 \u2103 climate scenario over the next 60 years?',
+        'robustness regarding Crop Productivity Loss in a 4 \u2103 climate scenario over the next 60 years?',
         'interaction_least_productivity_loss-input', 
         OPTION_DICT
     ),
+])
 
 
-multi_likkert_scale(
-    "Likkert-Evaluation questions",
-    'likkert_use-robustness',
-    ['I totally disagree', '', '', '', 'I totally agree'],
-    ['I find this figure easy to understand',
-     'I am confident that I read this figure correctly to inform the decision-choice',
-     'This visualization provides enough information to justify a `decision',
-     'I would use this visualisation for similar problems'
-]),
+survey_questions = html.Div([
+likkert_scale(
+    'I find this figure easy to understand',
+    'likkert_use-robustness_easy',
+    ['totally disagree', '', '', '', 'totally\u00A0agree'],
+    ),
 
-    long_text('Please briefly describe one or two challenges you had when reading the figure (if any)', 'robustness_challenge'),
+    likkert_scale(
+    'I am confident that I read this figure correctly to inform the decision-choice',
+    'likkert_use-robustness_confidence',
+    ['totally disagree', '', '', '', 'totally\u00A0agree'],
+    ),
+    likkert_scale(
+        'This visualization provides enough information to justify your answer',
+        'likkert_use-robustness_enough_information',
+        ['totally disagree', '', '', '', 'totally\u00A0agree'],
+        ),
+    likkert_scale(
+        'I would use this visualisation for similar problems',
+        'likkert_use-robustness_scalability',
+        ['totally disagree', '', '', '', 'totally\u00A0agree'],
+    ),
+    long_text(
+        'Please briefly describe one or two challenges you had when reading the figure (if any)',
+        'robustness_challenge'),
 
-    long_text('Please briefly describe one or two things you find useful about this figure (if any)', 'robustness_advantage'),
-
+    long_text(
+        'Please briefly describe one or two things you find useful about this figure (if any)',
+        'robustness_advantage'),
 
     # For multiple choice questions, follow a similar pattern
-    *submit_answers('submit-survey-pathways-robustness', 'pathways_robustness-validation'),
-    ])
+    *submit_answers(
+        'submit-survey-pathways-robustness',
+        'pathways_robustness-validation')
+    ]
+)
 
 
-text_field = create_instructions(introduction_text, selection_options, fig_explanation, survey_questions)
+text_field = create_instructions(introduction_text, selection_options, fig_explanation, testing_viz_questions, survey_questions)
 
 
 visualization = dbc.Col([
@@ -150,6 +173,8 @@ layout_C = dbc.Row(
     [dbc.Col([
     text_field
     ], width=TEXTFIELD_WIDTH),
-     visualization],
+     visualization,
+    PROGRESS_MODAL,
+    FINAL_MODAL],
     style={'height': LAYOUT_HEIGHT}
 )

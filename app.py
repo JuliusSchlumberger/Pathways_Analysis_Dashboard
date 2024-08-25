@@ -2,20 +2,21 @@ import dash_bootstrap_components as dbc
 from dash import dcc, Input, Output, html, ClientsideFunction, clientside_callback
 from pages import *
 from components import header, TermsConditions
+from components.progress_modal import PROGRESS_MODAL
 # from callbacks import toggle_tabs
 import dash
 from callbacks import (navigation_pages, update_alternatives, \
     toggle_robustness_figure, update_robustness, \
     update_multi_sector_interactions, update_interaction_plot, submit_responses_db, update_pathways,\
-     toggle_termsconditions, update_surveys, toggle_word_explanations, update_figure_description, update_drop_down, to_store,
-
-                       validate_answers)
+     toggle_termsconditions, update_surveys, toggle_word_explanations, update_figure_description, update_drop_down, to_store
+)
 
 from dashapp import app
 
 
 server = app.server
-app.layout = dbc.Container([
+app.layout = dbc.Container(
+    [
         dcc.Location(id='url', refresh=False),
         dcc.Store(id='storage-general', storage_type='session', data={}),  # Using session storage
         dcc.Store(id='viewport-size'),  # To store and use viewport data in other callbacks
@@ -23,12 +24,15 @@ app.layout = dbc.Container([
         html.Div(id='page-content'),
         html.Div(id='document-title', style={'display': 'none'}),  # Hidden div for setting the document title
         # TermsConditions.TermConditions,
+        PROGRESS_MODAL
 ],
     fluid=True,  # Change to 100vh to fill the screen height
 )
 
+app.layout.children.append(html.Div(id='dummy-output', style={'display': 'none'}))
+
 # Clientside function to capture viewport size
-clientside_callback(
+app.clientside_callback(
     """
     function(trigger) {
         return {
@@ -39,7 +43,23 @@ clientside_callback(
     }
     """,
     Output('viewport-size', 'data'),
-    Input('url', 'href')
+    [Input('prev-btn', 'n_clicks'),
+     Input('next-btn', 'n_clicks'),],
+)
+
+# Clientside callback to scroll to the top
+app.clientside_callback(
+    """
+    function(url) {
+        var element = document.getElementById('scrollable-column');
+        if (element) {
+            element.scrollTop = 0;  // Scroll to the top
+        }
+    }
+    """,
+    Output('dummy-output', 'children'),
+    [Input('prev-btn', 'n_clicks'),
+        Input('next-btn', 'n_clicks')],
 )
 
 # clientside_callback(

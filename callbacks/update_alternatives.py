@@ -29,7 +29,7 @@ def update_options_graph(risk_owner_hazard, stored_data):
     else:
         message = generate_missing_input_message(('Risk Owner - Hazard Pair', stored_data.get('risk_owner_hazard', None)))
         if message:
-            return [html.Div('Make Choices (left side of display), to show visualization.',
+            return [html.Div('Specify the focus of the analysis (see left), to see a visualization',
                              style={'color': 'red', 'fontSize': '1vw', 'fontWeight': 'bold', 'marginTop': '20px',
                                     'textAlign': 'center'})], dash.no_update, dash.no_update
         relevant_input = stored_data['risk_owner_hazard']
@@ -41,6 +41,6 @@ def update_options_graph(risk_owner_hazard, stored_data):
 
     fig, _, _ = scale_figure(fig, stored_data)
 
-    return [dcc.Graph(figure=fig, responsive=False, config={'displayModeBar': False})], stored_data, relevant_input
+    return [dcc.Graph(figure=fig, responsive=False)], stored_data, relevant_input
 
 
