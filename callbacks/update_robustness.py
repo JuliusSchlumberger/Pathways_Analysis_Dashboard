@@ -41,6 +41,7 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
         if options is not None:
             # print(options)
             stored_data['robustness_plot'] = options
+
         # print('options', options)
 
         ctx = dash.callback_context
@@ -135,11 +136,11 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
                                        "overflow": "hidden"  # Prevent scrollbars from appearing
                                        }
                                 )]), stored_data, stored_data['timehorizon'], stored_data['scenarios'],
-            stored_data['robustness_metric'], stored_data['robustness_plot'], stored_data['interacting_sectors'],
+            stored_data['robustness_metric'], stored_data['robustness_plot'], stored_data['interacting_sectors_robustness'],
                         stored_data)
             else:
                 return ([dcc.Graph(figure=fig, responsive=False)], stored_data['timehorizon'], stored_data['scenarios'],
-            stored_data['robustness_metric'], stored_data['robustness_plot'], stored_data['interacting_sectors'],
+            stored_data['robustness_metric'], stored_data['robustness_plot'], stored_data['interacting_sectors_robustness'],
                         stored_data)
 
     return (dash.no_update, dash.no_update, *[dash.no_update] * 5)

@@ -150,6 +150,7 @@ def visual_impairments():
                     {'label': 'No', 'value': 'No'},
                     {'label': 'Yes', 'value': 'Yes'},
                     {'label': "I don't know", 'value': 'IdontKnow'},
+                    {'label': "I don't want to share", 'value': 'IdontShare'},
                 ],
                 inline=False,
                 className="mb-3"
@@ -329,7 +330,7 @@ def long_text(question, question_id):
                          style={'display': 'none'}),
             dbc.Textarea(
                 id=question_id,
-                placeholder='Enter your multi-line comment here...',
+                placeholder='Enter your feedback/reflection here...',
                 style={'width': '100%', 'height': '10vh'},
                 className="mb-3"
             ),

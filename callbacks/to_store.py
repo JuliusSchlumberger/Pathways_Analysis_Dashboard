@@ -11,6 +11,7 @@ import os
 
 # Fetch the database URL from environment variables
 DATABASE_URL = os.getenv('DATABASE_URL')
+DATABASE_URL = 'postgres://ugeimca9dvqv5:p974c8dbdceb0d7a4bb52a13b798f1473ec758833188eafb3af1c3a528455c57e@c3ljuvoe25cl2n.cluster-czz5s0kz4scl.eu-west-1.rds.amazonaws.com:5432/db07l8t1ull76s'
 
 # Adjust the URL format if necessary
 if DATABASE_URL.startswith("postgres://"):

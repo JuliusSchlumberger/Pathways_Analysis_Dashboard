@@ -43,9 +43,10 @@ app.clientside_callback(
     }
     """,
     Output('viewport-size', 'data'),
-    [Input('prev-btn', 'n_clicks'),
-     Input('next-btn', 'n_clicks'),
-     Input('url', 'pathname'),
+    [
+     #    Input('prev-btn', 'n_clicks'),
+     # Input('next-btn', 'n_clicks'),
+     # # Input('url', 'pathname'),
      Input("close-termsconditions", "n_clicks")],
 )
 

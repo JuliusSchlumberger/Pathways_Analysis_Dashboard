@@ -21,7 +21,7 @@ header = dbc.Col(
                                 dbc.Button("Back", id='prev-btn', n_clicks=0, color="secondary", className="ms-2",
                                            style={'height': '4vh'}),
                                 dbc.Button("Next", id='next-btn', n_clicks=0, color="secondary", className="ms-2",
-                                           style={'height': '4vh'}),
+                                           style={'height': '4vh', 'align': 'center'}),
                                 html.Div(style={'marginRight': '7vw',}),
                                 *[item
                             for page in PAGES

@@ -79,13 +79,14 @@ def create_link_design(current_step):
         Input('next-btn', 'n_clicks'),
         # Input("close-progress", "n_clicks"),
         Input('url', 'pathname'),
+        Input('viewport-size', 'data'),
     ],
-    [State('viewport-size', 'data'),
+    [
         State('storage-general', 'data'),
         State('url', 'pathname'),
         # State('viewport-size', 'data'),
     ],
-    prevent_initial_call=False  # Prevent callback from triggering on initial load
+    # prevent_initial_call=False  # Prevent callback from triggering on initial load
 )
 def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path):
     ctx = dash.callback_context
@@ -112,9 +113,12 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
         new_url = '/0-introduction'
         link_names = create_link_design(0)
         content = layout_A
-        storage = {'existing_id': generate_session_id(),
-                   'viewport_size': viewport,
-                   'current_url': new_url}
+        # storage = {'existing_id': generate_session_id(),
+        #            'viewport_size': viewport,
+        #            'current_url': new_url}
+        storage['existing_id']= generate_session_id()
+        storage[ 'viewport_size']= viewport
+        storage['current_url']= new_url
         return (content,
                 *link_names,
                 new_url,
@@ -128,14 +132,20 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
         previous_step = get_step_from_pathname(storage['current_url'])
         page_names = create_link_design(current_step)
         content = step_content_dict.get(current_step, layout_A)
-        storage['current_url'] = url
-        if storage.get(PAGES[current_step]['check'], 'no') == 'yes' or previous_step <= current_step:
+
+        print(previous_step, current_step)
+        if storage.get(PAGES[previous_step]['check'], 'no') == 'yes' or previous_step >= current_step:
+            print(PAGES[previous_step]['check'], 'activated')
+            storage['current_url'] = url
             return content, *page_names, url, storage, 0, 0, False
         # elif modal_click > 0:
         #     return dash.no_update, *[dash.no_update] * len(
         #         page_names), dash.no_update, dash.no_update, 0, 0,  False, 0
         else:
-            return content, *page_names, url, storage, 0, 0, True
+            page_names = create_link_design(previous_step)
+            content = step_content_dict.get(previous_step, layout_A)
+            return dash.no_update, *[dash.no_update] * len(
+                page_names), storage['current_url'], dash.no_update, 0, 0, True
 
     # Manage if navigation via buttons
     print('# Manage if navigation via buttons')
