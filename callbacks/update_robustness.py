@@ -76,10 +76,32 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
 
             fig, _, _ = scale_figure(fig, stored_data)
 
-            return ([dcc.Graph(figure=fig, responsive=False, config={
-            'displayModeBar': False})], stored_data['timehorizon'], stored_data['scenarios'],
+            if stored_data["robustness_plot"] == 'StackedBar':
+                # Convert the figure to an HTML string
+                fig_html = pio.to_html(fig, full_html=False,  include_plotlyjs='cdn')
+
+                # Custom JavaScript to be added
+                custom_js = CUSTOM_LEGEND_CHANGE
+
+                # Append the custom JavaScript to the HTML string
+                fig_html_with_js = f"{fig_html}\n<script>{custom_js}</script>"
+
+                # Return the HTML content
+                return (html.Div([
+                    html.Iframe(srcDoc=fig_html_with_js,
+                                style={"width": "100%",  # Ensure iframe width fills the parent
+                                       "height": "100%",  # Ensure iframe height fills the parent
+                                       "border": "none",  # Remove borders if not needed
+                                       "overflow": "hidden"  # Prevent scrollbars from appearing
+                                       }
+                                )]), stored_data['timehorizon'], stored_data['scenarios'],
             stored_data['robustness_metric'], stored_data['robustness_plot'], dash.no_update,
                         stored_data)
+            else:
+                return ([dcc.Graph(figure=fig, responsive=False, config={
+                'displayModeBar': False})], stored_data['timehorizon'], stored_data['scenarios'],
+                stored_data['robustness_metric'], stored_data['robustness_plot'], dash.no_update,
+                            stored_data)
 
 
         else:
@@ -96,7 +118,7 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
 
             if stored_data["robustness_plot"] == 'StackedBar':
                 # Convert the figure to an HTML string
-                fig_html = pio.to_html(fig, full_html=False, config={'displayModeBar': False}, include_plotlyjs='cdn')
+                fig_html = pio.to_html(fig, full_html=False,  include_plotlyjs='cdn')
 
                 # Custom JavaScript to be added
                 custom_js = CUSTOM_LEGEND_CHANGE
@@ -112,10 +134,11 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
                                        "border": "none",  # Remove borders if not needed
                                        "overflow": "hidden"  # Prevent scrollbars from appearing
                                        }
-                                )]), stored_data)
+                                )]), stored_data, stored_data['timehorizon'], stored_data['scenarios'],
+            stored_data['robustness_metric'], stored_data['robustness_plot'], stored_data['interacting_sectors'],
+                        stored_data)
             else:
-                return ([dcc.Graph(figure=fig, responsive=False, config={
-            'displayModeBar': False})], stored_data['timehorizon'], stored_data['scenarios'],
+                return ([dcc.Graph(figure=fig, responsive=False)], stored_data['timehorizon'], stored_data['scenarios'],
             stored_data['robustness_metric'], stored_data['robustness_plot'], stored_data['interacting_sectors'],
                         stored_data)
 

@@ -12,7 +12,6 @@ from pages.A_introduction import layout_A
 from pages.B_alternative_pathways import layout_B
 from pages.C_pathways_robustness import layout_C
 from pages.D_pathways_maps import layout_D
-from pages.E_interaction_effects import layout_E
 from pages.F_multi_risk_pathways import layout_F
 
 
@@ -113,9 +112,7 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
         new_url = '/0-introduction'
         link_names = create_link_design(0)
         content = layout_A
-        random_default = random.choice(list(WHICH_OPTIONS.values()))
         storage = {'existing_id': generate_session_id(),
-                   'robustness_plot': random_default,
                    'viewport_size': viewport,
                    'current_url': new_url}
         return (content,

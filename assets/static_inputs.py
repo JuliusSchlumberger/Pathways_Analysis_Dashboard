@@ -223,26 +223,91 @@ CUSTOM_HOVER = '''
 
 
 
-
-
-CUSTOM_LEGEND_CHANGE ='''
+CUSTOM_LEGEND_CHANGE = '''
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('Document loaded');
+
     var myPlot = document.getElementsByClassName('plotly-graph-div')[0];
-    myPlot.on('plotly_legendclick', function(data) {
+    console.log('myPlot:', myPlot);
+
+    if (!myPlot) {
+        console.error('Plotly graph not found');
+        return;
+    }
+
+    // Create a div for displaying hover information
+    var hoverInfoDiv = document.createElement('div');
+    hoverInfoDiv.id = 'hover-info';
+    hoverInfoDiv.style.position = 'absolute';
+    hoverInfoDiv.style.width = '23%';
+    hoverInfoDiv.style.top = '75%';
+    hoverInfoDiv.style.left = '77%';
+    hoverInfoDiv.style.transform = 'translate(-50%, 0)';
+    hoverInfoDiv.style.backgroundColor = '#f8f9fa';
+    hoverInfoDiv.style.color = '#212529';
+    hoverInfoDiv.style.padding = '10px';
+    hoverInfoDiv.style.border = '1px solid #ccc';
+    hoverInfoDiv.style.borderRadius = '5px';
+    hoverInfoDiv.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.1)';
+    hoverInfoDiv.style.zIndex = '1000';
+    hoverInfoDiv.style.fontSize = '14px';
+    hoverInfoDiv.style.fontFamily = '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+    hoverInfoDiv.style.textAlign = 'center';
+    hoverInfoDiv.style.wordWrap = 'break-word';
+    document.body.appendChild(hoverInfoDiv);
+    console.log('Hover info div created and appended');
+
+    // Default message for hoverInfoDiv
+    var defaultMessage = 'Hover above the bars to see more information here';
+
+    // Function to handle hover event
+    function handleHover(data) {
+        console.log('Hover event detected:', data);
+
+        if (!data || !data.points || !data.points[0] || !data.points[0].data.customdata) {
+            console.log('No customdata found, resetting to default message');
+            hoverInfoDiv.innerHTML = defaultMessage;
+            return;
+        }
+
+        // Update the hoverInfoDiv with the hover data
+        hoverInfoDiv.innerHTML = `${data.points[0].data.customdata}`;
+        console.log('Hover info updated:', hoverInfoDiv.innerHTML);
+    }
+
+    // Attach hover and unhover event listeners
+    myPlot.on('plotly_hover', handleHover);
+    myPlot.on('plotly_unhover', function () {
+        console.log('Unhover event detected');
+        hoverInfoDiv.innerHTML = defaultMessage;
+    });
+
+    // Initialize with the default message
+    hoverInfoDiv.innerHTML = defaultMessage;
+    console.log('Hover info div initialized with default message');
+
+    // Custom legend click handling
+    myPlot.on('plotly_legendclick', function (data) {
+        console.log('Legend click detected:', data);
+
         var index = data.curveNumber;
         var legendItem = data.data[index];
         var currentName = legendItem.name;
+
+        console.log('Legend item name before update:', currentName);
 
         // Check if the legend item is currently toggled on or off
         if (currentName.includes("Click to show effective robustness (with interactions)")) {
             legendItem.name = currentName.replace("Click to show effective robustness (with interactions)", "Click to show interaction effects compared to robustness without interactions");
         } else {
-            // Add "(hidden)" suffix
             legendItem.name = "Click to show effective robustness (with interactions)";
         }
 
+        console.log('Legend item name after update:', legendItem.name);
+
         // Update the plot with the new legend name
         Plotly.update(myPlot, {}, {}, [index]);
+        console.log('Plotly update called with new legend name');
     });
 });
 '''

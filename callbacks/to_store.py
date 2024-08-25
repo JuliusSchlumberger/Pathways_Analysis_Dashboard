@@ -10,7 +10,7 @@ import os
 
 
 # Fetch the database URL from environment variables
-DATABASE_URL = os.getenv('HEROKU_POSTGRESQL_CYAN_URL')
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 # Adjust the URL format if necessary
 if DATABASE_URL.startswith("postgres://"):

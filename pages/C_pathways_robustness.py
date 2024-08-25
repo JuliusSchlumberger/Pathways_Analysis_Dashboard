@@ -5,7 +5,9 @@ from utilities.submission_button import submit_answers
 from utilities.instruction_template import create_instructions
 from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
 from dashapp import dash
+import random
 
+random_default = random.choice(list(WHICH_OPTIONS.keys()))
 
 dash.register_page(__name__, path='/2-pathways-robustness')
 
@@ -58,10 +60,9 @@ selection_options = html.Div([
                     # # Comment out the rest
                     options=[
                         {
-                            'label': label,
-                            'value': value,
+                            'label': random_default,
+                            'value': WHICH_OPTIONS[random_default],
                         }
-                        for label, value in WHICH_OPTIONS.items()
                     ],
                     # value=random_default,  # Set the randomized value as the default
                 ),

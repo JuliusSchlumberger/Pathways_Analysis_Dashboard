@@ -66,7 +66,7 @@ def update_pathways_graph(pathname, map_scenario, interacting_sectors, stored_da
         fig, scaled_height, scaled_width = scale_figure(fig, stored_data)
 
         # Convert the figure to an HTML string
-        fig_html = pio.to_html(fig, full_html=False, config={'displayModeBar': False}, include_plotlyjs='cdn')
+        fig_html = pio.to_html(fig, full_html=False,  include_plotlyjs='cdn')
 
         # Custom JavaScript to be added
         custom_js = CUSTOM_HOVER

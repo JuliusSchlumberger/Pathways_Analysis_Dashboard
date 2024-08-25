@@ -6,10 +6,10 @@ from components.progress_modal import PROGRESS_MODAL
 # from callbacks import toggle_tabs
 import dash
 from callbacks import (navigation_pages, update_alternatives, \
-                       update_robustness, \
-                       update_multi_sector_interactions, update_pathways, \
+                       toggle_robustness_figure, update_robustness, \
+                       update_multi_sector_interactions, update_interaction_plot, submit_responses_db, update_pathways, \
                        toggle_termsconditions, update_surveys, toggle_word_explanations, update_figure_description,
-                       to_store
+                       update_drop_down, to_store
                        )
 
 from dashapp import app
