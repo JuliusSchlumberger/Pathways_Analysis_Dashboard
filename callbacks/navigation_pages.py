@@ -80,6 +80,7 @@ def create_link_design(current_step):
         # Input("close-progress", "n_clicks"),
         Input('url', 'pathname'),
         Input('viewport-size', 'data'),
+        # Input('submit-survey-introduction', 'n_clicks')
     ],
     [
         State('storage-general', 'data'),
@@ -117,7 +118,7 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
         #            'viewport_size': viewport,
         #            'current_url': new_url}
         if storage.get('existing_id', None) == None:
-            storage['existing_id']= generate_session_id()
+            storage['existing_id'] = generate_session_id()
         storage[ 'viewport_size']= viewport
         storage['current_url']= new_url
         return (content,
@@ -191,7 +192,25 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
         # elif modal_click > 0:
         #     return dash.no_update, *[dash.no_update] * len(
         #         page_names), dash.no_update, dash.no_update, 0, 0, False
+    if triggered_id == 'submit-survey-introduction':
+        if storage.get(PAGES[current_step]['check'], 'no') == 'yes':
+            new_step = current_step
+            new_step = current_step + 1
+            new_url = PAGES[new_step]['url']
+            storage['current_url'] = new_url
+            if viewport is not None:
+                storage['viewport_size'] = viewport
+            print(new_url)
 
+            # Select the correct layout based on the new step
+            content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
+
+            page_names = create_link_design(new_step)
+
+            return content, *page_names, new_url, storage, 0, 0, False
+        else:
+            return dash.no_update, *[dash.no_update] * len(
+                page_names), dash.no_update, dash.no_update, 0, 0, True
     if triggered_id == 'close-progress':
         current_step = get_step_from_pathname(current_path)
         print('triggered_id', triggered_id, current_step, prev_clicks, next_clicks, )

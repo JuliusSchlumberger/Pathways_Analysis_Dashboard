@@ -85,7 +85,7 @@ testing_viz_questions = html.Div([
     ),
 
     single_choice(
-        'When accounting for the presence of Farmer - Drought interactions, what is the general effect on the timing of measure implementation '
+        'When accounting for the presence of Farmer - Drought interactions, what is the general effect on the timing of measure implementation compared to the case without interactions '
         'in a 4 \u2103 climate scenario?',
         'timing_shifts-input',
         {
@@ -98,7 +98,7 @@ testing_viz_questions = html.Div([
     ),
     single_output_question(
         'When accounting for the presence of Farmer - Drought interactions, by how many years does the '
-        'implementation of "Ditch System" in pathway 1 shift in a 4 \u2103 climate scenario?',
+        'implementation of "Ditch System" in pathway 1 shift in a 4 \u2103 climate scenario compared to the case without interactions?',
         'ditch_shift-input',
         'number'
     ),
