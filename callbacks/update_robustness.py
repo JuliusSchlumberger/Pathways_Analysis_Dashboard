@@ -135,7 +135,7 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
                                        "border": "none",  # Remove borders if not needed
                                        "overflow": "hidden"  # Prevent scrollbars from appearing
                                        }
-                                )]), stored_data, stored_data['timehorizon'], stored_data['scenarios'],
+                                )]), stored_data['timehorizon'], stored_data['scenarios'],
             stored_data['robustness_metric'], stored_data['robustness_plot'], stored_data['interacting_sectors_robustness'],
                         stored_data)
             else:
