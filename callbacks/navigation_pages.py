@@ -116,7 +116,8 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
         # storage = {'existing_id': generate_session_id(),
         #            'viewport_size': viewport,
         #            'current_url': new_url}
-        storage['existing_id']= generate_session_id()
+        if storage.get('existing_id', None) == None:
+            storage['existing_id']= generate_session_id()
         storage[ 'viewport_size']= viewport
         storage['current_url']= new_url
         return (content,
