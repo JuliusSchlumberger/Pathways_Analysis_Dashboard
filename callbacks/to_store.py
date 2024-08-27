@@ -59,9 +59,10 @@ def save_response_to_db(user_id, data):
      Output("viztype-input_Stacked_Bar_Chart-validation", 'style'),
      Output("viztype-input_Parallel_Coordinates_Plot-validation", 'style'),
      Output("viztype-input_Heatmap-validation", 'style'),
-     Output("viztype-input_Pathways_Map-validation", 'style')
+     Output("viztype-input_Pathways_Map-validation", 'style'),
+     Output('to_store-complete', 'data', allow_duplicate=True)
      ],
-    [Input('submit-survey-introduction', 'n_clicks'),
+    [Input({'type': 'submit-survey', 'index': 1}, 'n_clicks'),
         ],
     [State('impairment-radio', 'value'),
      State('work-input', 'value'),
@@ -77,6 +78,7 @@ def save_response_to_db(user_id, data):
 )
 def handle_introduction_inputs(nclicks, impairment, work, expertise, use_frequency, viztype_barchart, viztype_pcp,
                                        viztype_heatmap, viztype_pathways, stored_data, url, ):
+    print("not triggered")
     input_ids = [
         'impairment', 'work', 'expertise', 'use_frequency',
         'viztype_barchart', 'viztype_pcp', 'viztype_heatmap', 'viztype_pathways'
@@ -102,7 +104,7 @@ def handle_introduction_inputs(nclicks, impairment, work, expertise, use_frequen
             *[stored_data.get(in_id, None) for in_id in input_ids],
             stored_data,
             final_comment, final_style,
-            *validation_styles
+            *validation_styles, True
         )
 
     # Otherwise, just return the updated stored data
@@ -110,6 +112,7 @@ def handle_introduction_inputs(nclicks, impairment, work, expertise, use_frequen
         *[dash.no_update] * len(input_ids),
         stored_data,
         *[dash.no_update] * (len(input_ids) + 2),
+        True
     )
 
 
@@ -137,10 +140,11 @@ def handle_introduction_inputs(nclicks, impairment, work, expertise, use_frequen
         Output("likkert_use-alternatives_enough_information-validation", 'style'),
         Output("likkert_use-alternatives_scalability-validation", 'style'),
         Output("alternative_challenge-validation", 'style'),
-        Output("alternative_advantage-validation", 'style')
+        Output("alternative_advantage-validation", 'style'),
+        Output('to_store-complete', 'data', allow_duplicate=True)
     ],
     [
-        Input('submit-survey-alternative_pathways', 'n_clicks')
+        Input({'type': 'submit-survey', 'index': 2}, 'n_clicks')
     ],
     [
         State('pathway_number-input', 'value'),
@@ -196,14 +200,16 @@ def handle_alternative_pathways(
             *[stored_data.get(in_id, None) for in_id in input_ids],
             stored_data,
             final_comment, final_style,
-            *validation_styles
+            *validation_styles,
+            True
         )
 
     # Otherwise, return without updating anything
     return (
         *[dash.no_update] * len(input_ids),
         stored_data,
-        *[dash.no_update] * (len(input_ids) + 2)
+        *[dash.no_update] * (len(input_ids) + 2),
+        True
     )
 
 
@@ -235,10 +241,11 @@ def handle_alternative_pathways(
         Output("likkert_use-robustness_enough_information-validation", 'style'),
         Output("likkert_use-robustness_scalability-validation", 'style'),
         Output("robustness_challenge-validation", 'style'),
-        Output("robustness_advantage-validation", 'style')
+        Output("robustness_advantage-validation", 'style'),
+        Output('to_store-complete', 'data', allow_duplicate=True)
     ],
     [
-        Input('submit-survey-pathways-robustness', 'n_clicks'),
+        Input({'type': 'submit-survey', 'index': 3}, 'n_clicks'),
     ],
     [
         State('coding-input', 'value'),
@@ -290,7 +297,8 @@ def handle_pathways_robustness(submit_clicks, coding, crop_loss, robustness, tra
             *[stored_data.get(in_id, None) for in_id in input_ids],
             stored_data,
             final_comment, final_style,
-            *validation_styles
+            *validation_styles,
+            True
         )
 
     # Otherwise, just return the updated stored data
@@ -298,6 +306,7 @@ def handle_pathways_robustness(submit_clicks, coding, crop_loss, robustness, tra
         *[dash.no_update] * len(input_ids),
         stored_data,
         *[dash.no_update] * (len(input_ids) + 2),
+        True
     )
 
 @app.callback(
@@ -329,10 +338,11 @@ def handle_pathways_robustness(submit_clicks, coding, crop_loss, robustness, tra
         Output("likkert_use-pathways_maps_scalability-validation", 'style'),
         Output("pathways_challenge-validation", 'style'),
         Output("pathways_advantage-validation", 'style'),
-        Output('end_modal', 'is_open')
+        Output('end_modal', 'is_open'),
+        Output('to_store-complete', 'data', allow_duplicate=True)
     ],
     [
-        Input('submit-survey-pathways_maps', 'n_clicks'),
+        Input({'type': 'submit-survey', 'index': 4}, 'n_clicks'),
     ],
     [
         State('first_measure-input', 'value'),
@@ -389,7 +399,8 @@ def handle_pathways_maps(submit_clicks, first_measure, number_measures, most_fle
             stored_data,
             final_comment, final_style,
             *validation_styles,
-            is_open
+            is_open,
+            False
         )
 
     # Otherwise, just return the updated stored data
@@ -397,6 +408,7 @@ def handle_pathways_maps(submit_clicks, first_measure, number_measures, most_fle
         *[dash.no_update] * len(input_ids),
         stored_data,
         *[dash.no_update] * (len(input_ids) + 2),
+        False,
         False
     )
 
@@ -458,3 +470,4 @@ def handle_pathways_maps(submit_clicks, first_measure, number_measures, most_fle
 #         *[dash.no_update] * len(input_ids),
 #         stored_data
 #     )
+

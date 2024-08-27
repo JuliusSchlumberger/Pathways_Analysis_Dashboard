@@ -95,7 +95,7 @@ survey_questions = html.Div(
             ["Stacked Bar Chart", "Parallel Coordinates Plot", "Heatmap", "Pathways Map"]
         ),
         *submit_answers(
-            'submit-survey-introduction',
+            {'type': 'submit-survey', 'index': 1},
             'introduction-validation'
         ),
     ],

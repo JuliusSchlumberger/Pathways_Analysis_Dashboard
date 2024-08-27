@@ -152,7 +152,7 @@ likkert_scale(
 
     # For multiple choice questions, follow a similar pattern
     *submit_answers(
-        'submit-survey-pathways-robustness',
+        {'type': 'submit-survey', 'index': 3},
         'pathways_robustness-validation')
     ]
 )

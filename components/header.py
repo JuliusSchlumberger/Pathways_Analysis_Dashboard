@@ -18,25 +18,31 @@ header = dbc.Col(
                     [
                         dbc.Col(
                             [
-                                dbc.Button("Back", id='prev-btn', n_clicks=0, color="secondary", className="ms-2",
-                                           style={'height': '4vh'}),
-                                dbc.Button("Next", id='next-btn', n_clicks=0, color="secondary", className="ms-2",
-                                           style={'height': '4vh', 'align': 'center'}),
-                                html.Div(style={'marginRight': '7vw',}),
+                                # html.Div(style={'marginRight': '7vw',}),
                                 *[item
                             for page in PAGES
                                 for item in
                                   (html.Div(style={'borderLeft': '1px solid white', 'height': '80%'}),
                                       html.Div(page['title'], id=f"step-{page['step']}-link", style={'color': 'white', 'paddingTop': '1.vh', 'marginRight': '1vw','marginLeft': '1vw'}),
                                 html.Div(style={'borderLeft': '1px solid white', 'height': '80%'}))
-                            ],
+                            ],],
+                                width = 10,  # Distribute the PAGES over a width of 8
+style = {'display': 'flex', 'alignItems': 'center', 'justifyContent': 'left'}
+),
+                        dbc.Col([
+                            dbc.Button("Back", id='prev-btn', n_clicks=0, color="secondary", className="ms-2",
+                                           style={'height': '4vh', 'alignItems': 'center'}),
+                            dbc.Button("Next", id='next-btn', n_clicks=0, color="secondary", className="ms-2",
+                                           style={'height': '4vh', 'alignItems': 'center'}),
+                            # dbc.Button("Resize", id='resize_screen', n_clicks=0, color="secondary", className="ms-2",
+                            #                style={'height': '4vh', 'alignItems': 'center'}),
                             # style={'padding': '2vh'},
                             # width="auto"
 
                             ],
-                        width="auto",
-                        style={'display': 'flex', 'alignItems': 'center'}
-                    )
+                            width=2,  # Place this button on the right in the remaining width of 2
+                            style={'display': 'flex', 'alignItems': 'center', 'justifyContent': 'end'}
+                        )
                     ],
                     justify="between",
                     style={'margin': '0px', 'padding': '0px', 'height': '5.5vh'}

@@ -20,13 +20,11 @@ def toggle_agree_button(checkbox_value):
     # Output("content", "style"),
     Input("close-termsconditions", "n_clicks"),
     Input("close-termsconditions", "disabled"),
-    State('storage-general', 'data'),
     prevent_initial_call=True
 )
-def toggle_initial_agreement(n, close_disabled, stored_data):
+def toggle_initial_agreement(n, close_disabled):
     if n > 0 and close_disabled == False:   # submit activated
-        stored_data['accepted_TOC'] = 1
         print(n, 'did accept')
-        return False, 1   # Hide modal and show content
+        return False, 1  # Hide modal and show content
     return True, 0  # Default state
 

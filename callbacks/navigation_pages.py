@@ -1,6 +1,6 @@
 import dash
 from dash import dcc, html
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Output, State, ALL
 import dash_bootstrap_components as dbc
 from dashapp import app
 from datetime import datetime
@@ -68,28 +68,27 @@ def create_link_design(current_step):
         Output('page-content', 'children'),
         *[Output(f"step-{i}-link", "children") for i in range(len(PAGES))],
         Output('url', 'pathname'),
-        Output('storage-general', 'data'),
+        Output('storage-general', 'data', allow_duplicate=True),
         Output('prev-btn', 'n_clicks'),
         Output('next-btn', 'n_clicks'),
         Output("progress_modal", "is_open"),
-        # Output("close-progress", "n_clicks"),
     ],
     [
+        Input('to_store-complete', 'data'),
         Input('prev-btn', 'n_clicks'),
         Input('next-btn', 'n_clicks'),
-        # Input("close-progress", "n_clicks"),
         Input('url', 'pathname'),
-        Input('viewport-size', 'data'),
-        # Input('submit-survey-introduction', 'n_clicks')
+
+        Input({'type': 'submit-survey', 'index': ALL}, 'n_clicks')
     ],
-    [
+    [State('viewport-size', 'data'),
         State('storage-general', 'data'),
         State('url', 'pathname'),
         # State('viewport-size', 'data'),
     ],
-    # prevent_initial_call=False  # Prevent callback from triggering on initial load
+    prevent_initial_call='duplicate_initial'  # Prevent callback from triggering on initial load
 )
-def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path):
+def display_page(to_store_complete, prev_clicks, next_clicks, url, submit_click, viewport, storage, current_path):
     ctx = dash.callback_context
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
     print('navigation pages - triggered callback:', triggered_id, )
@@ -126,9 +125,10 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
                 new_url,
                 storage,
                 0, 0, False)
+
     # # Manage if navigation via url
     if triggered_id == 'url':
-
+        storage['viewport_size'] = viewport
         print('# Manage if navigation via url', url, storage['current_url'])
         current_step = get_step_from_pathname(url)
         previous_step = get_step_from_pathname(storage['current_url'])
@@ -140,9 +140,6 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
             print(PAGES[previous_step]['check'], 'activated')
             storage['current_url'] = url
             return content, *page_names, url, storage, 0, 0, False
-        # elif modal_click > 0:
-        #     return dash.no_update, *[dash.no_update] * len(
-        #         page_names), dash.no_update, dash.no_update, 0, 0,  False, 0
         else:
             page_names = create_link_design(previous_step)
             content = step_content_dict.get(previous_step, layout_A)
@@ -174,6 +171,7 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
             return dash.no_update, *[dash.no_update] * len(
                 page_names), dash.no_update, dash.no_update, 0, 0, True
     if triggered_id == 'prev-btn' and current_step > 0:
+        storage['viewport_size'] = viewport
         new_step = current_step
         new_step = current_step - 1
 
@@ -192,14 +190,15 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
         # elif modal_click > 0:
         #     return dash.no_update, *[dash.no_update] * len(
         #         page_names), dash.no_update, dash.no_update, 0, 0, False
-    if triggered_id == 'submit-survey-introduction':
+    if (triggered_id.startswith('{') and to_store_complete) or triggered_id == 'to_store-complete':    # is string of including dictionary {"index":1,"type":"submit-survey"}
+        if viewport is not None:
+            storage['viewport_size'] = viewport
         if storage.get(PAGES[current_step]['check'], 'no') == 'yes':
             new_step = current_step
-            new_step = current_step + 1
+            new_step = min(current_step + 1, len(PAGES)-1)
             new_url = PAGES[new_step]['url']
             storage['current_url'] = new_url
-            if viewport is not None:
-                storage['viewport_size'] = viewport
+
             print(new_url)
 
             # Select the correct layout based on the new step
@@ -210,11 +209,5 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
             return content, *page_names, new_url, storage, 0, 0, False
         else:
             return dash.no_update, *[dash.no_update] * len(
-                page_names), dash.no_update, dash.no_update, 0, 0, True
-    if triggered_id == 'close-progress':
-        current_step = get_step_from_pathname(current_path)
-        print('triggered_id', triggered_id, current_step, prev_clicks, next_clicks, )
-        page_names = create_page_design(current_step)
-        content = step_content_dict.get(current_step, layout_A)
-        return content, *page_names, url, storage, 0, 0, False
+                page_names), dash.no_update, dash.no_update, 0, 0, False
     return dash.no_update, *[dash.no_update] * len(PAGES), dash.no_update, dash.no_update, 0, 0, False
