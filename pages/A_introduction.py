@@ -117,15 +117,15 @@ visualization = dbc.Col(
         # )
         dbc.Row(
             html.Img(id='introduction-image', src=f"data:image/png;base64,{img_str}", style={'max-width': '100%',
-                'height': 'auto',
+                'height': '80vh',
                 'margin': 'auto'}),
             style={
-                'height': '78vh',
+                'height': '80vh',
                 'display': 'flex',
                 # 'justifyContent': 'center',
                 # 'alignItems': 'top',
-                'display': 'flex',
-                'padding': '5%',
+                'margin': '0px',
+                # 'padding': '5%',
             }
         ),
     ],

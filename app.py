@@ -20,6 +20,7 @@ server = app.server
 app.layout = dbc.Container(
     [
         dcc.Location(id='url', refresh=False),
+        html.Link(rel='shortcut icon', href='/assets/favicon.ico'),
         dcc.Store(id='storage-general', storage_type='session', data={}),  # Using session storage
         dcc.Store(id='viewport-size'),  # To store and use viewport data in other callbacks
         header.header,

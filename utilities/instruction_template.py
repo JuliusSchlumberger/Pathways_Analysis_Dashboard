@@ -63,7 +63,7 @@ def create_instructions(intro_text, choices=False, figure_explanation=False, tes
         id ='scrollable-column',
         style={
         'overflow-y': 'auto',
-        'height': '78vh',
+        'height': '80vh',
         'border': '1px solid #ddd',
         'padding': '15px',
         'background-color': '#ffffff',
