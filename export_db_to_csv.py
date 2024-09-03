@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from app import TABLE_NAME
 from sqlalchemy import create_engine
 import requests
 import base64
@@ -15,7 +16,7 @@ if DATABASE_URL.startswith("postgres://"):
 engine = create_engine(DATABASE_URL)
 
 # Query the database
-output = 'survey_data'
+output = TABLE_NAME
 query = f"SELECT * FROM {output}"
 df = pd.read_sql_query(query, engine)
 

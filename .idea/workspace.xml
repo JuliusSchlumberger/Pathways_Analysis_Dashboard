@@ -4,15 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c60c66b6-51d2-4150-b49d-e2c284deebe4" name="Changes" comment="'inital push'">
+    <list default="true" id="c60c66b6-51d2-4150-b49d-e2c284deebe4" name="Changes" comment="'with tab description'">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/to_store.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/to_store.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/header.py" beforeDir="false" afterPath="$PROJECT_DIR$/components/header.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashapp.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashapp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/A_introduction.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/A_introduction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/tester.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/instruction_template.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/instruction_template.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/export_db_to_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/export_db_to_csv.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,11 +125,20 @@
       <option name="project" value="LOCAL" />
       <updated>1724671812657</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="'with tab description'">
+      <option name="closed" value="true" />
+      <created>1725278124624</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1725278124625</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="'inital push'" />
-    <option name="LAST_COMMIT_MESSAGE" value="'inital push'" />
+    <MESSAGE value="'with tab description'" />
+    <option name="LAST_COMMIT_MESSAGE" value="'with tab description'" />
   </component>
 </project>

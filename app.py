@@ -16,6 +16,8 @@ from callbacks import (navigation_pages, toggle_termsconditions,
 
 from dashapp import app
 
+TABLE_NAME = 'survey_table_september'
+
 server = app.server
 app.layout = dbc.Container(
     [
@@ -74,21 +76,6 @@ app.clientside_callback(
      Input({'type': 'submit-survey', 'index': ALL}, 'n_clicks'),],
 )
 
-
-
-# clientside_callback(
-#     """
-#     function(trigger) {
-#         return JSON.stringify({
-#             width: window.innerWidth,
-#             height: window.innerHeight
-#         });
-#
-#     }
-#     """,
-#     Output('viewport-size', 'data'),
-#     Input('viewport-size', 'n_intervals')
-# )
 
 
 if __name__ == '__main__':

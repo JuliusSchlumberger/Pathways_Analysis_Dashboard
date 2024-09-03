@@ -1,4 +1,5 @@
 import dash
+from app import TABLE_NAME
 from dash import Input, Output, State
 from dashapp import app
 from utilities.validate_and_store_data import validate_and_store_data
@@ -21,7 +22,7 @@ engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
 class SurveyResponse(Base):
-    __tablename__ = 'survey_data'
+    __tablename__ = TABLE_NAME
     id = Column(Integer, primary_key=True)
     user_id = Column(String)
     data = Column(Text)
