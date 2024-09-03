@@ -147,11 +147,14 @@ def display_page(to_store_complete, prev_clicks, next_clicks, url, submit_click,
                 page_names), storage['current_url'], dash.no_update, 0, 0, True
 
     # Manage if navigation via buttons
-    print('# Manage if navigation via buttons')
+
     current_step = get_step_from_pathname(current_path)
-    print('triggered_id', triggered_id, current_step, prev_clicks, next_clicks, )
+    print('current step', current_step, current_path)
     page_names = create_page_design(current_step)
+
     if triggered_id == 'next-btn' and current_step < len(PAGES) - 1:
+        print('# Manage if navigation via buttons')
+        print('triggered_id', triggered_id, current_step, prev_clicks, next_clicks, )
         if storage.get(PAGES[current_step]['check'], 'no') == 'yes':
             new_step = current_step
             new_step = current_step + 1
@@ -171,6 +174,8 @@ def display_page(to_store_complete, prev_clicks, next_clicks, url, submit_click,
             return dash.no_update, *[dash.no_update] * len(
                 page_names), dash.no_update, dash.no_update, 0, 0, True
     if triggered_id == 'prev-btn' and current_step > 0:
+        print('# Manage if navigation via buttons')
+        print('triggered_id', triggered_id, current_step, prev_clicks, next_clicks, )
         storage['viewport_size'] = viewport
         new_step = current_step
         new_step = current_step - 1
@@ -194,19 +199,24 @@ def display_page(to_store_complete, prev_clicks, next_clicks, url, submit_click,
         if viewport is not None:
             storage['viewport_size'] = viewport
         if storage.get(PAGES[current_step]['check'], 'no') == 'yes':
+            print('to_store_complete adjust pages')
             new_step = current_step
             new_step = min(current_step + 1, len(PAGES)-1)
-            new_url = PAGES[new_step]['url']
-            storage['current_url'] = new_url
+            if current_step < 3:
+                new_url = PAGES[new_step]['url']
+                storage['current_url'] = new_url
 
-            print(new_url)
+                print(new_url)
 
-            # Select the correct layout based on the new step
-            content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
+                # Select the correct layout based on the new step
+                content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
 
-            page_names = create_link_design(new_step)
+                page_names = create_link_design(new_step)
 
-            return content, *page_names, new_url, storage, 0, 0, False
+                return content, *page_names, storage['current_url'], storage, 0, 0, False
+            else:
+                return dash.no_update, *[dash.no_update] * len(
+                    page_names), dash.no_update, dash.no_update, 0, 0, False
         else:
             return dash.no_update, *[dash.no_update] * len(
                 page_names), dash.no_update, dash.no_update, 0, 0, False

@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from app import TABLE_NAME
+from dashapp import TABLE_NAME
 from sqlalchemy import create_engine
 import requests
 import base64

@@ -10,13 +10,13 @@ from callbacks import (navigation_pages, toggle_termsconditions,
                        update_alternatives, \
                        update_robustness, \
                        update_multi_sector_interactions, update_pathways, \
-                       toggle_termsconditions, update_surveys, toggle_word_explanations, update_figure_description
+                       toggle_termsconditions, update_surveys, toggle_word_explanations, update_figure_description,
+                        closing_modal
 
                        )
 
 from dashapp import app
 
-TABLE_NAME = 'survey_table_september'
 
 server = app.server
 app.layout = dbc.Container(

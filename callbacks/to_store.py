@@ -1,7 +1,7 @@
 import dash
-from app import TABLE_NAME
+
 from dash import Input, Output, State
-from dashapp import app
+from dashapp import app, TABLE_NAME
 from utilities.validate_and_store_data import validate_and_store_data
 from sqlalchemy import create_engine, Column, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
@@ -314,8 +314,8 @@ def handle_pathways_robustness(submit_clicks, coding, crop_loss, robustness, tra
     [
         Output('first_measure-input', 'value'),
         Output('number_measures-input', 'value'),
-        Output('most_flexible15-input', 'value'),
-        Output('most_flexible4-input', 'value'),
+        Output('most_flexible15-input', 'value', allow_duplicate=True),
+        Output('most_flexible4-input', 'value', allow_duplicate=True),
         Output('timing_shifts-input', 'value'),
         Output('ditch_shift-input', 'value'),
         Output("likkert_use-pathways_maps_easy", 'value'),
@@ -339,7 +339,7 @@ def handle_pathways_robustness(submit_clicks, coding, crop_loss, robustness, tra
         Output("likkert_use-pathways_maps_scalability-validation", 'style'),
         Output("pathways_challenge-validation", 'style'),
         Output("pathways_advantage-validation", 'style'),
-        Output('end_modal', 'is_open'),
+        # Output('end_modal', 'is_open'),
         Output('to_store-complete', 'data', allow_duplicate=True)
     ],
     [
@@ -373,9 +373,12 @@ def handle_pathways_maps(submit_clicks, first_measure, number_measures, most_fle
         'likkert_use-pathways_maps_enough_information', 'likkert_use-pathways_maps_scalability', 'pathways_challenge',
         'pathways_advantage'
     ]
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('pathways maps pages - triggered callback:', triggered_id, )
+    print(stored_data)
 
     if url == '/3-pathways-maps':
-        print(pathways_advantage)
         values = [
             first_measure, number_measures, most_flexible1_5, most_flexible4, timing_shifts, ditch_shift,
             easy, confidence, enough_information, scalability, pathways_challenge, pathways_advantage
@@ -389,28 +392,23 @@ def handle_pathways_maps(submit_clicks, first_measure, number_measures, most_fle
                 save_response_to_db(stored_data['existing_id'], stored_data)
             except Exception as e:
                 print(f"Error storing data: {e}")
-            is_open = True
         else:
             stored_data['completed_pathways_maps'] = 'no'
-            is_open = False
-        print(stored_data['completed_pathways_maps'])
-
+        print('STORAGE COMPLETE')
+        print(stored_data)
         return (
             *[stored_data.get(in_id, None) for in_id in input_ids],
             stored_data,
             final_comment, final_style,
             *validation_styles,
-            is_open,
-            False
+            True
         )
-
     # Otherwise, just return the updated stored data
     return (
-        *[dash.no_update] * len(input_ids),
+        *[stored_data.get(in_id, None) for in_id in input_ids],
         stored_data,
         *[dash.no_update] * (len(input_ids) + 2),
-        False,
-        False
+        True
     )
 
 

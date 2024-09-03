@@ -8,17 +8,18 @@ def validate_and_store_data(input_ids, values, stored_data):
     final_style = {'display': 'inline', 'marginLeft': '0.5vw', 'color': '#5cb85c'}
 
     for input_id, value in zip(input_ids, values):
-        if value is not None and value != '' and value != ' ':
+        if value is not None and value != '' and value != ' ' and value != []:
             print(input_id, value)
             stored_data[input_id] = value
 
-        if stored_data.get(input_id, None) == None:
+        if stored_data.get(input_id, None) != None and stored_data.get(input_id, []):
+            validation_style = {'display': 'none'}
+        else:
             validation_style = {'display': 'block'}
             final_comment = "Please fill in all required fields."
             final_style = {'display': 'inline', 'marginLeft': '0.5vw', 'color': '#d9534f'}
-        else:
-            validation_style = {'display': 'none'}
+
+
         validation_styles.append(validation_style)
         # stored_data[input_id] = None
-    print(stored_data)
     return validation_styles, stored_data, final_comment, final_style

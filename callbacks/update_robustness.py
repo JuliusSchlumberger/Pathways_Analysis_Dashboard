@@ -48,13 +48,9 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
         triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
         if triggered_id == 'multi_sectoral_interactions_robustness':
+            print(interacting_sectors)
             print('interactions', interacting_sectors.split(','))
             stored_data['interacting_sectors_robustness'] = interacting_sectors.split(',')
-        else:
-            if interacting_sectors is not None:
-                stored_data['interacting_sectors_robustness'] = interacting_sectors.split(',')
-            else:
-                stored_data['interacting_sectors_robustness'] = None
 
         message = generate_missing_input_message(
             ('Risk Owner - Hazard Pair', stored_data.get('risk_owner_hazard', None)),
