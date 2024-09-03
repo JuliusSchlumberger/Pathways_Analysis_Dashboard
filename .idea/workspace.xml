@@ -5,16 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c60c66b6-51d2-4150-b49d-e2c284deebe4" name="Changes" comment="'with tab description'">
-      <change afterPath="$PROJECT_DIR$/callbacks/closing_modal.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/static_inputs.py" beforeDir="false" afterPath="$PROJECT_DIR$/assets/static_inputs.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/navigation_pages.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/navigation_pages.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/to_store.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/to_store.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/update_robustness.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_robustness.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dashapp.py" beforeDir="false" afterPath="$PROJECT_DIR$/dashapp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/export_db_to_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/export_db_to_csv.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/validate_and_store_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/validate_and_store_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/C_pathways_robustness.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/C_pathways_robustness.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/D_pathways_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/D_pathways_maps.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

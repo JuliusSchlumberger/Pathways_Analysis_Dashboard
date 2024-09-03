@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function () {
     hoverInfoDiv.id = 'hover-info';
     hoverInfoDiv.style.position = 'absolute';
     hoverInfoDiv.style.width = '90%';  
-    hoverInfoDiv.style.top = '70%';  
+    hoverInfoDiv.style.top = '90%';  
     hoverInfoDiv.style.left = '50%'; 
     hoverInfoDiv.style.transform = 'translate(-50%, 0)';
     hoverInfoDiv.style.backgroundColor = '#f8f9fa';

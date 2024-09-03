@@ -1,5 +1,5 @@
 from utilities.design_choices import TEXTFIELD_WIDTH, VIZ_STYLE_FIG, LAYOUT_HEIGHT
-from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT
+from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT, MEASURE_ALTERNATIVES
 from utilities.create_suited_question import *
 from utilities.submission_button import submit_answers
 from utilities.instruction_template import create_instructions
@@ -72,17 +72,27 @@ testing_viz_questions = html.Div([
         'number'
     ),
 
-    multiple_choice(
-        'In a 1.5 \u2103 climate scenario, which pathway(s) seem to be the most flexible?',
-        'most_flexible15-input',
-        OPTION_DICT
-    ),
+    # multiple_choice(
+    #     'In a 1.5 \u2103 climate scenario, which pathway(s) seem to be the most flexible?',
+    #     'most_flexible15-input',
+    #     OPTION_DICT
+    # ),
 
-    multiple_choice(
-        'Which pathway(s) seem to be the most flexible alternatives in a 4 \u2103 climate scenario?',
-        'most_flexible4-input',
-        OPTION_DICT
-    ),
+    single_choice(
+            'In a 1.5 \u2103 climate scenario, which first implemented measure offers the most flexibility with regards to future options?',
+            'most_flexible15-input',
+            MEASURE_ALTERNATIVES,
+            'Dropdown'),
+single_choice(
+            'In a 4 \u2103 climate scenario, which first implemented measure offers the most flexibility with regards to future options?',
+            'most_flexible4-input',
+            MEASURE_ALTERNATIVES,
+            'Dropdown'),
+    # multiple_choice(
+    #     'Which pathway(s) seem to be the most flexible alternatives in a 4 \u2103 climate scenario?',
+    #     'most_flexible4-input',
+    #     OPTION_DICT
+    # ),
 
     single_choice(
         'When accounting for the presence of Farmer - Drought interactions, what is the general effect on the timing of measure implementation compared to the case without interactions '
@@ -98,7 +108,7 @@ testing_viz_questions = html.Div([
     ),
     single_output_question(
         'When accounting for the presence of Farmer - Drought interactions, by how many years does the '
-        'implementation of "Ditch System" in pathway 1 shift in a 4 \u2103 climate scenario compared to the case without interactions?',
+        'implementation of "Large Dike elevation increase" in pathway 6 shift in a 4 \u2103 climate scenario compared to the case without interactions (use negative values if implementation takes place earlier, otherwise positive values)?',
         'ditch_shift-input',
         'number'
     ),

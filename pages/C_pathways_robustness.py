@@ -96,7 +96,7 @@ testing_viz_questions = html.Div([
                     'robustness-input', OPTION_DICT),
 
     multiple_choice(
-        'Which pathway(s) results in the highest Impacted Lifestock for the highest Measure Costs '
+        'Which pathway(s) results in the highest Impacted Lifestock '
         'after 100 years in a 1.5 \u2103 climate scenario with no pathway interactions considered?',
         'tradeoff-input', 
         OPTION_DICT),
