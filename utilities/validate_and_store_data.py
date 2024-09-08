@@ -8,6 +8,7 @@ def validate_and_store_data(input_ids, values, stored_data):
     final_style = {'display': 'inline', 'marginLeft': '0.5vw', 'color': '#5cb85c'}
 
     for input_id, value in zip(input_ids, values):
+        # stored_data[input_id] = value
         if value is not None and value != '' and value != ' ' and value != []:
             print(input_id, value)
             stored_data[input_id] = value

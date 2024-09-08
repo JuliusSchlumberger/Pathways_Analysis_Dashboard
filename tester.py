@@ -1,144 +1,73 @@
-import pandas as pd
-import matplotlib.pyplot as plt
+import dash
+import dash_bootstrap_components as dbc
+from dash import dcc, html, Input, Output
+import plotly.graph_objs as go
+from plotly.subplots import make_subplots
+
+# Initialize Dash app with Bootstrap theme
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+# Create a figure with subplots
+fig = make_subplots(
+    rows=2, cols=2,  # 2x2 grid of subplots
+    subplot_titles=("Plot 1", "Plot 2", "Plot 3", "Plot 4"),  # Subplot titles
+    vertical_spacing=0.1,
+    horizontal_spacing=0.05
+)
+
+# Add traces to subplots
+fig.add_trace(go.Scatter(x=[1, 2, 3], y=[4, 5, 6], mode='lines', name="Plot 1"), row=1, col=1)
+fig.add_trace(go.Scatter(x=[1, 2, 3], y=[6, 5, 4], mode='lines', name="Plot 2"), row=1, col=2)
+fig.add_trace(go.Scatter(x=[1, 2, 3], y=[4, 5, 6], mode='lines', name="Plot 3"), row=2, col=1)
+fig.add_trace(go.Scatter(x=[1, 2, 3], y=[6, 5, 4], mode='lines', name="Plot 4"), row=2, col=2)
+
+# Define layout with Graph and Modal
+app.layout = dbc.Container([
+    dcc.Graph(id='main-plot', figure=fig, config={'displayModeBar': False}),  # Main plot
+    dbc.Modal(
+        [
+            dbc.ModalHeader(dbc.ModalTitle("Expanded Subplot")),
+            dbc.ModalBody(dcc.Graph(id='modal-plot')),  # Placeholder for enlarged plot
+        ],
+        id='modal',
+        size='xl',  # Large modal size
+        is_open=False  # Initially modal is closed
+    )
+])
 
 
-def plot_grouped_scatter(df, groups_dict):
-    """
-    Function to create a grouped scatter plot with custom annotations.
+# Callback to open modal and display the clicked subplot
+@app.callback(
+    [Output('modal', 'is_open'), Output('modal-plot', 'figure')],
+    [Input('main-plot', 'clickData')],
+    [dash.dependencies.State('modal', 'is_open')]
+)
+def display_modal_on_click(clickData, is_open):
+    if clickData:  # If a click event occurs
+        # Extract subplot information (row and col) from the clickData
+        point = clickData['points'][0]
+        x = point['x']
+        y = point['y']
+        subplot_title = point['curveNumber']
 
-    Parameters:
-    df (pd.DataFrame): The DataFrame containing the data. The first column should be the labels (y-axis), and the rest should be binary columns (x-axis).
-    groups_dict (dict): A dictionary where keys are tuples containing group name and color, and values are lists of column names in that group.
-                        Example: {('Group1', 'orange'): ['col1', 'col2'], ('Group2', 'green'): ['col3']}
-    """
-    # Define plot
-    fig, ax = plt.subplots(figsize=(12, 8))
+        # Create a new figure (enlarged version of the clicked subplot)
+        subplot_fig = go.Figure()
 
-    # Extract y-axis labels from the first column of the DataFrame
-    y_labels = df.iloc[:, 0]
-    y = range(len(y_labels))
+        # Add the clicked trace to the new figure
+        subplot_fig.add_trace(go.Scatter(x=[1, 2, 3], y=[y, y, y], mode='lines', name=f"Selected Plot"))
 
-    # Define x-axis labels from the dictionary
-    x_labels = []
-    colors = []
-    x_pos = []
-    current_x = 0
+        # Update the layout of the new figure (optional customization)
+        subplot_fig.update_layout(
+            title=f"Enlarged Subplot {subplot_title + 1}",
+            xaxis_title="X Axis",
+            yaxis_title="Y Axis",
+        )
 
-    for (group_name, color), columns in groups_dict.items():
-        x_labels.extend(columns)
-        colors.extend([color] * len(columns))
-        group_center = current_x + len(columns) / 2 - 0.5
-        plt.text(group_center, len(y_labels) + 15.5, group_name, ha='center', fontsize=12, color=color)
-        current_x += len(columns)
-        x_pos.extend(range(current_x - len(columns), current_x))
+        return not is_open, subplot_fig  # Open modal with updated figure
 
-    # Plot the scatter points
-    for j, tool in enumerate(y):
-        for i, col in enumerate(x_labels):
-            if df.iloc[j, df.columns.get_loc(col)] == 1:
-                ax.scatter(i, j, color=colors[i], s=100)
-
-    # Set the ticks and labels
-    ax.set_xticks(range(len(x_labels)))
-    ax.set_xticklabels(x_labels, rotation=90, ha='center')
-    ax.set_yticks(y)
-    ax.set_yticklabels(y_labels)
-
-    # Move the x-axis labels to the top
-    ax.xaxis.tick_top()
-
-    # Manually set the color of each x-axis label
-    for i, label in enumerate(ax.get_xticklabels()):
-        label.set_color(colors[i])
-
-    # Add gridlines for better visibility
-    ax.grid(True, linestyle='--', alpha=0.5)
-
-    # Set labels for x and y axes
-    ax.set_ylabel(df.columns[0])
-    ax.set_xlabel('Categories')
-
-    # Adjust the layout to ensure everything fits
-    plt.subplots_adjust(top=0.6, bottom=0.05, left=0.45, right=0.95)
-    fig.savefig('software_tools.png', dpi=300)
-    plt.show()
-
-# Example DataFrame
-# data = {
-#     "Tool": ["EMA Workbench", "Rhodium", "openMORDM", "PRIM (Python package)", "TMIP-EMAT", "PRIM (R package)",
-#              "SALib", "scikit-learn", "ScenarioWizard", "Colorado River Basin Post-2026 Operations Exploration Tool",
-#              "Colorado River Robustness Tradeoffs", "ARCH Resilience Pathways Visualization Tool",
-#              "Adaptation Catalyst", "Pathways Generator"],
-#     "Generation of Alternatives - Exploration": [1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
-#     "Generation of Alternatives - Search": [1, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
-#     "Generation of Alternatives - Prespecified": [1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0],
-#     "Generation of Alternatives - Iterative": [1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-#     "Generation of Scenarios - Exploration": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-#     "Generation of Scenarios - Search": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-#     "Generation of Scenarios - Prespecified": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-#     "Robustness Evaluation - Regret": [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0],
-#     "Robustness Evaluation - Satisficing": [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0],
-#     "Vulnerability Analysis - Subspace Partitioning": [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0],
-#     "Vulnerability Analysis - Sensitivity Analysis": [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0],
-# }
+    return is_open, go.Figure()  # Keep modal closed if no click event
 
 
-# df = pd.DataFrame(data)
-df = pd.read_excel('software_tools.xlsx')
-print(df.nunique())
-# # Group dictionary
-groups_dict = {
-    ('Scope', 'green'): [
-        'Generation of Alternatives',
-        'Generation of Scenarios',
-        'Robustness Evaluation',
-        'Vulnerability Analysis',
-        'Raising awareness'
-    ],
-    ('Methods', 'blue'): [
-        'RDM',
-        'DAPP',
-        'MCDA',
-        'Info-Gap',
-        'Decision Scaling'
-    ],
-    ('Level of Analysis', 'red'): [
-        'Level 1 (qualitative)',
-        'Level 2 (semi-quantiative)',
-        'Level 3 (qualitative)'
-    ],
-    ('Audience', 'orange'): [
-        'policy maker',
-        'technical expert',
-        'Project manager',
-        'general public'
-    ],
-    ('', 'purple'): [
-        'Case study example'
-    ]
-}
-
-# groups_dict = {
-#     ('Generation of Alternatives', 'orange'): [
-#         'Generation of Alternatives - Exploration',
-#         'Generation of Alternatives - Search',
-#         'Generation of Alternatives - Prespecified',
-#         'Generation of Alternatives - Iterative'
-#     ],
-#     ('Generation of Scenarios', 'green'): [
-#         'Generation of Scenarios - Exploration',
-#         'Generation of Scenarios - Search',
-#         'Generation of Scenarios - Prespecified'
-#     ],
-#     ('Robustness Evaluation', 'blue'): [
-#         'Robustness Evaluation - Regret',
-#         'Robustness Evaluation - Satisficing'
-#     ],
-#     ('Vulnerability Analysis', 'red'): [
-#         'Vulnerability Analysis - Subspace Partitioning',
-#         'Vulnerability Analysis - Sensitivity Analysis'
-#     ]
-# }
-
-# Call the function with the DataFrame and group dictionary
-plot_grouped_scatter(df, groups_dict)
+# Run the app
+if __name__ == "__main__":
+    app.run_server(debug=True)

@@ -2,17 +2,14 @@ import dash_bootstrap_components as dbc
 from dash import dcc, Input, Output, html, ALL, State
 from pages import *
 from components import header, TermsConditions
-from components.progress_modal import PROGRESS_MODAL
+from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
 # from callbacks import toggle_tabs
 import dash
 from callbacks import (navigation_pages, toggle_termsconditions,
                        to_store,
                        update_alternatives, \
                        update_robustness, \
-                       update_multi_sector_interactions, update_pathways, \
-                       toggle_termsconditions, update_surveys, toggle_word_explanations, update_figure_description,
-                        closing_modal
-
+                       update_pathways, update_surveys, toggle_word_explanations, update_figure_description,
                        )
 
 from dashapp import app
@@ -29,9 +26,11 @@ app.layout = dbc.Container(
         html.Div(id='page-content'),
         html.Div(id='document-title', style={'display': 'none'}),  # Hidden div for setting the document title
         dcc.Store(id='to_store-complete', data=False),
+
         # html.Div(id='submit-survey'),
         TermsConditions.TermConditions,
-        PROGRESS_MODAL
+        PROGRESS_MODAL,
+        FINAL_MODAL
     ],
     fluid=True,  # Change to 100vh to fill the screen height
 )

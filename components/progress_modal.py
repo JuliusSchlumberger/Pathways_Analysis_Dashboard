@@ -13,15 +13,6 @@ PROGRESS_MODAL = dbc.Modal(
             ]),
         ]
         ),
-        # dbc.ModalFooter(
-        #     dbc.Button(
-        #         "Agree",
-        #         id="close-progress",
-        #         className="ms-auto",
-        #         n_clicks=0,
-        #         disabled=True  # Initially disabled
-        #     )
-        # ),
     ],
     className="modal-xl",
     id="progress_modal",
@@ -51,15 +42,6 @@ FINAL_MODAL = dbc.Modal(
                    "conducted during the IIASA Young Scientists Summer Program (YSSP).")
         ]
         ),
-        # dbc.ModalFooter(
-        #     dbc.Button(
-        #         "Agree",
-        #         id="close-progress",
-        #         className="ms-auto",
-        #         n_clicks=0,
-        #         disabled=True  # Initially disabled
-        #     )
-        # ),
     ],
     className="modal-xl",
     id="end_modal",

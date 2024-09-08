@@ -24,7 +24,7 @@ def update_options_graph(risk_owner_hazard, stored_data):
         filtered_options = [{'label': key, 'value': value} for option in INTERACTIONS[risk_owner_hazard] for key, value
                             in
                             option.items()]
-        stored_data['interactions'] = filtered_options
+        # stored_data['interactions'] = filtered_options
         relevant_input = risk_owner_hazard
     else:
         message = generate_missing_input_message(('Risk Owner - Hazard Pair', stored_data.get('risk_owner_hazard', None)))

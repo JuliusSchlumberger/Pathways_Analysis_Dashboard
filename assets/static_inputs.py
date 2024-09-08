@@ -71,7 +71,7 @@ PAGES = [
     {"step": 2, "title": "2) Pathways Robustness", 'url': '/2-pathways-robustness', 'check': 'completed_pathways_robustness'},
     {"step": 3, "title": "3) Pathway Maps", 'url': '/3-pathways-maps', 'check': 'completed_pathways_maps'},
     # {"step": 4, "title": "4) Interaction Effects", 'url': '/4-interaction-effects'},
-    # {"step": 5, "title": "[5) Multi-risk Pathways]", 'url': '/5-multi_risk-pathways'}
+    {"step": 4, "title": "4) System Analysis", 'url': '/4-system_analysis'}
 ]
 
 INTERACTIONS = {ROH_DICT[ROH_DICT_LIST[0]]: [

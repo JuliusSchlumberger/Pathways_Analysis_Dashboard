@@ -17,14 +17,26 @@ def toggle_agree_button(checkbox_value):
 @app.callback(
     Output("termsconditions", "is_open"),
     Output("close-termsconditions", "n_clicks"),
+    Output('storage-general', 'data', allow_duplicate=True),
     # Output("content", "style"),
     Input("close-termsconditions", "n_clicks"),
     Input("close-termsconditions", "disabled"),
+    State('storage-general', 'data'),
     prevent_initial_call=True
 )
-def toggle_initial_agreement(n, close_disabled):
-    if n > 0 and close_disabled == False:   # submit activated
-        print(n, 'did accept')
-        return False, 1  # Hide modal and show content
-    return True, 0  # Default state
+def toggle_initial_agreement(n, close_disabled, stored_data):
+    print('terms and conditions')
+    if n > 0 and close_disabled == False:  # submit activated
+        stored_data['accepted_toc'] = 'yes'
+        return False, 1, stored_data  # Hide modal and show content
+    return True, 0, dash.no_update  # Default state
+    # print('terms and conditions')
+    # if stored_data.get('accepted_toc', 'no') == 'yes':
+    #     return False, 1, dash.no_update
+    # else:
+    #
+    #     if n > 0 and close_disabled == False:   # submit activated
+    #         stored_data['accepted_toc'] = 'yes'
+    #         return False, 1, stored_data  # Hide modal and show content
+    #     return True, 0, dash.no_update  # Default state
 

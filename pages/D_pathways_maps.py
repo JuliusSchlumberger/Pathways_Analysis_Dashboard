@@ -1,5 +1,5 @@
 from utilities.design_choices import TEXTFIELD_WIDTH, VIZ_STYLE_FIG, LAYOUT_HEIGHT
-from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT, MEASURE_ALTERNATIVES
+from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT, MEASURE_ALTERNATIVES, INTERACTIONS
 from utilities.create_suited_question import *
 from utilities.submission_button import submit_answers
 from utilities.instruction_template import create_instructions
@@ -40,6 +40,10 @@ selection_options = html.Div([
             html.Label('b) Accounting for interactions with...', className='mb-1'),
             dbc.Select(
                 id='multi_sectoral_interactions_maps',
+                options=[{'label': key, 'value': value} for option in INTERACTIONS['flood_agr'] for key, value
+                         in
+                         option.items()],
+                value='no_interactions',
                 className="mb-3"
             ),
         ], style={'marginBottom': '20px'}),

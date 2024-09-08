@@ -1,5 +1,5 @@
 from utilities.design_choices import TEXTFIELD_WIDTH, VIZ_STYLE_FIG, LAYOUT_HEIGHT
-from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT
+from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT, INTERACTIONS
 from utilities.create_suited_question import *
 from utilities.submission_button import submit_answers
 from utilities.instruction_template import create_instructions
@@ -71,7 +71,10 @@ selection_options = html.Div([
             html.Label('d) Accounting for interactions with...', className='mb-1'),
             dbc.Select(
                 id='multi_sectoral_interactions_robustness',
-                options=[],
+                options=[{'label': key, 'value': value} for option in INTERACTIONS['flood_agr'] for key, value
+                            in
+                            option.items()],
+                value= 'no_interactions',
                 # inline=True,
                 className="mb-3"
             ),
@@ -98,7 +101,7 @@ testing_viz_questions = html.Div([
     multiple_choice(
         'Which pathway(s) results in the highest Impacted Lifestock '
         'after 100 years in a 1.5 \u2103 climate scenario with no pathway interactions considered?',
-        'tradeoff-input', 
+        'tradeoff-input',
         OPTION_DICT),
     single_choice(
         'When accounting for the presence of Farmer - Drought interactions, do we experience more synergy or more trade-off effects in a 1.5 \u2103 climate scenario over the next 60 years?',
@@ -114,7 +117,7 @@ testing_viz_questions = html.Div([
     multiple_choice(
         'When accounting for the presence of Farmer - Drought strategies, which pathway(s) show the best '
         'robustness regarding Crop Productivity Loss in a 4 \u2103 climate scenario over the next 60 years?',
-        'interaction_least_productivity_loss-input', 
+        'interaction_least_productivity_loss-input',
         OPTION_DICT
     ),
 ])

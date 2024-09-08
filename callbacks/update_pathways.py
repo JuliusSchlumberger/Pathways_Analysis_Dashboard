@@ -21,6 +21,7 @@ from dashapp import app
 )
 def update_pathways_graph(pathname, map_scenario, interacting_sectors, stored_data):
     if pathname == '/3-pathways-maps':
+        print('pathways', stored_data)
         risk_owner_hazard = stored_data['risk_owner_hazard']
 
         # Overwrite scenarios if necessary
@@ -31,7 +32,6 @@ def update_pathways_graph(pathname, map_scenario, interacting_sectors, stored_da
         triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
         if triggered_id == 'multi_sectoral_interactions_maps':
-            print('interactions', interacting_sectors.split(','))
             stored_data['sectoral_interactions_maps'] = interacting_sectors.split(',')
         else:
             if interacting_sectors is not None:

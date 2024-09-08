@@ -58,9 +58,7 @@ def scale_figure(fig, storage):
         size = storage['viewport_size']
         width, height = size['width'], size['height']
         scale_factor = round(min(FIGURE_WIDTH / 12 * width / current_width, height * 0.8 / current_height), 2) * 0.9
-        print(f'fig: {current_width}/{current_height}')
-        print(
-            f'scale_factor: {scale_factor} - {FIGURE_WIDTH / 12 * width / current_width}/{height * .8 / current_height}')
+
         # Scale the dimensions
         if scale_factor < 10.2:
             scaled_width = current_width * scale_factor

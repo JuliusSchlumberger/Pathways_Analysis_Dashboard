@@ -44,12 +44,17 @@ def multiple_choice(question, question_id, option_dict):
             dbc.Label([question], html_for=question_id, style={'fontWeight': 'bold'}),
             dbc.FormText(id=f'{question_id}-validation', color='danger', children='This field is required.',
                          style={'display': 'none'}),
-            dbc.Checklist(
-                id=question_id,
-                options=[{'label': key, 'value': element} for key, element in option_dict.items()],
-                inline=True,
-                value=[],
-                className="mb-3"
+            dcc.Loading(
+                id=f'{question_id}-loading',
+                children=[
+                    dbc.Checklist(
+                        id=question_id,
+                        options=[{'label': key, 'value': element} for key, element in option_dict.items()],
+                        inline=True,
+                        className="mb-3"
+                    )
+                ],
+                type="default"  # Default loading spinner
             ),
             html.Hr(style={'borderWidth': "1px", 'borderColor': 'grey'}),
         ])
