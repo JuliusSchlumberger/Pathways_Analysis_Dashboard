@@ -1,0 +1,5 @@
+current 10[2]
+current 11[0]
+current 13[6]
+current 14[4]
+current 12[0]
