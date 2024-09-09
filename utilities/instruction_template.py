@@ -27,7 +27,7 @@ def create_instructions(intro_text, choices=False, figure_explanation=False, tes
     if figure_explanation:
         figure_instruction = [
             html.Hr(style={'borderWidth': "3px", 'borderColor': 'grey'}),
-            html.H4("How to read the figure"),
+            html.H4("How to read the figure on the right"),
             html.Div(figure_explanation, style={'marginTop': '20px'}),
         ]
     else:

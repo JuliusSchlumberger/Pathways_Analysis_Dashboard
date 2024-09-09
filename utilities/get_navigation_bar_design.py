@@ -1,5 +1,6 @@
 from assets.static_inputs import PAGES
 import dash_bootstrap_components as dbc
+from dash import html
 
 def get_step_from_pathname(pathname):
     try:

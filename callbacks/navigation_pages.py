@@ -14,7 +14,7 @@ from pages.A_introduction import layout_A
 from pages.B_alternative_pathways import layout_B
 from pages.C_pathways_robustness import layout_C
 from pages.D_pathways_maps import layout_D
-from pages.F_multi_risk_pathways import layout_F
+from pages.E_system_analysis import layout_E
 
 @app.callback(
     [
@@ -57,7 +57,7 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
             1: layout_B,
             2: layout_C,
             3: layout_D,
-            # 4: layout_E,
+            4: layout_E,
             # 5: layout_F
         }
 

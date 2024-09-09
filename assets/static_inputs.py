@@ -1,4 +1,4 @@
-
+import random
 
 ROH_DICT = {
     'Farmer - Flood': 'flood_agr',
@@ -32,6 +32,11 @@ SCENARIOS = {
 ROBUSTNESS_METRICS = {
     'mean across scenario': 'average',
     # 'any other metric preferred by stakeholder': 'whatever'
+}
+
+SYSTEM_ANALYSIS_FOCUS = {
+    'Pathways Maps': 'system_pathways',
+    'Pathways Performance': 'system_performance'
 }
 
 INTRO_TEXT = (
@@ -70,8 +75,7 @@ PAGES = [
     {"step": 1, "title": "1) Measure Sequences", 'url': '/1-measure-sequences', 'check': 'completed_alternative_pathways'},
     {"step": 2, "title": "2) Pathways Robustness", 'url': '/2-pathways-robustness', 'check': 'completed_pathways_robustness'},
     {"step": 3, "title": "3) Pathway Maps", 'url': '/3-pathways-maps', 'check': 'completed_pathways_maps'},
-    # {"step": 4, "title": "4) Interaction Effects", 'url': '/4-interaction-effects'},
-    {"step": 4, "title": "4) System Analysis", 'url': '/4-system_analysis'}
+    {"step": 4, "title": "4) System Analysis", 'url': '/4-system_analysis', 'check': 'completed_system_analysis'}
 ]
 
 INTERACTIONS = {ROH_DICT[ROH_DICT_LIST[0]]: [
@@ -115,6 +119,10 @@ ROH_DICT[ROH_DICT_LIST[3]]: [
 {f'{ROH_DICT_LIST[1]} & {ROH_DICT_LIST[2]} & {ROH_DICT_LIST[0]}': [ROH_DICT[ROH_DICT_LIST[1]], ROH_DICT[ROH_DICT_LIST[2]],ROH_DICT[ROH_DICT_LIST[0]]]},
 ],
 }
+
+
+
+RANDOM_DEFAULT = random.choice(list(WHICH_OPTIONS.keys()))
 
 CUSTOM_HOVER = '''
     document.addEventListener("DOMContentLoaded", function() {

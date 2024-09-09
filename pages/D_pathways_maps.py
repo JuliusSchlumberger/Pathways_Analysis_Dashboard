@@ -163,13 +163,13 @@ visualization = dbc.Col(
     [
 
         dbc.Row(
-            id='pathways-graph',
-            style={
+            id='pathways-graph', style={
                 'alignItems': 'top',
                 'height': '100%',  # Ensure Row fills the Col height
                 'display': 'flex',  # Flex display for row layout
                 'flex-grow': '1'  # Allow row to grow and fill space
             }
+
         ),
 
     ],

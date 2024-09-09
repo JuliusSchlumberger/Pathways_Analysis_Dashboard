@@ -123,7 +123,12 @@ text_field = create_instructions(introduction_text, selection_options, fig_expla
 
 
 visualization = dbc.Col([
-    dbc.Row(id='alternatives-graph', style={'alignItems': 'top'}),
+    dbc.Row(
+dcc.Loading(
+            id="loading-spinner",
+            type="circle",  # or "dot" or "default"
+            children=[html.Div(id='alternatives-graph'), ], style={'alignItems': 'top'}
+        ),)
 ], style=VIZ_STYLE_FIG, width=12-TEXTFIELD_WIDTH)
 
 

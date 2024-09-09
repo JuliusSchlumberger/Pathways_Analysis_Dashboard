@@ -5,12 +5,7 @@ from components import header, TermsConditions
 from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
 # from callbacks import toggle_tabs
 import dash
-from callbacks import (navigation_pages, toggle_termsconditions,
-                       to_store,
-                       update_alternatives, \
-                       update_robustness, \
-                       update_pathways, update_surveys, toggle_word_explanations, update_figure_description,
-                       )
+
 
 from dashapp import app
 
@@ -18,10 +13,11 @@ from dashapp import app
 server = app.server
 app.layout = dbc.Container(
     [
+        dcc.Store(id='viewport-size'),  # To store and use viewport data in other callbacks
         dcc.Location(id='url', refresh=False),
         html.Link(rel='shortcut icon', href='/assets/favicon.ico'),
         dcc.Store(id='storage-general', storage_type='session', data={}),  # Using session storage
-        dcc.Store(id='viewport-size'),  # To store and use viewport data in other callbacks
+
         header.header,
         html.Div(id='page-content'),
         html.Div(id='document-title', style={'display': 'none'}),  # Hidden div for setting the document title
@@ -41,19 +37,23 @@ app.layout.children.append(html.Div(id='dummy-output', style={'display': 'none'}
 app.clientside_callback(
     """
     function(trigger) {
+        console.log('Callback triggered!');  // Log a message to the console
+        console.log('Trigger value:', trigger);  // Log the input trigger value
+        console.log(window.innerWidth, window.innerHeight);
+
         return {
             width: window.innerWidth,
             height: window.innerHeight
         };
-
     }
     """,
     Output('viewport-size', 'data'),
     [
+        Input('termsconditions', 'is_open'),
     Input({'type': 'submit-survey', 'index': ALL}, 'n_clicks'),
     Input('prev-btn', 'n_clicks'),
     Input('next-btn', 'n_clicks'),
-    Input('url', 'pathname'),
+    Input('url', 'pathname')
     ],
 )
 
@@ -75,7 +75,12 @@ app.clientside_callback(
      Input({'type': 'submit-survey', 'index': ALL}, 'n_clicks'),],
 )
 
-
+from callbacks import (navigation_pages, toggle_termsconditions,
+                       to_store,
+                       update_alternatives, \
+                       update_robustness, \
+                       update_pathways, update_surveys, toggle_word_explanations, update_figure_description, toggle_system_analysis_legend, update_figure_system_analysis, update_system_analysis_layout
+                       )
 
 if __name__ == '__main__':
     app.run_server(debug=True)

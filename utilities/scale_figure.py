@@ -67,8 +67,8 @@ def scale_figure(fig, storage):
                 width=scaled_width,
                 height=scaled_height,
                 autosize=False,
-                title_font_size=FONTS['title'] * scale_factor,
-                font_size=FONTS['main'] * scale_factor,
+                title_font_size=fig.layout.title.font.size * scale_factor,
+                font_size=fig.layout.font.size * scale_factor,
             )
 
             # Scale annotation font sizes

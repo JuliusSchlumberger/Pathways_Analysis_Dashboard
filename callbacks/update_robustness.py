@@ -10,9 +10,9 @@ from assets.static_inputs import CUSTOM_LEGEND_CHANGE
 @app.callback(
     [
         Output('robustness-graph', 'children'),
-        Output('timehorizon', 'value'),
-        Output('scenarios', 'value'),
-        Output('robustness_metric', 'value'),
+        Output('timehorizon', 'value', allow_duplicate=True),
+        Output('scenarios', 'value', allow_duplicate=True),
+        Output('robustness_metric', 'value', allow_duplicate=True),
         Output('options', 'value', allow_duplicate=True),
         Output('multi_sectoral_interactions_robustness', 'value', allow_duplicate=True),
         Output('storage-general', 'data', allow_duplicate=True),
@@ -28,9 +28,9 @@ from assets.static_inputs import CUSTOM_LEGEND_CHANGE
     prevent_initial_call=True
 )
 def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, interacting_sectors, stored_data):
-    if any(i is None for i in
-           [timehorizon, scenarios, robustness_metric, options, interacting_sectors]):
-        return (dash.no_update, dash.no_update, *[dash.no_update] * 5)
+    # if any(i is None for i in
+    #        [timehorizon, scenarios, robustness_metric, options, interacting_sectors]):
+    #     return (dash.no_update, dash.no_update, *[dash.no_update] * 5)
 
     print('robustness', stored_data)
     # print(timehorizon, scenarios, robustness_metric)
@@ -61,8 +61,9 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
 
     if message:
         return html.Div('Specify the focus of the analysis (see left), to see a visualization',
-                         style={'color': 'red', 'fontSize': '1vw', 'fontWeight': 'bold', 'marginTop': '20px',
-                                'textAlign': 'center'}), dash.no_update, *[dash.no_update] * 5
+                        style={'color': 'red', 'fontSize': '1vw', 'fontWeight': 'bold', 'marginTop': '20px',
+                               'textAlign': 'center'}), *[dash.no_update] * 4, dash.no_update, stored_data
+
     if stored_data.get('interacting_sectors_robustness', None) == None or stored_data.get('interacting_sectors_robustness', None) == ['no_interactions']:
         # Assume we have necessary details in stored_data to generate the figure
         file_path = f'assets/figures/{stored_data["robustness_plot"]}/' \

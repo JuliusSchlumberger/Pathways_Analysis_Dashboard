@@ -19,7 +19,7 @@ from pages.A_introduction import layout_A
 from pages.B_alternative_pathways import layout_B
 from pages.C_pathways_robustness import layout_C
 from pages.D_pathways_maps import layout_D
-from pages.F_multi_risk_pathways import layout_F
+from pages.E_system_analysis import layout_E
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
@@ -28,7 +28,7 @@ step_content_dict = {
             1: layout_B,
             2: layout_C,
             3: layout_D,
-            # 4: layout_E,
+            4: layout_E,
             # 5: layout_F
         }
 
@@ -72,7 +72,7 @@ def save_response_to_db(DATABASE_URL, user_id, data):
 )
 def update_store_complete(n_clicks, stored_data):
     # Only update the store when the survey is complete and submit button is clicked
-    if n_clicks:
+    if n_clicks and any(click > 0 for click in n_clicks if click is not None):
         try:
             save_response_to_db(DATABASE_URL, stored_data['existing_id'], stored_data)
         except Exception as e:
@@ -238,8 +238,8 @@ def handle_alternative_pathways(
 ):
     print('alternattive pathways is called')
     input_ids = [
-        'pathway_number', 'f_resilient_crops', 'long_term', 'flexibility', 'easy',
-        'confidence', 'enough_information', 'scalability', 'alternative_challenge', 'alternative_advantage'
+        'pathway_number', 'f_resilient_crops', 'long_term', 'flexibility', 'alternatives_easy',
+        'alternatives_confidence', 'alternatives_enough_information', 'alternatives_scalability', 'alternative_challenge', 'alternative_advantage'
     ]
 
     if n_clicks == 0:
@@ -361,8 +361,8 @@ def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff
     print('robustness called')
     input_ids = [
         'coding', 'crop_loss', 'robustness', 'tradeoff', 'general_interactions', 'interaction_least_productivity_loss',
-        'likkert_use-robustness_easy', 'likkert_use-robustness_confidence', 'likkert_use-robustness_enough_information',
-        'likkert_use-robustness_scalability', 'robustness_challenge', 'robustness_advantage'
+        'robustness_easy', 'robustness_enough_information', 'robustness_enough_informationn',
+        'robustness_scalability', 'robustness_challenge', 'robustness_advantage'
     ]
 
     if n_clicks == 0:
@@ -452,7 +452,7 @@ def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff
         *[Output(f"step-{i}-link", "children", allow_duplicate=True) for i in range(len(PAGES))],
         Output('url', 'pathname', allow_duplicate=True),
         Output("progress_modal", "is_open", allow_duplicate=True),
-        Output('end_modal', 'is_open', allow_duplicate=True)
+        # Output('end_modal', 'is_open', allow_duplicate=True)
     ],
     [
         Input({'type': 'submit-survey', 'index': 4}, 'n_clicks'),
@@ -481,8 +481,8 @@ def handle_pathways_maps(n_clicks, first_measure, number_measures, most_flexible
     print('pathways called')
     input_ids = [
         'first_measure', 'number_measures', 'most_flexible15', 'most_flexible4', 'timing_shifts', 'ditch_shift',
-        'likkert_use-pathways_maps_easy', 'likkert_use-pathways_maps_confidence',
-        'likkert_use-pathways_maps_enough_information', 'likkert_use-pathways_maps_scalability', 'pathways_challenge',
+        'pathways_maps_easy', 'pathways_maps_confidence',
+        'pathways_maps_enough_information', 'pathways_maps_scalability', 'pathways_challenge',
         'pathways_advantage'
     ]
 
@@ -496,7 +496,7 @@ def handle_pathways_maps(n_clicks, first_measure, number_measures, most_flexible
             *[dash.no_update] * len(PAGES),
             dash.no_update,
             False,
-            False
+            # False
         )
 
     print('pathways activated')
@@ -526,8 +526,9 @@ def handle_pathways_maps(n_clicks, first_measure, number_measures, most_flexible
             stored_data,
             final_comment, final_style,
             *validation_styles, to_store_complete,
-            dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, False, True)
+            content, *page_names, stored_data['current_url'], False
+            # True
+        )
 
     else:
         stored_data['completed_pathways_maps'] = 'no'
@@ -538,4 +539,159 @@ def handle_pathways_maps(n_clicks, first_measure, number_measures, most_flexible
             final_comment, final_style,
             *validation_styles, to_store_complete,
             dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, True, False)
+                PAGES), dash.no_update, True)
+
+
+@app.callback(
+    [
+        Output('system_analysis_pathways_1560-input', 'value'),
+        Output('system_analysis_pathways_1530-input', 'value'),
+        Output('system_analysis_pathways_which_better-input', 'value', allow_duplicate=True),
+        Output('system_analysis_performance_1560-input', 'value', allow_duplicate=True),
+        Output('system_analysis_performance_1530-input', 'value'),
+        Output('system_analysis_performance_which_better-input', 'value'),
+        Output("likkert_use-system_analysis_pathways_easy", 'value'),
+        Output("likkert_use-system_analysis_performance_easy", 'value'),
+        Output("likkert_use-system_analysis_pathways_confidence", 'value'),
+        Output("likkert_use-system_analysis_performance_confidence", 'value'),
+        Output("likkert_use-system_analysis_pathways_enough_information", 'value'),
+        Output("likkert_use-system_analysis_performance_enough_information", 'value'),
+Output("likkert_use-system_analysis_pathways_scalability", 'value'),
+        Output("likkert_use-system_analysis_performance_scalability", 'value'),
+        Output("system_analysis_challenge", 'value'),
+        Output("system_analysis_advantage", 'value'),
+        Output('storage-general', 'data', allow_duplicate=True),
+        Output('system_analysis-validation', 'children'),
+        Output('system_analysis-validation', 'style'),
+        Output('system_analysis_pathways_1560-input-validation', 'style'),
+        Output('system_analysis_pathways_1530-input-validation', 'style'),
+        Output('system_analysis_pathways_which_better-input-validation', 'style'),
+        Output('system_analysis_performance_1560-input-validation', 'style'),
+        Output('system_analysis_performance_1530-input-validation', 'style'),
+        Output('system_analysis_performance_which_better-input-validation', 'style'),
+        Output("likkert_use-system_analysis_pathways_easy-validation", 'style'),
+        Output("likkert_use-system_analysis_performance_easy-validation", 'style'),
+        Output("likkert_use-system_analysis_pathways_confidence-validation", 'style'),
+        Output("likkert_use-system_analysis_performance_confidence-validation", 'style'),
+        Output("likkert_use-system_analysis_pathways_enough_information-validation", 'style'),
+        Output("likkert_use-system_analysis_performance_enough_information-validation", 'style'),
+        Output("likkert_use-system_analysis_pathways_scalability-validation", 'style'),
+        Output("likkert_use-system_analysis_performance_scalability-validation", 'style'),
+        Output("system_analysis_challenge-validation", 'style'),
+        Output("system_analysis_advantage-validation", 'style'),
+        # Output('end_modal', 'is_open'),
+        Output('to_store-complete', 'data', allow_duplicate=True),
+        Output('page-content', 'children', allow_duplicate=True),
+        *[Output(f"step-{i}-link", "children", allow_duplicate=True) for i in range(len(PAGES))],
+        Output('url', 'pathname', allow_duplicate=True),
+        Output("progress_modal", "is_open", allow_duplicate=True),
+        Output('end_modal', 'is_open', allow_duplicate=True)
+    ],
+    [
+        Input({'type': 'submit-survey', 'index': 5}, 'n_clicks'),
+    ],
+    [
+        State('system_analysis_pathways_1560-input', 'value'),
+        State('system_analysis_pathways_1530-input', 'value'),
+        State('system_analysis_pathways_which_better-input', 'value'),
+        State('system_analysis_performance_1560-input', 'value'),
+        State('system_analysis_performance_1530-input', 'value'),
+        State('system_analysis_performance_which_better-input', 'value'),
+        State("likkert_use-system_analysis_pathways_easy", 'value'),
+        State("likkert_use-system_analysis_performance_easy", 'value'),
+        State("likkert_use-system_analysis_pathways_confidence", 'value'),
+        State("likkert_use-system_analysis_performance_confidence", 'value'),
+        State("likkert_use-system_analysis_pathways_enough_information", 'value'),
+        State("likkert_use-system_analysis_performance_enough_information", 'value'),
+        State("likkert_use-system_analysis_pathways_scalability", 'value'),
+        State("likkert_use-system_analysis_performance_scalability", 'value'),
+        State("system_analysis_challenge", 'value'),
+        State("system_analysis_advantage", 'value'),
+        State('storage-general', 'data'),
+        State('url', 'pathname')
+    ],
+    prevent_initial_call=True
+)
+def handle_system_analysis(n_clicks, system_analysis_pathways_1560, system_analysis_pathways_1530,
+                         system_analysis_pathways_which_better, system_analysis_performance_1560,
+                         system_analysis_performance_1530, system_analysis_performance_which_better,
+                         system_analysis_pathways_easy, system_analysis_performance_easy,
+                         system_analysis_pathways_confidence,
+                         system_analysis_performance_confidence, system_analysis_pathways_enough_information,
+                         system_analysis_performance_enough_information, system_analysis_pathways_scalability,
+                         system_analysis_performance_scalability, system_analysis_challenge, system_analysis_advantage,
+                         stored_data, url):
+    print('pathways called')
+    input_ids = [
+        'system_analysis_pathways_1560', 'system_analysis_pathways_1530', 'system_analysis_pathways_which_better',
+        'system_analysis_performance_1560',
+        'system_analysis_performance_1530', 'system_analysis_performance_which_better', 'system_analysis_pathways_easy',
+        'system_analysis_performance_easy', 'system_analysis_pathways_confidence',
+        'system_analysis_performance_confidence', 'system_analysis_pathways_enough_information',
+        'system_analysis_performance_enough_information', 'system_analysis_pathways_scalability',
+        'system_analysis_performance_scalability', 'system_analysis_challenge', 'system_analysis_advantage',
+    ]
+
+    if n_clicks == 0:
+        return (
+            *[stored_data.get(in_id, None) for in_id in input_ids],
+            stored_data,
+            *[dash.no_update] * (len(input_ids) + 2),
+            False,
+            dash.no_update,
+            *[dash.no_update] * len(PAGES),
+            dash.no_update,
+            False,
+            # False
+        )
+
+    print('pathways activated')
+    values = [
+        system_analysis_pathways_1560, system_analysis_pathways_1530,
+        system_analysis_pathways_which_better, system_analysis_performance_1560,
+        system_analysis_performance_1530, system_analysis_performance_which_better,
+        system_analysis_pathways_easy, system_analysis_performance_easy,
+        system_analysis_pathways_confidence,
+        system_analysis_performance_confidence, system_analysis_pathways_enough_information,
+        system_analysis_performance_enough_information, system_analysis_pathways_scalability,
+        system_analysis_performance_scalability, system_analysis_challenge, system_analysis_advantage,
+    ]
+
+    validation_styles, stored_data, final_comment, final_style = validate_and_store_data(
+        input_ids, values, stored_data)
+    if final_style['color'] == '#5cb85c':
+        stored_data['completed_system_analysis'] = 'yes'
+        current_step = get_step_from_pathname(stored_data['current_url'])
+        new_step = min(current_step + 1, len(PAGES) - 1)
+        to_store_complete = True
+
+        new_url = PAGES[new_step]['url']
+        stored_data['current_url'] = new_url
+
+        # Select the correct layout based on the new step
+        content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
+
+        page_names = create_link_design(new_step)
+
+        return (
+            *[stored_data.get(in_id, None) for in_id in input_ids],
+            stored_data,
+            final_comment, final_style,
+            *validation_styles, to_store_complete,
+            dash.no_update, *[dash.no_update] * len(
+                PAGES), dash.no_update, False,
+            True
+        )
+
+    else:
+        stored_data['completed_pathways_maps'] = 'no'
+        to_store_complete = False
+        return (
+            *[stored_data.get(in_id, None) for in_id in input_ids],
+            stored_data,
+            final_comment, final_style,
+            *validation_styles, to_store_complete,
+            dash.no_update, *[dash.no_update] * len(
+                PAGES), dash.no_update, True,
+            False
+        )

@@ -1,13 +1,11 @@
 from utilities.design_choices import TEXTFIELD_WIDTH, VIZ_STYLE_FIG, LAYOUT_HEIGHT
-from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT, INTERACTIONS
+from assets.static_inputs import INTRO_TEXT, TIMEHORIZONS, SCENARIOS, WHICH_OPTIONS, ROBUSTNESS_METRICS, OPTION_DICT, INTERACTIONS, RANDOM_DEFAULT
 from utilities.create_suited_question import *
 from utilities.submission_button import submit_answers
 from utilities.instruction_template import create_instructions
 from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
 from dashapp import dash
-import random
 
-random_default = random.choice(list(WHICH_OPTIONS.keys()))
 
 dash.register_page(__name__, path='/2-pathways-robustness')
 
@@ -60,8 +58,8 @@ selection_options = html.Div([
                     # # Comment out the rest
                     options=[
                         {
-                            'label': random_default,
-                            'value': WHICH_OPTIONS[random_default],
+                            'label': RANDOM_DEFAULT,
+                            'value': WHICH_OPTIONS[RANDOM_DEFAULT],
                         }
                     ],
                     # value=random_default,  # Set the randomized value as the default
@@ -165,11 +163,14 @@ text_field = create_instructions(introduction_text, selection_options, fig_expla
 
 
 visualization = dbc.Col([
-    dbc.Row(id='robustness-graph', style={'alignItems': 'top',
+    dbc.Row(
+id='robustness-graph', style={'alignItems': 'top',
                                           'height': '100%',  # Ensure Row fills the Col height
                                           'display': 'flex',  # Flex display for row layout
                                           'flex-grow': '1'  # Allow row to grow and fill space
-                                          }),
+                                          }
+
+    ),
 ], style=VIZ_STYLE_FIG, width=12-TEXTFIELD_WIDTH)
 
 

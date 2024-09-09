@@ -15,9 +15,10 @@ from utilities.generate_missing_message import generate_missing_input_message
     [Input('risk_owner_hazard', 'value'),
      ],
 State('storage-general', 'data'),
+    State('viewport-size', 'data'),
 prevent_initial_call=True
 )
-def update_options_graph(risk_owner_hazard, stored_data):
+def update_options_graph(risk_owner_hazard, stored_data, viewport):
     print('alternatives', stored_data)
     if risk_owner_hazard is not None:   # if this is not empty
         stored_data['risk_owner_hazard'] = risk_owner_hazard
