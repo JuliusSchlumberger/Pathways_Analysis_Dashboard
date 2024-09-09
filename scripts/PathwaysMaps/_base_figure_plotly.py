@@ -69,7 +69,7 @@ def base_figure_plotly(self, data, action_pairs, action_transitions, offsets, pr
     fig.update_xaxes({'range': (planning_horizon[0], planning_horizon[1]), 'autorange': False})
 
     # Add an image under the legend to the left
-    base64_image = image_to_base64(f'{LEGENDS_LOCATION}/vertical_{risk_owner_hazard}_full_legend.png')
+    base64_image = image_to_base64(f'{LEGENDS_LOCATION}/{risk_owner_hazard}/colorized/vertical_{risk_owner_hazard}_full_legend.png')
     fig.add_layout_image(
         dict(
             source=base64_image,
@@ -155,7 +155,7 @@ def pathways_plotly_with_background(self, data_new, action_pairs_new, action_tra
         )
 
         # Add an image under the legend to the left
-        base64_image = image_to_base64(f'{LEGENDS_LOCATION}/vertical_{risk_owner_hazard}_full_legend.png')
+        base64_image = image_to_base64(f'{LEGENDS_LOCATION}/{risk_owner_hazard}/colorized/vertical_{risk_owner_hazard}_full_legend.png')
         fig.add_layout_image(
             dict(
                 source=base64_image,

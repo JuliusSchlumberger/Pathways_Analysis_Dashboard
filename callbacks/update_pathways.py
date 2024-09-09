@@ -6,6 +6,7 @@ import json
 from assets.static_inputs import CUSTOM_HOVER
 from utilities.scale_figure import scale_figure
 from utilities.generate_missing_message import generate_missing_input_message
+from scripts.PathwaysMaps.generate_pathways_map import generate_pathways_map
 from dashapp import app
 
 @app.callback(
@@ -32,38 +33,37 @@ def update_pathways_graph(pathname, map_scenario, interacting_sectors, stored_da
         triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
         if triggered_id == 'multi_sectoral_interactions_maps':
-            stored_data['sectoral_interactions_maps'] = interacting_sectors.split(',')
+            stored_data['sectoral_interactions_maps'] = interacting_sectors
         else:
             if interacting_sectors is not None:
-                stored_data['sectoral_interactions_maps'] = interacting_sectors.split(',')
+                stored_data['sectoral_interactions_maps'] = interacting_sectors
             else:
-                stored_data['sectoral_interactions_maps'] = None
+                stored_data['sectoral_interactions_maps'] = 'no_interactions'
 
         message = generate_missing_input_message(
             ('Climate Scenario', stored_data.get('scenarios', None)))
-
+        print(stored_data['sectoral_interactions_maps'])
         if message:
             return [html.Div('Specify the focus of the analysis (see left), to see a visualization',
                              style={'color': 'red', 'fontSize': '1vw', 'fontWeight': 'bold', 'marginTop': '20px',
                                     'textAlign': 'center'})],dash.no_update, dash.no_update, dash.no_update
         if stored_data.get('sectoral_interactions_maps', None) == None or stored_data.get(
-                'sectoral_interactions_maps', None) == ['no_interactions']:
-            figure_identifier = f'assets/figures/PathwaysMaps/{risk_owner_hazard}/pathways_map_{risk_owner_hazard}_{stored_data["scenarios"]}.json'
+                'sectoral_interactions_maps', None) == 'no_interactions':
+            fig = generate_pathways_map([stored_data['scenarios']], risk_owner_hazard, interacting_sector_string=False)
+            # figure_identifier = f'assets/figures/PathwaysMaps/{risk_owner_hazard}/pathways_map_{risk_owner_hazard}_{stored_data["scenarios"]}.json'
             interactions = 'no'
         else:
             interactions = 'yes'
-            interacting_sector_string = stored_data["risk_owner_hazard"] + '&' + '&'.join(
-                stored_data['sectoral_interactions_maps'])
-            figure_identifier = f'assets/figures/PathwaysMaps/' \
-                    f'{stored_data["risk_owner_hazard"]}/' \
-                    f'pathways_map_{stored_data["risk_owner_hazard"]}_{stored_data["scenarios"]}_combi_{interacting_sector_string}.json'
+
+            interacting_sector_string = stored_data["risk_owner_hazard"] + '&' + '&'.join(interacting_sectors.split(','))
+            fig = generate_pathways_map([stored_data['scenarios']], risk_owner_hazard, interacting_sector_string=interacting_sector_string)
 #
         # Read the JSON file and create the Plotly figure
-        with open(figure_identifier, 'r') as f:
-            fig_dict = json.load(f)
-            fig = pio.from_json(json.dumps(fig_dict))
-
-        fig, scaled_height, scaled_width = scale_figure(fig, stored_data)
+        # with open(figure_identifier, 'r') as f:
+        #     fig_dict = json.load(f)
+        #     fig = pio.from_json(json.dumps(fig_dict))
+        #
+        # fig, scaled_height, scaled_width = scale_figure(fig, stored_data)
 
         # Convert the figure to an HTML string
         fig_html = pio.to_html(fig, full_html=False,  include_plotlyjs='cdn')

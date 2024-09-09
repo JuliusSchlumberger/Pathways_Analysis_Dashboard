@@ -3,7 +3,8 @@ from dash import html, dcc, callback, Input, Output, State,callback_context
 import plotly.io as pio
 from utilities.scale_figure import scale_figure
 from assets.static_inputs import INTERACTIONS
-
+from scripts.DecisionTree.DecisionTree import decision_tree
+from scripts.main_central_path_directions import FILTER_CONDITIONS, DIRECTORY_MEASURE_LOGOS, INPUT_ALTERNATIVES
 from dashapp import app
 from utilities.generate_missing_message import generate_missing_input_message
 
@@ -35,12 +36,13 @@ def update_options_graph(risk_owner_hazard, stored_data, viewport):
                                     'textAlign': 'center'})], dash.no_update, dash.no_update
         relevant_input = stored_data['risk_owner_hazard']
 
-    figure_identifier = f'assets/figures/decision_tree/alternative_pathways_{relevant_input}.json'
-
-    with open(figure_identifier, 'r') as f:
-        fig = pio.from_json(f.read())
-
-    fig, _, _ = scale_figure(fig, stored_data)
+    fig = decision_tree(f'{INPUT_ALTERNATIVES}{risk_owner_hazard}.txt', risk_owner_hazard,
+                        DIRECTORY_MEASURE_LOGOS + '/colorized', FILTER_CONDITIONS[risk_owner_hazard])
+    # figure_identifier = f'assets/figures/decision_tree/alternative_pathways_{relevant_input}.json'
+    # with open(figure_identifier, 'r') as f:
+    #     fig = pio.from_json(f.read())
+    #
+    # fig, _, _ = scale_figure(fig, stored_data)
 
     return [dcc.Graph(figure=fig, responsive=False)], stored_data, relevant_input
 

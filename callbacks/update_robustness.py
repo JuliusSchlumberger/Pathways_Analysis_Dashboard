@@ -5,6 +5,7 @@ import plotly.io as pio
 from utilities.generate_missing_message import generate_missing_input_message
 from utilities.scale_figure import scale_figure
 from assets.static_inputs import CUSTOM_LEGEND_CHANGE
+from scripts.figures_pathways_robustness import pathways_robustness, pathways_robustness_with_interactions
 
 
 @app.callback(
@@ -66,14 +67,15 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
 
     if stored_data.get('interacting_sectors_robustness', None) == None or stored_data.get('interacting_sectors_robustness', None) == ['no_interactions']:
         # Assume we have necessary details in stored_data to generate the figure
-        file_path = f'assets/figures/{stored_data["robustness_plot"]}/' \
-                    f'{stored_data["risk_owner_hazard"]}/' \
-                    f'plot_{stored_data["timehorizon"]}_{ stored_data["scenarios"]}_{stored_data["robustness_metric"]}.json'
+        # file_path = f'assets/figures/{stored_data["robustness_plot"]}/' \
+        #             f'{stored_data["risk_owner_hazard"]}/' \
+        #             f'plot_{stored_data["timehorizon"]}_{ stored_data["scenarios"]}_{stored_data["robustness_metric"]}.json'
+        #
+        # with open(file_path, 'r') as f:
+        #     fig = pio.from_json(f.read())
+        fig = pathways_robustness([scenarios], options, stored_data['risk_owner_hazard'], robustness_metric, timehorizon)
 
-        with open(file_path, 'r') as f:
-            fig = pio.from_json(f.read())
-
-        fig, _, _ = scale_figure(fig, stored_data)
+        # fig, _, _ = scale_figure(fig, stored_data)
 
         if stored_data["robustness_plot"] == 'StackedBar':
             # Convert the figure to an HTML string
@@ -105,14 +107,17 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
 
     else:
         interacting_sector_string = stored_data["risk_owner_hazard"] + '&' + '&'.join(stored_data['interacting_sectors_robustness'])
-        file_path = f'assets/figures/{stored_data["robustness_plot"]}/' \
-                                f'{stored_data["risk_owner_hazard"]}/' \
-                            f'plot_{stored_data["timehorizon"]}_{ stored_data["scenarios"]}_{stored_data["robustness_metric"]}_combi_{interacting_sector_string}.json'
+        # file_path = f'assets/figures/{stored_data["robustness_plot"]}/' \
+        #                         f'{stored_data["risk_owner_hazard"]}/' \
+        #                     f'plot_{stored_data["timehorizon"]}_{ stored_data["scenarios"]}_{stored_data["robustness_metric"]}_combi_{interacting_sector_string}.json'
+        #
+        # with open(file_path, 'r') as f:
+        #     fig = pio.from_json(f.read())
 
-        with open(file_path, 'r') as f:
-            fig = pio.from_json(f.read())
+        fig = pathways_robustness_with_interactions([scenarios], options, stored_data['risk_owner_hazard'], robustness_metric,
+                                              timehorizon, interacting_sector_string)
 
-        fig, scaled_height, scaled_width = scale_figure(fig, stored_data)
+        # fig, scaled_height, scaled_width = scale_figure(fig, stored_data)
 
         if stored_data["robustness_plot"] == 'StackedBar':
             # Convert the figure to an HTML string

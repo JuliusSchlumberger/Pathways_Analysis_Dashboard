@@ -80,6 +80,7 @@ def get_sequences_only(input_file, file_sequence_only, renaming_dict, sector_pat
     Returns:
     - measures_in_pathways: A dictionary mapping pathways to their associated measures.
     """
+    print(input_file)
     with open(input_file, 'r') as file:
         all_lines = file.readlines()  # Read all lines from the file
     full_input = [item.split(' ') for item in all_lines]  # Split lines into components

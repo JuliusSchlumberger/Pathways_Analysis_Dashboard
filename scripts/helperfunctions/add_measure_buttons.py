@@ -2,7 +2,7 @@ from scripts.main_central_path_directions import LEGENDS_LOCATION
 from scripts.helperfunctions.images_as_base64 import image_to_base64
 def add_measure_buttons(fig, y_ticks, risk_owner_hazard, x_start=0.23, xref='paper', yref='y', xanchor='left'):
     for tick, y_tick in enumerate(y_ticks.values):
-        img_path = f'{LEGENDS_LOCATION}/{risk_owner_hazard}_pathway_{str(y_tick)}_ylabel.png'
+        img_path = f'{LEGENDS_LOCATION}/{risk_owner_hazard}/colorized/{risk_owner_hazard}_pathway_{str(y_tick)}_ylabel.png'
 
         base64_image = image_to_base64(img_path)
         fig.add_layout_image(
@@ -22,7 +22,7 @@ def add_measure_buttons(fig, y_ticks, risk_owner_hazard, x_start=0.23, xref='pap
 
 def add_measure_buttons_PCP(fig, y_ticks, risk_owner_hazard, x_start=0.23, xref='paper', yref='paper', xanchor='left'):
     for y_tick in y_ticks.keys():
-        img_path = f'{LEGENDS_LOCATION}/{risk_owner_hazard}_pathway_{str(y_tick)}_ylabel.png'
+        img_path = f'{LEGENDS_LOCATION}/{risk_owner_hazard}/colorized/{risk_owner_hazard}_pathway_{str(y_tick)}_ylabel.png'
 
         base64_image = image_to_base64(img_path)
         fig.add_layout_image(

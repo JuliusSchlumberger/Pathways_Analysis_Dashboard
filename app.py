@@ -24,7 +24,7 @@ app.layout = dbc.Container(
         dcc.Store(id='to_store-complete', data=False),
 
         # html.Div(id='submit-survey'),
-        TermsConditions.TermConditions,
+        # TermsConditions.TermConditions,
         PROGRESS_MODAL,
         FINAL_MODAL
     ],
