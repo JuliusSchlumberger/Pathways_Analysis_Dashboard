@@ -4,7 +4,6 @@ from scripts.design_choices.main_dashboard_dropdowns import ROH_DICT_INV
 from scripts.design_choices.main_dashboard_design_choices import FIG_DIMENSIONS, FONTS
 from scripts.main_central_path_directions import LEGENDS_LOCATION
 from scripts.helperfunctions.get_table_for_plot import get_table_for_plot_multi_risk
-from scripts.StackedBar.get_change_between_old_and_new import get_change_between_old_and_new
 from scripts.StackedBar.add_trace_one_bar import add_traces_oneBar_multi_risk
 from scripts.StackedBar.add_custom_legend import add_custom_legend
 from scripts.helperfunctions.images_as_base64 import image_to_base64
