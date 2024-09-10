@@ -62,7 +62,7 @@ def add_traces_oneBar(plot_objectives, sector_objectives, plot_df, text_df, text
             # Since you are using RGB, you need only the first 3 channels
             rgb_color = rgba_color_int[:3]
             pattern = dict(shape='/', bgcolor=rgb_color, fgcolor='white') if col.endswith('_tradeoff') else dict(shape='.',
-                                                                                                            bgcolor=color,
+                                                                                                            bgcolor=rgb_color,
                                                                                                              fgcolor='white') if col.endswith(
                 '_synergy') else None
 

@@ -11,6 +11,9 @@ from dashapp import app
     prevent_initial_call=True
 )
 def update_paragraph(url, option):
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('update_paragraph', triggered_id)
     fig_description = html.P()
 
     if url == '/2-pathways-robustness':

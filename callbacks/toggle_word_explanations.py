@@ -10,6 +10,8 @@ from dashapp import app
     [State({"type": "modal", "index": MATCH}, "is_open")]
 )
 def toggle_word_explanations(n1, n2, is_open):
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
     if n1 or n2:
         return not is_open
     return is_open

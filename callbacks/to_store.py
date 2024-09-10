@@ -33,54 +33,6 @@ step_content_dict = {
         }
 
 
-def save_response_to_db(DATABASE_URL, user_id, data):
-    # Adjust the URL format if necessary
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-
-    # Set up SQLAlchemy
-    engine = create_engine(DATABASE_URL)
-    Base = declarative_base()
-
-    Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
-
-    class SurveyResponse(Base):
-        __tablename__ = TABLE_NAME
-        id = Column(Integer, primary_key=True)
-        user_id = Column(String)
-        data = Column(Text)
-
-    session = Session()
-    response = session.query(SurveyResponse).filter_by(user_id=user_id).first()
-    if response:
-        response.data = json.dumps(data)
-    else:
-        response = SurveyResponse(user_id=user_id, data=json.dumps(data))
-        session.add(response)
-    session.commit()
-    session.close()
-#
-
-# Assume validate_and_store_data and save_response_to_db functions are already defined as you shared earlier.
-
-@app.callback(
-    Output('dummy-output', 'children', allow_duplicate=True),
-    Input({'type': 'submit-survey', 'index': ALL}, 'n_clicks'),
-    State('storage-general', 'data'),
-    prevent_initial_call=True
-)
-def update_store_complete(n_clicks, stored_data):
-    # Only update the store when the survey is complete and submit button is clicked
-    if n_clicks and any(click > 0 for click in n_clicks if click is not None):
-        try:
-            save_response_to_db(DATABASE_URL, stored_data['existing_id'], stored_data)
-        except Exception as e:
-            print(f"Error storing data: {e}")
-        return True
-    return False
-
-
 @app.callback(
     [Output('impairment-radio', 'value'),
      Output('work-input', 'value'),
@@ -90,7 +42,7 @@ def update_store_complete(n_clicks, stored_data):
      Output("viztype-input_Parallel_Coordinates_Plot", 'value'),
      Output("viztype-input_Heatmap", 'value'),
      Output("viztype-input_Pathways_Map", 'value'),
-     Output('storage-general', 'data', allow_duplicate=True),
+     Output('store-page-A-form', 'data'),
      Output('introduction-validation', 'children'),
      Output('introduction-validation', 'style'),
      Output('impairment-radio-validation', 'style'),
@@ -101,11 +53,6 @@ def update_store_complete(n_clicks, stored_data):
      Output("viztype-input_Parallel_Coordinates_Plot-validation", 'style'),
      Output("viztype-input_Heatmap-validation", 'style'),
      Output("viztype-input_Pathways_Map-validation", 'style'),
-     Output('to_store-complete', 'data', allow_duplicate=True),
-     Output('page-content', 'children', allow_duplicate=True),
-        *[Output(f"step-{i}-link", "children", allow_duplicate=True) for i in range(len(PAGES))],
-        Output('url', 'pathname', allow_duplicate=True),
-        Output("progress_modal", "is_open", allow_duplicate=True),
      ],
     [Input({'type': 'submit-survey', 'index': 1}, 'n_clicks'),
         ],
@@ -122,21 +69,25 @@ def update_store_complete(n_clicks, stored_data):
 )
 def handle_introduction_inputs(n_clicks, impairment, work, expertise, use_frequency, viztype_barchart, viztype_pcp,
                                        viztype_heatmap, viztype_pathways, stored_data):
+
     input_ids = [
         'impairment', 'work', 'expertise', 'use_frequency',
         'viztype_barchart', 'viztype_pcp', 'viztype_heatmap', 'viztype_pathways'
     ]
-    print('introduction_to_store is called')
+
+    storage = {key: stored_data[key] for key in input_ids if key in stored_data}
+    storage = {}
+    print('introduction_to_store is called', n_clicks)
     if n_clicks == 0:
         return (
             *[stored_data.get(in_id, []) if 'work' in in_id else stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            storage,
             *[dash.no_update] * (len(input_ids) + 2),
-            False,
-            dash.no_update,
-            *[dash.no_update] * len(PAGES),
-            dash.no_update,
-            False
+            # False,
+            # dash.no_update,
+            # *[dash.no_update] * len(PAGES),
+            # dash.no_update,
+            # False
         )
 
     ctx = dash.callback_context
@@ -148,39 +99,25 @@ def handle_introduction_inputs(n_clicks, impairment, work, expertise, use_freque
     values = [impairment, work, expertise, use_frequency, viztype_barchart, viztype_pcp, viztype_heatmap,
               viztype_pathways]
 
-    validation_styles, stored_data, final_comment, final_style = validate_and_store_data(
-            input_ids, values, stored_data)
+    validation_styles, storage, final_comment, final_style = validate_and_store_data(
+            input_ids, values, storage)
     if final_style['color'] == '#5cb85c':
-        stored_data['completed_introduction'] = 'yes'
-        current_step = get_step_from_pathname(stored_data['current_url'])
-        new_step = min(current_step + 1, len(PAGES) - 1)
-        to_store_complete = True
+        storage['completed_introduction'] = 'yes'
 
-        new_url = PAGES[new_step]['url']
-        stored_data['current_url'] = new_url
-
-        # Select the correct layout based on the new step
-        content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
-
-        page_names = create_link_design(new_step)
 
         return (
-    *[stored_data.get(in_id, []) if 'work' in in_id else stored_data.get(in_id, None) for in_id in input_ids],
-    stored_data,
+    *[storage.get(in_id, []) if 'work' in in_id else storage.get(in_id, None) for in_id in input_ids],
+    storage,
     final_comment, final_style,
-    *validation_styles, to_store_complete,
-            content, *page_names, stored_data['current_url'], False)
+    *validation_styles)
 
     else:
-        stored_data['completed_introduction'] = 'no'
-        to_store_complete = False
+        storage['completed_introduction'] = 'no'
         return (
-            *[stored_data.get(in_id, []) if 'work' in in_id else stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, []) if 'work' in in_id else storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            dash.no_update, *[dash.no_update] * len(
-            PAGES), dash.no_update, True)
+            *validation_styles)
 
 @app.callback(
     [
@@ -194,7 +131,7 @@ def handle_introduction_inputs(n_clicks, impairment, work, expertise, use_freque
         Output("likkert_use-alternatives_scalability", 'value'),
         Output("alternative_challenge", 'value'),
         Output("alternative_advantage", 'value'),
-        Output('storage-general', 'data', allow_duplicate=True),
+        Output('store-page-B-form', 'data'),
         Output('alternative_pathways-validation', 'children'),
         Output('alternative_pathways-validation', 'style'),
         Output('pathway_number-input-validation', 'style'),
@@ -207,11 +144,6 @@ def handle_introduction_inputs(n_clicks, impairment, work, expertise, use_freque
         Output("likkert_use-alternatives_scalability-validation", 'style'),
         Output("alternative_challenge-validation", 'style'),
         Output("alternative_advantage-validation", 'style'),
-        Output('to_store-complete', 'data', allow_duplicate=True),
-        Output('page-content', 'children', allow_duplicate=True),
-        *[Output(f"step-{i}-link", "children", allow_duplicate=True) for i in range(len(PAGES))],
-        Output('url', 'pathname', allow_duplicate=True),
-        Output("progress_modal", "is_open", allow_duplicate=True),
     ],
     [
         Input({'type': 'submit-survey', 'index': 2}, 'n_clicks')
@@ -227,15 +159,15 @@ def handle_introduction_inputs(n_clicks, impairment, work, expertise, use_freque
         State("likkert_use-alternatives_scalability", 'value'),
         State("alternative_challenge", 'value'),
         State("alternative_advantage", 'value'),
-        State('storage-general', 'data'),
-        State('url', 'pathname')
+State('storage-general', 'data')
     ],
     prevent_initial_call=True
 )
 def handle_alternative_pathways(
     n_clicks, pathway_number, f_resilient_crops, long_term, flexibility, easy,
-    confidence, enough_information, scalability, alternative_challenge, alternative_advantage, stored_data, url
+    confidence, enough_information, scalability, alternative_challenge, alternative_advantage, stored_data
 ):
+    storage = {}
     print('alternattive pathways is called')
     input_ids = [
         'pathway_number', 'f_resilient_crops', 'long_term', 'flexibility', 'alternatives_easy',
@@ -245,13 +177,8 @@ def handle_alternative_pathways(
     if n_clicks == 0:
         return (
             *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
-            *[dash.no_update] * (len(input_ids) + 2),
-            False,
-            dash.no_update,
-            *[dash.no_update] * len(PAGES),
-            dash.no_update,
-            False
+            storage,
+            *[dash.no_update] * (len(input_ids) + 2)
         )
 
     # Check if the URL matches the correct page
@@ -262,41 +189,26 @@ def handle_alternative_pathways(
     ]
 
     # Validate and store data
-    validation_styles, stored_data, final_comment, final_style = validate_and_store_data(
-        input_ids, values, stored_data
+    validation_styles, storage, final_comment, final_style = validate_and_store_data(
+        input_ids, values, storage
     )
 
     # Determine completion status
     if final_style['color'] == '#5cb85c':
-        stored_data['completed_alternative_pathways'] = 'yes'
-        current_step = get_step_from_pathname(stored_data['current_url'])
-        new_step = min(current_step + 1, len(PAGES) - 1)
-        to_store_complete = True
-
-        new_url = PAGES[new_step]['url']
-        stored_data['current_url'] = new_url
-
-        # Select the correct layout based on the new step
-        content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
-
-        page_names = create_link_design(new_step)
+        storage['completed_alternative_pathways'] = 'yes'
 
         return (
-            *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            content, *page_names, stored_data['current_url'], False)
+            *validation_styles)
     else:
-        stored_data['completed_alternative_pathways'] = 'no'
-        to_store_complete = False
+        storage['completed_alternative_pathways'] = 'no'
         return (
-            *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, True)
+            *validation_styles)
 
 
 @app.callback(
@@ -313,7 +225,7 @@ def handle_alternative_pathways(
         Output("likkert_use-robustness_scalability", 'value'),
         Output("robustness_challenge", 'value'),
         Output("robustness_advantage", 'value'),
-        Output('storage-general', 'data', allow_duplicate=True),
+        Output('store-page-C-form', 'data'),
         Output('pathways_robustness-validation', 'children'),
         Output('pathways_robustness-validation', 'style'),
         Output('coding-input-validation', 'style'),
@@ -328,11 +240,6 @@ def handle_alternative_pathways(
         Output("likkert_use-robustness_scalability-validation", 'style'),
         Output("robustness_challenge-validation", 'style'),
         Output("robustness_advantage-validation", 'style'),
-        Output('to_store-complete', 'data', allow_duplicate=True),
-        Output('page-content', 'children', allow_duplicate=True),
-        *[Output(f"step-{i}-link", "children", allow_duplicate=True) for i in range(len(PAGES))],
-        Output('url', 'pathname', allow_duplicate=True),
-        Output("progress_modal", "is_open", allow_duplicate=True),
     ],
     [
         Input({'type': 'submit-survey', 'index': 3}, 'n_clicks'),
@@ -350,15 +257,17 @@ def handle_alternative_pathways(
         State("likkert_use-robustness_scalability", 'value'),
         State("robustness_challenge", 'value'),
         State("robustness_advantage", 'value'),
-        State('storage-general', 'data'),
-        State('url', 'pathname')
+State('storage-general', 'data')
     ],
     prevent_initial_call=True
 )
 def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff, general_interactions,
                                interaction_least_productivity_loss, easy, confidence, enough_information,
-                               scalability, robustness_challenge, robustness_advantage, stored_data, url):
-    print('robustness called')
+                               scalability, robustness_challenge, robustness_advantage, stored_data):
+    storage = {}
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('robustness called', triggered_id)
     input_ids = [
         'coding', 'crop_loss', 'robustness', 'tradeoff', 'general_interactions', 'interaction_least_productivity_loss',
         'robustness_easy', 'robustness_enough_information', 'robustness_enough_informationn',
@@ -369,13 +278,8 @@ def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff
         print('not_relevant')
         return (
             *[stored_data.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            storage,
             *[dash.no_update] * (len(input_ids) + 2),
-            False,
-            dash.no_update,
-            *[dash.no_update] * len(PAGES),
-            dash.no_update,
-            False
         )
 
     print('robustness activated')
@@ -384,38 +288,24 @@ def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff
         easy, confidence, enough_information, scalability, robustness_challenge, robustness_advantage
     ]
 
-    validation_styles, stored_data, final_comment, final_style = validate_and_store_data(
-        input_ids, values, stored_data)
+    validation_styles, storage, final_comment, final_style = validate_and_store_data(
+        input_ids, values, storage)
     if final_style['color'] == '#5cb85c':
-        stored_data['completed_pathways_robustness'] = 'yes'
-        current_step = get_step_from_pathname(stored_data['current_url'])
-        new_step = min(current_step + 1, len(PAGES) - 1)
-        to_store_complete = True
+        storage['completed_pathways_robustness'] = 'yes'
 
-        new_url = PAGES[new_step]['url']
-        stored_data['current_url'] = new_url
-
-        # Select the correct layout based on the new step
-        content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
-
-        page_names = create_link_design(new_step)
 
         return (
-            *[stored_data.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            content, *page_names, stored_data['current_url'], False)
+            *validation_styles)
     else:
-        stored_data['completed_pathways_robustness'] = 'no'
-        to_store_complete = False
+        storage['completed_pathways_robustness'] = 'no'
         return (
-            *[stored_data.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, True)
+            *validation_styles,)
 
 @app.callback(
     [
@@ -431,7 +321,7 @@ def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff
         Output("likkert_use-pathways_maps_scalability", 'value'),
         Output("pathways_challenge", 'value'),
         Output("pathways_advantage", 'value'),
-        Output('storage-general', 'data', allow_duplicate=True),
+        Output('store-page-D-form', 'data'),
         Output('pathways_maps-validation', 'children'),
         Output('pathways_maps-validation', 'style'),
         Output('first_measure-input-validation', 'style'),
@@ -447,12 +337,6 @@ def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff
         Output("pathways_challenge-validation", 'style'),
         Output("pathways_advantage-validation", 'style'),
         # Output('end_modal', 'is_open'),
-        Output('to_store-complete', 'data', allow_duplicate=True),
-        Output('page-content', 'children', allow_duplicate=True),
-        *[Output(f"step-{i}-link", "children", allow_duplicate=True) for i in range(len(PAGES))],
-        Output('url', 'pathname', allow_duplicate=True),
-        Output("progress_modal", "is_open", allow_duplicate=True),
-        # Output('end_modal', 'is_open', allow_duplicate=True)
     ],
     [
         Input({'type': 'submit-survey', 'index': 4}, 'n_clicks'),
@@ -470,15 +354,17 @@ def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff
         State("likkert_use-pathways_maps_scalability", 'value'),
         State("pathways_challenge", 'value'),
         State("pathways_advantage", 'value'),
-        State('storage-general', 'data'),
-        State('url', 'pathname')
+State('storage-general', 'data')
     ],
     prevent_initial_call=True
 )
 def handle_pathways_maps(n_clicks, first_measure, number_measures, most_flexible1_5, most_flexible4,
                          timing_shifts, ditch_shift, easy, confidence, enough_information, scalability,
-                         pathways_challenge, pathways_advantage, stored_data, url):
-    print('pathways called')
+                         pathways_challenge, pathways_advantage, stored_data):
+    storage = {}
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('pathways called', triggered_id)
     input_ids = [
         'first_measure', 'number_measures', 'most_flexible15', 'most_flexible4', 'timing_shifts', 'ditch_shift',
         'pathways_maps_easy', 'pathways_maps_confidence',
@@ -489,14 +375,8 @@ def handle_pathways_maps(n_clicks, first_measure, number_measures, most_flexible
     if n_clicks == 0:
         return (
             *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            storage,
             *[dash.no_update] * (len(input_ids) + 2),
-            False,
-            dash.no_update,
-            *[dash.no_update] * len(PAGES),
-            dash.no_update,
-            False,
-            # False
         )
 
     print('pathways activated')
@@ -505,41 +385,25 @@ def handle_pathways_maps(n_clicks, first_measure, number_measures, most_flexible
         easy, confidence, enough_information, scalability, pathways_challenge, pathways_advantage
     ]
 
-    validation_styles, stored_data, final_comment, final_style = validate_and_store_data(
-        input_ids, values, stored_data)
+    validation_styles, storage, final_comment, final_style = validate_and_store_data(
+        input_ids, values, storage)
     if final_style['color'] == '#5cb85c':
-        stored_data['completed_pathways_maps'] = 'yes'
-        current_step = get_step_from_pathname(stored_data['current_url'])
-        new_step = min(current_step + 1, len(PAGES) - 1)
-        to_store_complete = True
-
-        new_url = PAGES[new_step]['url']
-        stored_data['current_url'] = new_url
-
-        # Select the correct layout based on the new step
-        content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
-
-        page_names = create_link_design(new_step)
+        storage['completed_pathways_maps'] = 'yes'
 
         return (
-            *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            content, *page_names, stored_data['current_url'], False
-            # True
+            *validation_styles
         )
 
     else:
-        stored_data['completed_pathways_maps'] = 'no'
-        to_store_complete = False
+        storage['completed_pathways_maps'] = 'no'
         return (
-            *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, True)
+            *validation_styles)
 
 
 @app.callback(
@@ -560,7 +424,7 @@ Output("likkert_use-system_analysis_pathways_scalability", 'value'),
         Output("likkert_use-system_analysis_performance_scalability", 'value'),
         Output("system_analysis_challenge", 'value'),
         Output("system_analysis_advantage", 'value'),
-        Output('storage-general', 'data', allow_duplicate=True),
+        Output('store-page-E-form', 'data'),
         Output('system_analysis-validation', 'children'),
         Output('system_analysis-validation', 'style'),
         Output('system_analysis_pathways_1560-input-validation', 'style'),
@@ -579,13 +443,6 @@ Output("likkert_use-system_analysis_pathways_scalability", 'value'),
         Output("likkert_use-system_analysis_performance_scalability-validation", 'style'),
         Output("system_analysis_challenge-validation", 'style'),
         Output("system_analysis_advantage-validation", 'style'),
-        # Output('end_modal', 'is_open'),
-        Output('to_store-complete', 'data', allow_duplicate=True),
-        Output('page-content', 'children', allow_duplicate=True),
-        *[Output(f"step-{i}-link", "children", allow_duplicate=True) for i in range(len(PAGES))],
-        Output('url', 'pathname', allow_duplicate=True),
-        Output("progress_modal", "is_open", allow_duplicate=True),
-        Output('end_modal', 'is_open', allow_duplicate=True)
     ],
     [
         Input({'type': 'submit-survey', 'index': 5}, 'n_clicks'),
@@ -607,8 +464,7 @@ Output("likkert_use-system_analysis_pathways_scalability", 'value'),
         State("likkert_use-system_analysis_performance_scalability", 'value'),
         State("system_analysis_challenge", 'value'),
         State("system_analysis_advantage", 'value'),
-        State('storage-general', 'data'),
-        State('url', 'pathname')
+State('storage-general', 'data')
     ],
     prevent_initial_call=True
 )
@@ -620,8 +476,11 @@ def handle_system_analysis(n_clicks, system_analysis_pathways_1560, system_analy
                          system_analysis_performance_confidence, system_analysis_pathways_enough_information,
                          system_analysis_performance_enough_information, system_analysis_pathways_scalability,
                          system_analysis_performance_scalability, system_analysis_challenge, system_analysis_advantage,
-                         stored_data, url):
-    print('pathways called')
+                           stored_data):
+    storage = {}
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('system_analysis called', triggered_id)
     input_ids = [
         'system_analysis_pathways_1560', 'system_analysis_pathways_1530', 'system_analysis_pathways_which_better',
         'system_analysis_performance_1560',
@@ -633,16 +492,11 @@ def handle_system_analysis(n_clicks, system_analysis_pathways_1560, system_analy
     ]
 
     if n_clicks == 0:
+        print(f"Returning stored data without click: {storage}")
         return (
             *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            storage,
             *[dash.no_update] * (len(input_ids) + 2),
-            False,
-            dash.no_update,
-            *[dash.no_update] * len(PAGES),
-            dash.no_update,
-            False,
-            # False
         )
 
     print('pathways activated')
@@ -657,41 +511,22 @@ def handle_system_analysis(n_clicks, system_analysis_pathways_1560, system_analy
         system_analysis_performance_scalability, system_analysis_challenge, system_analysis_advantage,
     ]
 
-    validation_styles, stored_data, final_comment, final_style = validate_and_store_data(
-        input_ids, values, stored_data)
+    validation_styles, storage, final_comment, final_style = validate_and_store_data(
+        input_ids, values, storage)
     if final_style['color'] == '#5cb85c':
-        stored_data['completed_system_analysis'] = 'yes'
-        current_step = get_step_from_pathname(stored_data['current_url'])
-        new_step = min(current_step + 1, len(PAGES) - 1)
-        to_store_complete = True
-
-        new_url = PAGES[new_step]['url']
-        stored_data['current_url'] = new_url
-
-        # Select the correct layout based on the new step
-        content = step_content_dict.get(new_step, layout_A)  # Default to layout_A in case of an invalid step
-
-        page_names = create_link_design(new_step)
+        storage['completed_system_analysis'] = 'yes'
 
         return (
-            *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, False,
-            True
-        )
+            *validation_styles)
 
     else:
-        stored_data['completed_pathways_maps'] = 'no'
-        to_store_complete = False
+        storage['completed_system_analysis'] = 'no'
         return (
-            *[stored_data.get(in_id, None) for in_id in input_ids],
-            stored_data,
+            *[storage.get(in_id, None) for in_id in input_ids],
+            storage,
             final_comment, final_style,
-            *validation_styles, to_store_complete,
-            dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, True,
-            False
+            *validation_styles
         )

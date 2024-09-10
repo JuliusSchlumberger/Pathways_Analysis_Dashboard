@@ -21,7 +21,7 @@ from pages.E_system_analysis import layout_E
         Output('page-content', 'children'),
         *[Output(f"step-{i}-link", "children") for i in range(len(PAGES))],
         Output('url', 'pathname'),
-        Output('storage-general', 'data', allow_duplicate=True),
+        Output('storage-navigation', 'data'),
         Output('prev-btn', 'n_clicks'),
         Output('next-btn', 'n_clicks'),
         Output("progress_modal", "is_open"),
@@ -42,15 +42,16 @@ from pages.E_system_analysis import layout_E
     ],
     prevent_initial_call='duplicate_initial'  # Prevent callback from triggering on initial load
 )
-def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path):
+def display_page(prev_clicks, next_clicks, url, viewport, stored_data, current_path):
+    storage = {}
     ctx = dash.callback_context
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
     print('navigation pages - triggered callback:', triggered_id, current_path)
-    print(storage)
+    print(stored_data)
     if not ctx.triggered or triggered_id == None:
         page_names = create_link_design(0)
         # Fallback for no trigger, initial content
-        return layout_A, *page_names, PAGES[0]['url'], storage, 0, 0, False, False
+        return dash.no_update, *[dash.no_update] * len(PAGES), dash.no_update, storage, 0, 0, False, False
 
     step_content_dict = {
             0: layout_A,
@@ -62,15 +63,15 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
         }
 
     # Manage landing page
-    if (current_path == '/' and storage == {}) or triggered_id == 'viewport-size':
+    if current_path == '/' or triggered_id == 'viewport-size':
         print('# Manage landing page')
         new_url = '/0-introduction'
         link_names = create_link_design(0)
         content = layout_A
-        # storage = {'existing_id': generate_session_id(),
+        # stored_data = {'existing_id': generate_session_id(),
         #            'viewport_size': viewport,
         #            'current_url': new_url}
-        if storage.get('existing_id', None) == None:
+        if stored_data.get('existing_id', None) == None:
             storage['existing_id'] = generate_session_id()
         storage[ 'viewport_size']= viewport
         storage['current_url']= new_url
@@ -84,11 +85,11 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
     # # Manage if navigation via url
     if triggered_id == 'url':
         storage['viewport_size'] = viewport
-        print('# Manage if navigation via url', url, storage['current_url'])
+        print('# Manage if navigation via url', url, stored_data.get('current_url', None))
         to_page = get_step_from_pathname(url)
-        from_page = get_step_from_pathname(storage['current_url'])
+        from_page = get_step_from_pathname(stored_data.get('current_url', '/0-introduction'))
         print(PAGES[to_page]['check'], to_page)
-        if storage.get(PAGES[from_page]['check'], 'no') == 'yes' or from_page >= to_page:
+        if stored_data.get(PAGES[from_page]['check'], 'no') == 'yes' or from_page >= to_page:
             page_names = create_link_design(to_page)
             content = step_content_dict.get(to_page, layout_A)
             storage['current_url'] = url
@@ -103,7 +104,7 @@ def display_page(prev_clicks, next_clicks, url, viewport, storage, current_path)
     if triggered_id == 'next-btn' and next_clicks > 0 and from_page <= len(PAGES) - 1:
         to_page = min(from_page + 1, len(PAGES) - 1)
         print('# Manage if navigation via buttons', PAGES[from_page]['check'], next_clicks)
-        if storage.get(PAGES[from_page]['check'], 'no') == 'yes':
+        if stored_data.get(PAGES[from_page]['check'], 'no') == 'yes':
             new_url = PAGES[to_page]['url']
             storage['current_url'] = new_url
             if viewport is not None:

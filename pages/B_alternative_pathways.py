@@ -16,7 +16,7 @@ introduction_text = [
     ]
 
 selection_options = html.Div([
-    html.Label('a) Actor and Risk (default - no choice necessary', className='mb-1'),
+    html.Label('a) Actor and Risk', className='mb-1'),
     dbc.Select(
         id='risk_owner_hazard',
         options=[
@@ -137,7 +137,10 @@ layout_B = dbc.Row(
         text_field], width=TEXTFIELD_WIDTH),
      visualization,
     PROGRESS_MODAL,
-    FINAL_MODAL],
+    FINAL_MODAL,
+
+    ],
+
     style={'height': LAYOUT_HEIGHT}
 )
 

@@ -149,7 +149,7 @@ layout_A = dbc.Row(
         ),
         visualization,
         PROGRESS_MODAL,
-        FINAL_MODAL
+        FINAL_MODAL,
 
     ],
 )

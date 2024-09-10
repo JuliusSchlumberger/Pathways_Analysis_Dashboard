@@ -67,16 +67,24 @@ system_performance_layout = dbc.Container(
     Output('system_analysis_focus_figure', 'children'),
     Output('system_analysis-graph', 'children'),
     Output('other_selection_options', 'children'),
-    Output('storage-general', 'data', allow_duplicate=True),
+    Output('store-page-E-selection', 'data', allow_duplicate=True),
+    Output('system_analysis_focus', 'value'),
     Input('system_analysis_focus', 'value'),
     State('storage-general', 'data'),
 prevent_initial_call=True
 )
 def set_up_layout(focus, stored_data):
-    if focus == 'system_performance':
-        for i, p in enumerate(ROH_LIST):
-            stored_data[f'pathway_{ROH_LIST[i]}'] = []
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('set_up_layout', triggered_id, stored_data)
+    storage = {}
+    if focus != None:
+        storage['system_analysis_focus'] = focus
+    else:
+        storage['system_analysis_focus'] = stored_data.get('system_analysis_focus', None)
+        focus = stored_data.get('system_analysis_focus', None)
 
+    if focus == 'system_performance':
         selection_options = [html.Div([
                 html.Label('b) Timehorizon for Evaluation', className='mb-1'),
                 dbc.Select(
@@ -94,7 +102,7 @@ def set_up_layout(focus, stored_data):
                     )], style={'marginBottom': '20px'}),
 
             html.Div([
-                html.Label('d) Robustness quantification (default - no choice necessary)', className='mb-1'),
+                html.Label('d) Robustness quantification', className='mb-1'),
                 dbc.Select(
                         id='robustness_metric',
                     options=[{'label': option, 'value': ROBUSTNESS_METRICS[option]} for option in ROBUSTNESS_METRICS],
@@ -124,7 +132,7 @@ def set_up_layout(focus, stored_data):
                     options=[
                         {"label": i, "value": i} for i in
                         range(0, 8)
-                    ], value=[0], inline=True,
+                    ], value=[0,1], inline=True,
                 )], style={'marginBottom': '20px'}),
             html.Div([
                 html.Label(f'g) {list(ROH_DICT.keys())[1]} Pathways (select 2 or 3)'),
@@ -133,7 +141,7 @@ def set_up_layout(focus, stored_data):
                     options=[
                         {"label": i, "value": i} for i in
                         range(0, 8)
-                    ], value=[0], inline=True,
+                    ], value=[0,1], inline=True,
                 )], style={'marginBottom': '20px'}),
             html.Div([
                 html.Label(f'h) {list(ROH_DICT.keys())[2]} Pathways (select 2 or 3)'),
@@ -142,7 +150,7 @@ def set_up_layout(focus, stored_data):
                     options=[
                         {"label": i, "value": i} for i in
                         range(0, 8)
-                    ], value=[0], inline=True,
+                    ], value=[0,1], inline=True,
                 )], style={'marginBottom': '20px'}),
             html.Div([
                 html.Label(f'i) {list(ROH_DICT.keys())[3]} Pathways (select 2 or 3)'),
@@ -151,7 +159,7 @@ def set_up_layout(focus, stored_data):
                     options=[
                         {"label": i, "value": i} for i in
                         range(0, 8)
-                    ], value=[0], inline=True,
+                    ], value=[0,1], inline=True,
                 )], style={'marginBottom': '20px'}),
             dbc.Row([
                 dbc.Col(
@@ -164,7 +172,10 @@ def set_up_layout(focus, stored_data):
                 className="mb-3", style={'marginBottom': '0.1vh'}
             ),
         ]
-        text = [html.P("This figure visualizes the robustness performance regarding objectives of multiple actor - risk pairs for selected combinations of pathways. Use the button below to gain insight into the measures that are part of the selected pathways. "),
+        text = [html.P("This figure visualizes the robustness performance regarding objectives of multiple actor - risk pairs for selected combinations of pathways. "
+                       "In the section above, select actor - risk pathways you want to consider in combination with other pathways. "
+                       "Limit yourself to a maximum of 2 or 3 per actor, otherwise it gets very difficult to see."
+                       "Use the button below to gain insight into the measures that are part of the selected pathways. "),
                 dbc.Row([
                     dbc.Col(
                         dbc.Button('Show Legend',
@@ -176,11 +187,9 @@ def set_up_layout(focus, stored_data):
                     className="mb-3", style={'marginBottom': '0.1vh'}
                 ),
                 ]
-        return text, system_performance_layout, selection_options, stored_data
+        return text, system_performance_layout, selection_options, storage, focus
         # return system_performance_layout
-    if focus == 'system_pathways':
-        for i, p in enumerate(ROH_LIST):
-            stored_data[f'pathway_{ROH_LIST[i]}'] = 'not-considered'
+    elif focus == 'system_pathways':
         selection_options = [
             html.Div([
                 html.Label('b) Climate Scenario', className='mb-1'),
@@ -242,7 +251,7 @@ def set_up_layout(focus, stored_data):
         text = [html.P("This figures represents a 'Metro-map' through time (starting at the left, moving to the right). "
                "You can select one pathway for each actor and risk. The respective pathway is highlighted in color. The full pathways map is shown for each actor - risk pair in grey. "),
         html.P("In case the colored line diverges from the grey pathways maps, this can be associated with the interaction with the other considered pathways."),
-        html.P('You can select different combinations and observe changes with regards to the timing of the highlighted pathways'),
+        html.P('You can select different combinations of pathways and observe changes with regards to the timing of the highlighted pathways'),
                 dbc.Row([
                     dbc.Col(
                         dbc.Button('Show Legend',
@@ -254,7 +263,8 @@ def set_up_layout(focus, stored_data):
                     className="mb-3", style={'marginBottom': '0.1vh'}
                 ),
                 ]
-        return text, system_pathways_layout, selection_options, stored_data
-
-
+        return text, system_pathways_layout, selection_options, storage, focus
+    else:
+        # Return empty divs or default values for all outputs
+        return html.Div(), html.Div(), html.Div(), dash.no_update, dash.no_update
 

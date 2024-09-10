@@ -43,7 +43,7 @@ selection_options = html.Div([
                     )], style={'marginBottom': '20px'}),
 
             html.Div([
-                html.Label('c) Robustness quantification (default - no choice necessary)', className='mb-1'),
+                html.Label('c) Robustness quantification', className='mb-1'),
                 dbc.Select(
                         id='robustness_metric',
                     options=[{'label': option, 'value': ROBUSTNESS_METRICS[option]} for option in ROBUSTNESS_METRICS],
@@ -180,6 +180,9 @@ layout_C = dbc.Row(
     ], width=TEXTFIELD_WIDTH),
      visualization,
     PROGRESS_MODAL,
-    FINAL_MODAL],
+    FINAL_MODAL,
+
+    ],
+
     style={'height': LAYOUT_HEIGHT}
 )

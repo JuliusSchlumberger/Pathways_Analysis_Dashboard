@@ -10,19 +10,21 @@ from utilities.generate_missing_message import generate_missing_input_message
 
 @app.callback(
     [Output('alternatives-graph', 'children'),
-    Output('storage-general', 'data', allow_duplicate=True),
+    Output('store-page-B-selection', 'data'),
      Output('risk_owner_hazard', 'value'),
      ],
     [Input('risk_owner_hazard', 'value'),
      ],
 State('storage-general', 'data'),
     State('viewport-size', 'data'),
-prevent_initial_call=True
 )
 def update_options_graph(risk_owner_hazard, stored_data, viewport):
-    print('alternatives', stored_data)
+    storage = {}
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('alternatives', triggered_id, stored_data)
     if risk_owner_hazard is not None:   # if this is not empty
-        stored_data['risk_owner_hazard'] = risk_owner_hazard
+        storage['risk_owner_hazard'] = risk_owner_hazard
         filtered_options = [{'label': key, 'value': value} for option in INTERACTIONS[risk_owner_hazard] for key, value
                             in
                             option.items()]
@@ -42,8 +44,8 @@ def update_options_graph(risk_owner_hazard, stored_data, viewport):
     # with open(figure_identifier, 'r') as f:
     #     fig = pio.from_json(f.read())
     #
-    # fig, _, _ = scale_figure(fig, stored_data)
+    fig, _, _ = scale_figure(fig, viewport)
 
-    return [dcc.Graph(figure=fig, responsive=False)], stored_data, relevant_input
+    return [dcc.Graph(figure=fig, responsive=False)], storage, relevant_input
 
 

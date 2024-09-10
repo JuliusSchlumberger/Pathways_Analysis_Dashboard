@@ -5,7 +5,12 @@ from components import header, TermsConditions
 from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
 # from callbacks import toggle_tabs
 import dash
-
+from callbacks import (navigation_pages, toggle_termsconditions, update_general_store,
+                       to_store, update_general_store,
+                       update_alternatives, \
+                       update_robustness, \
+                       update_pathways, update_surveys, toggle_word_explanations, update_figure_description, toggle_system_analysis_legend, update_figure_system_analysis, update_system_analysis_layout
+                       )
 
 from dashapp import app
 
@@ -13,10 +18,21 @@ from dashapp import app
 server = app.server
 app.layout = dbc.Container(
     [
-        dcc.Store(id='viewport-size'),  # To store and use viewport data in other callbacks
+        dcc.Store(id='viewport-size', storage_type='session', data={}),  # To store and use viewport data in other callbacks
+        dcc.Store(id='store-page-A-selection',storage_type='session', data={}),
+        dcc.Store(id='store-page-A-form',storage_type='session', data={}),
+        dcc.Store(id='store-page-B-selection', storage_type='session', data={}),
+        dcc.Store(id='store-page-B-form', storage_type='session', data={}),
+        dcc.Store(id='store-page-C-selection', storage_type='session', data={}),
+        dcc.Store(id='store-page-C-form', storage_type='session', data={}),
+        dcc.Store(id='store-page-D-selection', storage_type='session', data={}),
+        dcc.Store(id='store-page-D-form', storage_type='session', data={}),
+        dcc.Store(id='store-page-E-selection', storage_type='session', data={}),
+        dcc.Store(id='store-page-E-form', storage_type='session', data={}),
         dcc.Location(id='url', refresh=False),
         html.Link(rel='shortcut icon', href='/assets/favicon.ico'),
-        dcc.Store(id='storage-general', storage_type='session', data={}),  # Using session storage
+        dcc.Store(id='storage-general', storage_type='session', data={'current_url': '/0-introduction'}),  # Using session storage
+        dcc.Store(id='storage-navigation', storage_type='session', data={}),  # Using session storage
 
         header.header,
         html.Div(id='page-content'),
@@ -24,7 +40,7 @@ app.layout = dbc.Container(
         dcc.Store(id='to_store-complete', data=False),
 
         # html.Div(id='submit-survey'),
-        # TermsConditions.TermConditions,
+        TermsConditions.TermConditions,
         PROGRESS_MODAL,
         FINAL_MODAL
     ],
@@ -57,6 +73,16 @@ app.clientside_callback(
     ],
 )
 
+# @app.callback(
+#     Output('storage-general', 'data'),
+#     Input('viewport-size', 'data'),
+#     State('storage-general', 'data'),
+# prevent_inital_call=True
+# )
+# def store_viewport(viewport, stored_data):
+#     # print(viewport)
+#     stored_data['viewport_size'] = viewport
+#     return stored_data
 
 
 # Clientside callback to scroll to the top
@@ -75,12 +101,7 @@ app.clientside_callback(
      Input({'type': 'submit-survey', 'index': ALL}, 'n_clicks'),],
 )
 
-from callbacks import (navigation_pages, toggle_termsconditions,
-                       to_store,
-                       update_alternatives, \
-                       update_robustness, \
-                       update_pathways, update_surveys, toggle_word_explanations, update_figure_description, toggle_system_analysis_legend, update_figure_system_analysis, update_system_analysis_layout
-                       )
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

@@ -22,7 +22,7 @@ from utilities.scale_figure import scale_figure
 # Callback to update the graph based on selected pathways
 @app.callback(
     Output("pathway-graph", "figure", allow_duplicate=True),
-    Output('storage-general', 'data', allow_duplicate=True),
+    Output('store-page-E-selection', 'data', allow_duplicate=True),
 Output("pathway-1", "value", allow_duplicate=True ),
      Output("pathway-2", "value", allow_duplicate=True),
      Output("pathway-3", "value", allow_duplicate=True),
@@ -38,29 +38,34 @@ Input('show_figure_pathways', 'n_clicks')
      ],
     State('storage-general', 'data'),
     State('system_analysis_focus', 'value'),
+    State('viewport-size', 'data'),
     prevent_initial_call=True
 )
-def update_graph_fig_pathways(pathway1, pathway2, pathway3, pathway4, scenario, n_clicks, stored_data, focus):
+def update_graph_fig_pathways(pathway1, pathway2, pathway3, pathway4, scenario, n_clicks, stored_data, focus, viewport):
+    storage = {}
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('update_graph_fig_pathways', triggered_id)
     all_pathways = [pathway1, pathway2, pathway3, pathway4]
     # Create a list of selected pathways, excluding 'not-considered'
-    stored_data['scenarios'] = scenario
+    storage['scenarios'] = scenario
     for i, p in enumerate(all_pathways):
-        stored_data[f'pathway_{ROH_LIST[i]}'] = p
+        storage[f'pathway_{ROH_LIST[i]}'] = p
     if focus == 'system_pathways' and n_clicks > 0:
         not_considered_count = all_pathways.count('not-considered')
         if not_considered_count <= 2:
             print('this condition is met!')
             fig = update_graph(pathway1, pathway2, pathway3, pathway4, scenario)
-            fig, _, _ = scale_figure(fig, stored_data)
+            fig, _, _ = scale_figure(fig, viewport)
             return fig, stored_data, pathway1, pathway2, pathway3, pathway4, scenario, 0
         else:
-            return dash.no_update, stored_data, *[stored_data[f'pathway_{i}'] for i in ROH_LIST], stored_data['scenarios'], 0
-    return dash.no_update, stored_data, *[stored_data[f'pathway_{i}'] for i in ROH_LIST], stored_data[
+            return dash.no_update, storage, *[storage[f'pathway_{i}'] for i in ROH_LIST], storage['scenarios'], 0
+    return dash.no_update, storage, *[storage[f'pathway_{i}'] for i in ROH_LIST], storage[
         'scenarios'], 0
 
 @app.callback(
     Output("performance-graph", "figure"),
-    Output('storage-general', 'data', allow_duplicate=True),
+    Output('store-page-E-selection', 'data', allow_duplicate=True),
 Output("pathway-1", "value", allow_duplicate=True ),
      Output("pathway-2", "value", allow_duplicate=True),
      Output("pathway-3", "value", allow_duplicate=True),
@@ -81,22 +86,32 @@ Output("pathway-1", "value", allow_duplicate=True ),
      Input('show_figure_performance', 'n_clicks')],
     State('storage-general', 'data'),
     State('system_analysis_focus', 'value'),
+State('viewport-size', 'data'),
     prevent_initial_call=True
 )
-def update_graph_fig_robustness(pathway1, pathway2, pathway3, pathway4, timehorizon, scenarios, robustness_metric, options,n_clicks, stored_data, focus):
+def update_graph_fig_robustness(pathway1, pathway2, pathway3, pathway4, timehorizon, scenarios, robustness_metric, options,n_clicks, stored_data, focus, viewport):
+    storage = {}
     if timehorizon is not None:
-        stored_data['timehorizon'] = timehorizon
+        storage['timehorizon'] = timehorizon
+    else:
+        storage['timehorizon'] = stored_data['timehorizon']
     if scenarios is not None:
         print(scenarios)
-        stored_data['scenarios'] = scenarios
+        storage['scenarios'] = scenarios
+    else:
+        storage['scenarios'] = stored_data['scenarios']
     if robustness_metric is not None:
-        stored_data['robustness_metric'] = robustness_metric
+        storage['robustness_metric'] = robustness_metric
+    else:
+        storage['robustness_metric'] = stored_data['robustness_metric']
     if options is not None:
         # print(options)
-        stored_data['robustness_plot'] = options
+        storage['robustness_plot'] = options
+    else:
+        storage['robustness_plot'] = stored_data['robustness_plot']
     all_pathways = [pathway1, pathway2, pathway3, pathway4]
     for i, p in enumerate(all_pathways):
-        stored_data[f'pathway_{ROH_LIST[i]}'] = p
+        storage[f'pathway_{ROH_LIST[i]}'] = p
     print(stored_data)
     # Create a list of selected pathways, excluding 'not-considered'
     if focus == 'system_performance' and n_clicks > 0:
@@ -110,8 +125,8 @@ def update_graph_fig_robustness(pathway1, pathway2, pathway3, pathway4, timehori
         #     del sectors_of_interest[index]
         print(sectors_of_interest)
         if len(sectors_of_interest) < 2:
-            return (dash.no_update, stored_data,
-                    *[stored_data[f'pathway_{i}'] for i in ROH_LIST],
+            return (dash.no_update, storage,
+                    *[storage[f'pathway_{i}'] for i in ROH_LIST],
                     *[dash.no_update] * 4,
                     0
                     )
@@ -120,11 +135,11 @@ def update_graph_fig_robustness(pathway1, pathway2, pathway3, pathway4, timehori
             print(pathways_of_interest_dict)
             fig = pathways_robustness_multi_risk([scenarios], options, timehorizon, pathways_of_interest_dict,
                                                   sectors_of_interest)
-            fig, _, _ = scale_figure(fig, stored_data)
-            return fig, stored_data, *[stored_data[f'pathway_{i}'] for i in ROH_LIST], stored_data['timehorizon'], \
-            stored_data['scenarios'], stored_data['robustness_metric'], stored_data['robustness_plot'], 0
+            fig, _, _ = scale_figure(fig, viewport)
+            return fig, storage, *[storage[f'pathway_{i}'] for i in ROH_LIST], storage['timehorizon'], \
+            storage['scenarios'], storage['robustness_metric'], storage['robustness_plot'], 0
 
-    return (dash.no_update, stored_data,
-            *[stored_data[f'pathway_{i}'] for i in ROH_LIST],
+    return (dash.no_update, storage,
+            *[storage[f'pathway_{i}'] for i in ROH_LIST],
             *[dash.no_update] * 4,
             0)

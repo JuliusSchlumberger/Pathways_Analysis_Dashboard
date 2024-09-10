@@ -47,7 +47,7 @@ from PIL import Image
 #             fig.update_layout(annotations=new_annotations)
 #     return fig, scaled_height, scaled_width
 
-def scale_figure(fig, storage):
+def scale_figure(fig, viewport):
     current_width = fig.layout.width
     current_height = fig.layout.height
 
@@ -55,8 +55,7 @@ def scale_figure(fig, storage):
     scaled_width = current_width
 
     if current_height is not None and current_width is not None:
-        size = storage['viewport_size']
-        width, height = size['width'], size['height']
+        width, height = viewport.get('width',1280), viewport.get('height',567)
         scale_factor = round(min(FIGURE_WIDTH / 12 * width / current_width, height * 0.8 / current_height), 2) * 0.9
 
         # Scale the dimensions
