@@ -162,7 +162,7 @@ def update_storage_general(store_A_selection, store_B_selection, store_C_selecti
                 PAGES), dash.no_update, False, False
 
         try:
-            save_response_to_db(DATABASE_URL, storage_general['existing_id'], storage_general)
+            save_response_to_db(storage_general['existing_id'], storage_general)
         except Exception as e:
             print(f"Error storing data: {e}")
 
