@@ -102,8 +102,8 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
                     # Return the HTML content
                     return (html.Div([
                         html.Iframe(srcDoc=fig_html_with_js,
-                                    style={"width": f"{scaled_width}px",  # Ensure iframe width fills the parent
-                                           "height": f"{scaled_height}px",  # Ensure iframe height fills the parent
+                                    style={"width": f"100%",  # Ensure iframe width fills the parent
+                                           "height": f"100%",  # Ensure iframe height fills the parent
                                            "border": "none",  # Remove borders if not needed
                                            "overflow": "hidden"  # Prevent scrollbars from appearing
                                            }

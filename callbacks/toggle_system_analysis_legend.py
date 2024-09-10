@@ -28,9 +28,14 @@ def toggle_modal(open_clicks, close_clicks, is_open):
 @app.callback(
     Output('modal_system_analysis-body', 'children'),  # Target the modal body to update its content
     Input('pathways-legend', 'n_clicks'),  # Trigger when the button is clicked
-    State('storage-general', 'data')
+    Input("pathway-1", "value"),
+     Input("pathway-2", "value"),
+     Input("pathway-3", "value"),
+     Input("pathway-4", "value"),
+    State('store-page-E-form', 'data')
 )
-def populate_modal(n_clicks, storage_data):
+def populate_modal(n_clicks, pathway1, pathway2, pathway3, pathway4, storage_data):
+    all_pathways = [pathway1, pathway2, pathway3, pathway4]
     # Step 1: Static content (First Row)
     header_row = dbc.Row(
         html.H5("The combination of the following pathway(s) is considered")
@@ -49,35 +54,35 @@ def populate_modal(n_clicks, storage_data):
     third_row = dbc.Row([
     dbc.Col(
         generate_image_based_on_text(
-            f"{ROH_LIST[0]}/uniform_color/{ROH_LIST[0]}_pathway_{storage_data.get(f'pathway_{ROH_LIST[0]}', 'not-considered')}_ylabel"
+            f"{ROH_LIST[0]}/uniform_color/{ROH_LIST[0]}_pathway_{all_pathways[0]}_ylabel"
         ),
         width=3,  # Auto width for image as well
         style={'padding-left': '5px'}  # Adjust the padding to reduce space
-    ) if storage_data.get(f'pathway_{ROH_LIST[0]}') != 'not-considered' else dbc.Col(html.P()),
+    ) if all_pathways[0] != 'not-considered' else dbc.Col(html.P()),
 
     dbc.Col(
         generate_image_based_on_text(
-            f"{ROH_LIST[1]}/uniform_color/{ROH_LIST[1]}_pathway_{storage_data.get(f'pathway_{ROH_LIST[1]}', 'not-considered')}_ylabel"
+            f"{ROH_LIST[1]}/uniform_color/{ROH_LIST[1]}_pathway_{all_pathways[1]}_ylabel"
         ),
         width=3,  # Auto width for image as well
         style={'padding-left': '5px'}  # Adjust the padding to reduce space
-    ) if storage_data.get(f'pathway_{ROH_LIST[1]}') != 'not-considered' else dbc.Col(html.P()),
+    ) if all_pathways[1] != 'not-considered' else dbc.Col(html.P()),
 
     dbc.Col(
         generate_image_based_on_text(
-            f"{ROH_LIST[2]}/uniform_color/{ROH_LIST[2]}_pathway_{storage_data.get(f'pathway_{ROH_LIST[2]}', 'not-considered')}_ylabel"
+            f"{ROH_LIST[2]}/uniform_color/{ROH_LIST[2]}_pathway_{all_pathways[2]}_ylabel"
         ),
         width=3,  # Auto width for image as well
         style={'padding-left': '5px'}  # Adjust the padding to reduce space
-    ) if storage_data.get(f'pathway_{ROH_LIST[2]}') != 'not-considered' else dbc.Col(html.P()),
+    ) if all_pathways[2] != 'not-considered' else dbc.Col(html.P()),
 
     dbc.Col(
         generate_image_based_on_text(
-            f"{ROH_LIST[3]}/uniform_color/{ROH_LIST[3]}_pathway_{storage_data.get(f'pathway_{ROH_LIST[3]}', 'not-considered')}_ylabel"
+            f"{ROH_LIST[3]}/uniform_color/{ROH_LIST[3]}_pathway_{all_pathways[3]}_ylabel"
         ),
         width=3,  # Auto width for image as well
         style={'padding-left': '5px'}  # Adjust the padding to reduce space
-    ) if storage_data.get(f'pathway_{ROH_LIST[3]}') != 'not-considered' else dbc.Col(html.P()),
+    ) if all_pathways[3]!= 'not-considered' else dbc.Col(html.P()),
 
 ])
 

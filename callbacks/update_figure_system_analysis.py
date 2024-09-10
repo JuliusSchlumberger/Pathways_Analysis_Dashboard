@@ -64,8 +64,7 @@ def update_graph_fig_pathways(pathway1, pathway2, pathway3, pathway4, scenario, 
                 return fig, stored_data, pathway1, pathway2, pathway3, pathway4, scenario, 0
             else:
                 return dash.no_update, storage, *[storage[f'pathway_{i}'] for i in ROH_LIST], storage['scenarios'], 0
-        return dash.no_update, storage, *[storage[f'pathway_{i}'] for i in ROH_LIST], storage[
-            'scenarios'], 0
+        return dash.no_update, storage, *[dash.no_update for i in ROH_LIST], dash.no_update, 0
 
 @app.callback(
     Output("performance-graph", "figure"),

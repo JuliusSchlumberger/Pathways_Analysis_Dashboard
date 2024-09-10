@@ -1,21 +1,21 @@
 import dash_bootstrap_components as dbc
-from dash import dcc, Input, Output, html, ALL, State
-from pages import *
+from dash import dcc, Input, Output, html, ALL
 from components import header, TermsConditions
 from components.progress_modal import PROGRESS_MODAL, FINAL_MODAL
-# from callbacks import toggle_tabs
-import dash
-from callbacks import (navigation_pages, toggle_termsconditions, update_general_store,
+from callbacks import (navigation_pages, toggle_termsconditions,
                        to_store, update_general_store,
                        update_alternatives, \
                        update_robustness, \
-                       update_pathways, update_surveys, toggle_word_explanations, update_figure_description, toggle_system_analysis_legend, update_figure_system_analysis, update_system_analysis_layout
+                       update_pathways, update_surveys, toggle_word_explanations, update_figure_description,
+                       toggle_system_analysis_legend, update_figure_system_analysis, update_system_analysis_layout
                        )
 
 from dashapp import app
 
 
 server = app.server
+
+
 app.layout = dbc.Container(
     [
         dcc.Store(id='viewport-size', storage_type='session', data={}),  # To store and use viewport data in other callbacks

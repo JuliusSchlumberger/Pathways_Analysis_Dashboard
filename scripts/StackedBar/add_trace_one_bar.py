@@ -61,8 +61,9 @@ def add_traces_oneBar(plot_objectives, sector_objectives, plot_df, text_df, text
 
             # Since you are using RGB, you need only the first 3 channels
             rgb_color = rgba_color_int[:3]
-            pattern = dict(shape='/', bgcolor=rgb_color, fgcolor='white') if col.endswith('_tradeoff') else dict(shape='.',
-                                                                                                            bgcolor=rgb_color,
+            rgb_tuple = f'rgb({", ".join([str(c) for c in rgb_color])})'
+            pattern = dict(shape='/', bgcolor=rgb_tuple, fgcolor='white') if col.endswith('_tradeoff') else dict(shape='.',
+                                                                                                            bgcolor=rgb_tuple,
                                                                                                              fgcolor='white') if col.endswith(
                 '_synergy') else None
 
@@ -79,6 +80,8 @@ def add_traces_oneBar(plot_objectives, sector_objectives, plot_df, text_df, text
                 showlegend = True
             # print(error)
             # Add individual trace for each row
+
+            print(rgb_tuple)
             traces.append(go.Bar(
                 name=groupname,
                 x=[plot_df.at[i, col]],
@@ -88,7 +91,7 @@ def add_traces_oneBar(plot_objectives, sector_objectives, plot_df, text_df, text
 
                 customdata=[hover_text],
                 # hoverinfo='text',
-                marker=dict(color=f'rgb{rgb_color}', pattern=pattern),
+                marker=dict(color=rgb_tuple, pattern=pattern),
                 showlegend=showlegend,
                 # name=custom_name,
                 hoverinfo='none',  # Disable default hover info on the plot
@@ -134,6 +137,7 @@ def add_traces_oneBar_multi_risk(plot_df, text_df, sectors_of_interest_list, off
                 rgba_color_int = tuple(int(c * 255) for c in color)
 
                 rgb_color = rgba_color_int[:3]
+                rgb_tuple = f'rgb({", ".join([str(c) for c in rgb_color])})'
                 # Determine if this legend entry has already been added
                 showlegend = False
 
@@ -150,7 +154,7 @@ def add_traces_oneBar_multi_risk(plot_df, text_df, sectors_of_interest_list, off
 
                     hovertemplate=hover_text,
                     # hoverinfo='text',
-                    marker=dict(color=rgba_color_int),
+                    marker=dict(color=rgb_tuple),
                     showlegend=showlegend,
                     # name=custom_name,
                     # hoverinfo='none',  # Disable default hover info on the plot
