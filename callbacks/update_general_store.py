@@ -145,13 +145,12 @@ def update_storage_general(n, store_A_selection, store_B_selection, store_C_sele
         check_complete = 'completed_system_analysis'
         end_modal = True
 
-    # try:
-    #     save_response_to_db(DATABASE_URL, storage_general['existing_id'], storage_general)
-    # except Exception as e:
-    #     print(f"Error storing data: {e}")
-    print(check_complete)
+    try:
+        save_response_to_db(DATABASE_URL, storage_general['existing_id'], storage_general)
+    except Exception as e:
+        print(f"Error storing data: {e}")
+        
     if check_complete != None:
-        print(storage_general)
         if storage_general[check_complete] == 'yes':
             current_step = get_step_from_pathname(storage_general.get('current_url', '/0-introduction'))
             new_step = min(current_step + 1, len(PAGES) - 1)
