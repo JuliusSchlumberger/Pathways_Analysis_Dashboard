@@ -49,40 +49,74 @@ def populate_modal(n_clicks, pathway1, pathway2, pathway3, pathway4, storage_dat
             f"{name}: Not Considered"), width=3) for name in
         actor_risk_names
     ])
+    if isinstance(all_pathways[0], list):
+        # Step 3: Dynamic content based on storage_data (Third Row)
+        full_set = {}
+        for i, pathway_list in enumerate(all_pathways):
+            full_set[i] = []
+            for p in pathway_list:
+                full_set[i].append(generate_image_based_on_text(
+                    f"{ROH_LIST[i]}/uniform_color/{ROH_LIST[i]}_pathway_{p}_ylabel"
+                ))
 
-    # Step 3: Dynamic content based on storage_data (Third Row)
-    third_row = dbc.Row([
-    dbc.Col(
-        generate_image_based_on_text(
-            f"{ROH_LIST[0]}/uniform_color/{ROH_LIST[0]}_pathway_{all_pathways[0]}_ylabel"
-        ),
-        width=3,  # Auto width for image as well
-        style={'padding-left': '5px'}  # Adjust the padding to reduce space
-    ) if all_pathways[0] != 'not-considered' else dbc.Col(html.P()),
+        third_row = dbc.Row([
+            dbc.Col([*full_set[0]],
+                width=3,  # Auto width for image as well
+                style={'padding-left': '5px'}  # Adjust the padding to reduce space
+            ),
 
-    dbc.Col(
-        generate_image_based_on_text(
-            f"{ROH_LIST[1]}/uniform_color/{ROH_LIST[1]}_pathway_{all_pathways[1]}_ylabel"
-        ),
-        width=3,  # Auto width for image as well
-        style={'padding-left': '5px'}  # Adjust the padding to reduce space
-    ) if all_pathways[1] != 'not-considered' else dbc.Col(html.P()),
+            dbc.Col(
+                [*full_set[1]],
+                width=3,  # Auto width for image as well
+                style={'padding-left': '5px'}  # Adjust the padding to reduce space
+            ),
 
-    dbc.Col(
-        generate_image_based_on_text(
-            f"{ROH_LIST[2]}/uniform_color/{ROH_LIST[2]}_pathway_{all_pathways[2]}_ylabel"
-        ),
-        width=3,  # Auto width for image as well
-        style={'padding-left': '5px'}  # Adjust the padding to reduce space
-    ) if all_pathways[2] != 'not-considered' else dbc.Col(html.P()),
+            dbc.Col(
+                [*full_set[2]],
+                width=3,  # Auto width for image as well
+                style={'padding-left': '5px'}  # Adjust the padding to reduce space
+            ),
 
-    dbc.Col(
-        generate_image_based_on_text(
-            f"{ROH_LIST[3]}/uniform_color/{ROH_LIST[3]}_pathway_{all_pathways[3]}_ylabel"
-        ),
-        width=3,  # Auto width for image as well
-        style={'padding-left': '5px'}  # Adjust the padding to reduce space
-    ) if all_pathways[3]!= 'not-considered' else dbc.Col(html.P()),
+            dbc.Col(
+                [*full_set[3]],
+                width=3,  # Auto width for image as well
+                style={'padding-left': '5px'}  # Adjust the padding to reduce space
+            )
+            ])
+    else:
+        # Step 3: Dynamic content based on storage_data (Third Row)
+        third_row = dbc.Row([
+        dbc.Col(
+            generate_image_based_on_text(
+                f"{ROH_LIST[0]}/uniform_color/{ROH_LIST[0]}_pathway_{all_pathways[0]}_ylabel"
+            ),
+            width=3,  # Auto width for image as well
+            style={'padding-left': '5px'}  # Adjust the padding to reduce space
+        ) if all_pathways[0] != 'not-considered' else dbc.Col(html.P()),
+
+        dbc.Col(
+            generate_image_based_on_text(
+                f"{ROH_LIST[1]}/uniform_color/{ROH_LIST[1]}_pathway_{all_pathways[1]}_ylabel"
+            ),
+            width=3,  # Auto width for image as well
+            style={'padding-left': '5px'}  # Adjust the padding to reduce space
+        ) if all_pathways[1] != 'not-considered' else dbc.Col(html.P()),
+
+        dbc.Col(
+            generate_image_based_on_text(
+                f"{ROH_LIST[2]}/uniform_color/{ROH_LIST[2]}_pathway_{all_pathways[2]}_ylabel"
+            ),
+            width=3,  # Auto width for image as well
+            style={'padding-left': '5px'}  # Adjust the padding to reduce space
+        ) if all_pathways[2] != 'not-considered' else dbc.Col(html.P()),
+
+        dbc.Col(
+            generate_image_based_on_text(
+                f"{ROH_LIST[3]}/uniform_color/{ROH_LIST[3]}_pathway_{all_pathways[3]}_ylabel"
+            ),
+            width=3,  # Auto width for image as well
+            style={'padding-left': '5px'}  # Adjust the padding to reduce space
+        ) if all_pathways[3]!= 'not-considered' else dbc.Col(html.P()),
 
 ])
 
