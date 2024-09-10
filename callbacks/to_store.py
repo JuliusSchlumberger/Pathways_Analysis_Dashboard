@@ -168,47 +168,58 @@ def handle_alternative_pathways(
     confidence, enough_information, scalability, alternative_challenge, alternative_advantage, stored_data
 ):
     storage = {}
-    print('alternattive pathways is called')
     input_ids = [
         'pathway_number', 'f_resilient_crops', 'long_term', 'flexibility', 'alternatives_easy',
         'alternatives_confidence', 'alternatives_enough_information', 'alternatives_scalability', 'alternative_challenge', 'alternative_advantage'
     ]
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    if n_clicks == 0:
+    if not ctx.triggered or n_clicks < 1:
         return (
-            *[stored_data.get(in_id, None) for in_id in input_ids],
-            storage,
-            *[dash.no_update] * (len(input_ids) + 2)
+                *[stored_data.get(in_id, None) for in_id in input_ids],
+                storage,
+                *[dash.no_update] * (len(input_ids) + 2)
+            )
+
+    else:
+        print('alternattive pathways is called', triggered_id, n_clicks)
+        if n_clicks == 0:
+            print('not_relevant')
+            return (
+                *[stored_data.get(in_id, None) for in_id in input_ids],
+                storage,
+                *[dash.no_update] * (len(input_ids) + 2)
+            )
+
+        # Check if the URL matches the correct page
+        print('alternattive pathways is activated')
+        values = [
+            pathway_number, f_resilient_crops, long_term, flexibility, easy,
+            confidence, enough_information, scalability, alternative_challenge, alternative_advantage
+        ]
+
+        # Validate and store data
+        validation_styles, storage, final_comment, final_style = validate_and_store_data(
+            input_ids, values, storage
         )
 
-    # Check if the URL matches the correct page
-    print('alternattive pathways is activated')
-    values = [
-        pathway_number, f_resilient_crops, long_term, flexibility, easy,
-        confidence, enough_information, scalability, alternative_challenge, alternative_advantage
-    ]
+        # Determine completion status
+        if final_style['color'] == '#5cb85c':
+            storage['completed_alternative_pathways'] = 'yes'
 
-    # Validate and store data
-    validation_styles, storage, final_comment, final_style = validate_and_store_data(
-        input_ids, values, storage
-    )
-
-    # Determine completion status
-    if final_style['color'] == '#5cb85c':
-        storage['completed_alternative_pathways'] = 'yes'
-
-        return (
-            *[storage.get(in_id, None) for in_id in input_ids],
-            storage,
-            final_comment, final_style,
-            *validation_styles)
-    else:
-        storage['completed_alternative_pathways'] = 'no'
-        return (
-            *[storage.get(in_id, None) for in_id in input_ids],
-            storage,
-            final_comment, final_style,
-            *validation_styles)
+            return (
+                *[storage.get(in_id, None) for in_id in input_ids],
+                storage,
+                final_comment, final_style,
+                *validation_styles)
+        else:
+            storage['completed_alternative_pathways'] = 'no'
+            return (
+                *[storage.get(in_id, None) for in_id in input_ids],
+                storage,
+                final_comment, final_style,
+                *validation_styles)
 
 
 @app.callback(
@@ -265,47 +276,54 @@ def handle_pathways_robustness(n_clicks, coding, crop_loss, robustness, tradeoff
                                interaction_least_productivity_loss, easy, confidence, enough_information,
                                scalability, robustness_challenge, robustness_advantage, stored_data):
     storage = {}
-    ctx = dash.callback_context
-    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
-    print('robustness called', triggered_id)
     input_ids = [
         'coding', 'crop_loss', 'robustness', 'tradeoff', 'general_interactions', 'interaction_least_productivity_loss',
         'robustness_easy', 'robustness_enough_information', 'robustness_enough_informationn',
         'robustness_scalability', 'robustness_challenge', 'robustness_advantage'
     ]
-
-    if n_clicks == 0:
-        print('not_relevant')
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    print('robustness pathways is called', triggered_id)
+    if not ctx.triggered or n_clicks < 1:
         return (
             *[stored_data.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else stored_data.get(in_id, None) for in_id in input_ids],
             storage,
-            *[dash.no_update] * (len(input_ids) + 2),
+            *[dash.no_update] * (len(input_ids) + 2)
         )
-
-    print('robustness activated')
-    values = [
-        coding, crop_loss, robustness, tradeoff, general_interactions, interaction_least_productivity_loss,
-        easy, confidence, enough_information, scalability, robustness_challenge, robustness_advantage
-    ]
-
-    validation_styles, storage, final_comment, final_style = validate_and_store_data(
-        input_ids, values, storage)
-    if final_style['color'] == '#5cb85c':
-        storage['completed_pathways_robustness'] = 'yes'
-
-
-        return (
-            *[storage.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else storage.get(in_id, None) for in_id in input_ids],
-            storage,
-            final_comment, final_style,
-            *validation_styles)
     else:
-        storage['completed_pathways_robustness'] = 'no'
-        return (
-            *[storage.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else storage.get(in_id, None) for in_id in input_ids],
-            storage,
-            final_comment, final_style,
-            *validation_styles,)
+        print('robustness pathways is TRIGGERED', triggered_id)
+        if n_clicks == 0:
+            print('not_relevant')
+            return (
+                *[stored_data.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else stored_data.get(in_id, None) for in_id in input_ids],
+                storage,
+                *[dash.no_update] * (len(input_ids) + 2),
+            )
+
+        print('robustness activated')
+        values = [
+            coding, crop_loss, robustness, tradeoff, general_interactions, interaction_least_productivity_loss,
+            easy, confidence, enough_information, scalability, robustness_challenge, robustness_advantage
+        ]
+
+        validation_styles, storage, final_comment, final_style = validate_and_store_data(
+            input_ids, values, storage)
+        if final_style['color'] == '#5cb85c':
+            storage['completed_pathways_robustness'] = 'yes'
+
+
+            return (
+                *[storage.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else storage.get(in_id, None) for in_id in input_ids],
+                storage,
+                final_comment, final_style,
+                *validation_styles)
+        else:
+            storage['completed_pathways_robustness'] = 'no'
+            return (
+                *[storage.get(in_id, []) if in_id in ['robustness', 'tradeoff', 'interaction_least_productivity_loss'] else storage.get(in_id, None) for in_id in input_ids],
+                storage,
+                final_comment, final_style,
+                *validation_styles,)
 
 @app.callback(
     [
@@ -362,48 +380,56 @@ def handle_pathways_maps(n_clicks, first_measure, number_measures, most_flexible
                          timing_shifts, ditch_shift, easy, confidence, enough_information, scalability,
                          pathways_challenge, pathways_advantage, stored_data):
     storage = {}
-    ctx = dash.callback_context
-    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
-    print('pathways called', triggered_id)
     input_ids = [
         'first_measure', 'number_measures', 'most_flexible15', 'most_flexible4', 'timing_shifts', 'ditch_shift',
         'pathways_maps_easy', 'pathways_maps_confidence',
         'pathways_maps_enough_information', 'pathways_maps_scalability', 'pathways_challenge',
         'pathways_advantage'
     ]
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    if n_clicks == 0:
+    if not ctx.triggered or n_clicks < 1:
+
         return (
             *[stored_data.get(in_id, None) for in_id in input_ids],
             storage,
-            *[dash.no_update] * (len(input_ids) + 2),
+            *[dash.no_update] * (len(input_ids) + 2)
         )
-
-    print('pathways activated')
-    values = [
-        first_measure, number_measures, most_flexible1_5, most_flexible4, timing_shifts, ditch_shift,
-        easy, confidence, enough_information, scalability, pathways_challenge, pathways_advantage
-    ]
-
-    validation_styles, storage, final_comment, final_style = validate_and_store_data(
-        input_ids, values, storage)
-    if final_style['color'] == '#5cb85c':
-        storage['completed_pathways_maps'] = 'yes'
-
-        return (
-            *[storage.get(in_id, None) for in_id in input_ids],
-            storage,
-            final_comment, final_style,
-            *validation_styles
-        )
-
     else:
-        storage['completed_pathways_maps'] = 'no'
-        return (
-            *[storage.get(in_id, None) for in_id in input_ids],
-            storage,
-            final_comment, final_style,
-            *validation_styles)
+        print('map pathways is called', triggered_id)
+        if n_clicks == 0:
+            return (
+                *[stored_data.get(in_id, None) for in_id in input_ids],
+                storage,
+                *[dash.no_update] * (len(input_ids) + 2),
+            )
+
+        print('pathways activated')
+        values = [
+            first_measure, number_measures, most_flexible1_5, most_flexible4, timing_shifts, ditch_shift,
+            easy, confidence, enough_information, scalability, pathways_challenge, pathways_advantage
+        ]
+
+        validation_styles, storage, final_comment, final_style = validate_and_store_data(
+            input_ids, values, storage)
+        if final_style['color'] == '#5cb85c':
+            storage['completed_pathways_maps'] = 'yes'
+
+            return (
+                *[storage.get(in_id, None) for in_id in input_ids],
+                storage,
+                final_comment, final_style,
+                *validation_styles
+            )
+
+        else:
+            storage['completed_pathways_maps'] = 'no'
+            return (
+                *[storage.get(in_id, None) for in_id in input_ids],
+                storage,
+                final_comment, final_style,
+                *validation_styles)
 
 
 @app.callback(
@@ -478,9 +504,6 @@ def handle_system_analysis(n_clicks, system_analysis_pathways_1560, system_analy
                          system_analysis_performance_scalability, system_analysis_challenge, system_analysis_advantage,
                            stored_data):
     storage = {}
-    ctx = dash.callback_context
-    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
-    print('system_analysis called', triggered_id)
     input_ids = [
         'system_analysis_pathways_1560', 'system_analysis_pathways_1530', 'system_analysis_pathways_which_better',
         'system_analysis_performance_1560',
@@ -490,43 +513,53 @@ def handle_system_analysis(n_clicks, system_analysis_pathways_1560, system_analy
         'system_analysis_performance_enough_information', 'system_analysis_pathways_scalability',
         'system_analysis_performance_scalability', 'system_analysis_challenge', 'system_analysis_advantage',
     ]
+    ctx = dash.callback_context
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
 
-    if n_clicks == 0:
-        print(f"Returning stored data without click: {storage}")
+    if not ctx.triggered or n_clicks < 1:
         return (
             *[stored_data.get(in_id, None) for in_id in input_ids],
             storage,
-            *[dash.no_update] * (len(input_ids) + 2),
+            *[dash.no_update] * (len(input_ids) + 2)
         )
-
-    print('pathways activated')
-    values = [
-        system_analysis_pathways_1560, system_analysis_pathways_1530,
-        system_analysis_pathways_which_better, system_analysis_performance_1560,
-        system_analysis_performance_1530, system_analysis_performance_which_better,
-        system_analysis_pathways_easy, system_analysis_performance_easy,
-        system_analysis_pathways_confidence,
-        system_analysis_performance_confidence, system_analysis_pathways_enough_information,
-        system_analysis_performance_enough_information, system_analysis_pathways_scalability,
-        system_analysis_performance_scalability, system_analysis_challenge, system_analysis_advantage,
-    ]
-
-    validation_styles, storage, final_comment, final_style = validate_and_store_data(
-        input_ids, values, storage)
-    if final_style['color'] == '#5cb85c':
-        storage['completed_system_analysis'] = 'yes'
-
-        return (
-            *[storage.get(in_id, None) for in_id in input_ids],
-            storage,
-            final_comment, final_style,
-            *validation_styles)
-
     else:
-        storage['completed_system_analysis'] = 'no'
-        return (
-            *[storage.get(in_id, None) for in_id in input_ids],
-            storage,
-            final_comment, final_style,
-            *validation_styles
-        )
+        print('system analysis is called', triggered_id)
+        if n_clicks == 0:
+            print(f"Returning stored data without click: {storage}")
+            return (
+                *[stored_data.get(in_id, None) for in_id in input_ids],
+                storage,
+                *[dash.no_update] * (len(input_ids) + 2),
+            )
+
+        print('systems pathways activated')
+        values = [
+            system_analysis_pathways_1560, system_analysis_pathways_1530,
+            system_analysis_pathways_which_better, system_analysis_performance_1560,
+            system_analysis_performance_1530, system_analysis_performance_which_better,
+            system_analysis_pathways_easy, system_analysis_performance_easy,
+            system_analysis_pathways_confidence,
+            system_analysis_performance_confidence, system_analysis_pathways_enough_information,
+            system_analysis_performance_enough_information, system_analysis_pathways_scalability,
+            system_analysis_performance_scalability, system_analysis_challenge, system_analysis_advantage,
+        ]
+
+        validation_styles, storage, final_comment, final_style = validate_and_store_data(
+            input_ids, values, storage)
+        if final_style['color'] == '#5cb85c':
+            storage['completed_system_analysis'] = 'yes'
+
+            return (
+                *[storage.get(in_id, None) for in_id in input_ids],
+                storage,
+                final_comment, final_style,
+                *validation_styles)
+
+        else:
+            storage['completed_system_analysis'] = 'no'
+            return (
+                *[storage.get(in_id, None) for in_id in input_ids],
+                storage,
+                final_comment, final_style,
+                *validation_styles
+            )

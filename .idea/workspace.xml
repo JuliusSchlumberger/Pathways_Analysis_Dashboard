@@ -5,26 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c60c66b6-51d2-4150-b49d-e2c284deebe4" name="Changes" comment="'with tab description'">
-      <change afterPath="$PROJECT_DIR$/callbacks/update_general_store.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/navigation_pages.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/navigation_pages.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/to_store.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/to_store.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/toggle_termsconditions.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/toggle_termsconditions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/toggle_word_explanations.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/toggle_word_explanations.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/update_alternatives.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_alternatives.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/update_figure_description.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_figure_description.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/update_figure_system_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_figure_system_analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/update_general_store.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_general_store.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/update_pathways.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_pathways.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/update_robustness.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_robustness.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/update_system_analysis_layout.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_system_analysis_layout.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/A_introduction.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/A_introduction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/B_alternative_pathways.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/B_alternative_pathways.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/C_pathways_robustness.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/C_pathways_robustness.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/D_pathways_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/D_pathways_maps.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/E_system_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/E_system_analysis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/StackedBar/add_trace_one_bar.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/StackedBar/add_trace_one_bar.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utilities/scale_figure.py" beforeDir="false" afterPath="$PROJECT_DIR$/utilities/scale_figure.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamic_data/data/3_pathways_maps/processed/all_sequences_flood_urb_G_average_05&amp;00&amp;00_only_sequences.txt" beforeDir="false" afterPath="$PROJECT_DIR$/dynamic_data/data/3_pathways_maps/processed/all_sequences_flood_urb_G_average_05&amp;00&amp;00_only_sequences.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

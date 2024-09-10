@@ -85,18 +85,21 @@ def display_page(prev_clicks, next_clicks, url, viewport, stored_data, current_p
     # # Manage if navigation via url
     if triggered_id == 'url':
         storage['viewport_size'] = viewport
-        print('# Manage if navigation via url', url, stored_data.get('current_url', None))
+        print('# Manage if navigation via url', url)
         to_page = get_step_from_pathname(url)
-        from_page = get_step_from_pathname(stored_data.get('current_url', '/0-introduction'))
-        print(PAGES[to_page]['check'], to_page)
-        if stored_data.get(PAGES[from_page]['check'], 'no') == 'yes' or from_page >= to_page:
+        print(PAGES[to_page]['check'], stored_data.get(PAGES[to_page - 1]['check'], 'no'), stored_data.get(PAGES[to_page]['check'],
+                                                                                          'no'), to_page)
+        # Two cases: 1) previous page has successfully been completed 2) Jumping back to another one
+        if stored_data.get(PAGES[to_page - 1]['check'], 'no') == 'yes' or stored_data.get(PAGES[to_page]['check'],
+                                                                                          'no') == 'yes':
+            print('page updated')
             page_names = create_link_design(to_page)
             content = step_content_dict.get(to_page, layout_A)
             storage['current_url'] = url
             return content, *page_names, storage['current_url'], storage, 0, 0, False, False
         else:
             return (
-                dash.no_update, *[dash.no_update] * len(PAGES), storage['current_url'], dash.no_update, 0, 0, True, False)
+                dash.no_update, *[dash.no_update] * len(PAGES), dash.no_update, dash.no_update, 0, 0, True, False)
 
     # Manage if navigation via buttons
     from_page = get_step_from_pathname(current_path)

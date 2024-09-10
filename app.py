@@ -19,16 +19,16 @@ server = app.server
 app.layout = dbc.Container(
     [
         dcc.Store(id='viewport-size', storage_type='session', data={}),  # To store and use viewport data in other callbacks
-        dcc.Store(id='store-page-A-selection',storage_type='session', data={}),
-        dcc.Store(id='store-page-A-form',storage_type='session', data={}),
-        dcc.Store(id='store-page-B-selection', storage_type='session', data={}),
-        dcc.Store(id='store-page-B-form', storage_type='session', data={}),
-        dcc.Store(id='store-page-C-selection', storage_type='session', data={}),
-        dcc.Store(id='store-page-C-form', storage_type='session', data={}),
-        dcc.Store(id='store-page-D-selection', storage_type='session', data={}),
-        dcc.Store(id='store-page-D-form', storage_type='session', data={}),
-        dcc.Store(id='store-page-E-selection', storage_type='session', data={}),
-        dcc.Store(id='store-page-E-form', storage_type='session', data={}),
+        dcc.Store(id='store-page-A-selection', data={}),
+        dcc.Store(id='store-page-A-form', data={}),
+        dcc.Store(id='store-page-B-selection', data={}),
+        dcc.Store(id='store-page-B-form', data={}),
+        dcc.Store(id='store-page-C-selection', data={}),
+        dcc.Store(id='store-page-C-form', data={}),
+        dcc.Store(id='store-page-D-selection', data={}),
+        dcc.Store(id='store-page-D-form', data={}),
+        dcc.Store(id='store-page-E-selection', data={}),
+        dcc.Store(id='store-page-E-form', data={}),
         dcc.Location(id='url', refresh=False),
         html.Link(rel='shortcut icon', href='/assets/favicon.ico'),
         dcc.Store(id='storage-general', storage_type='session', data={'current_url': '/0-introduction'}),  # Using session storage

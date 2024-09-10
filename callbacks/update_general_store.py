@@ -64,7 +64,7 @@ def save_response_to_db(DATABASE_URL, user_id, data):
         Output("progress_modal", "is_open", allow_duplicate=True),
         Output('end_modal', 'is_open'),
     [
-        Input({'type': 'submit-survey', 'index': ALL}, 'n_clicks'),
+        # Input({'type': 'submit-survey', 'index': ALL}, 'n_clicks'),
     Input('store-page-A-selection', 'data'),
      Input('store-page-B-selection', 'data'),
      Input('store-page-C-selection', 'data'),
@@ -80,7 +80,7 @@ def save_response_to_db(DATABASE_URL, user_id, data):
     State('storage-general', 'data'),
     prevent_initial_call=True
 )
-def update_storage_general(n, store_A_selection, store_B_selection, store_C_selection, store_D_selection,
+def update_storage_general(store_A_selection, store_B_selection, store_C_selection, store_D_selection,
                            store_E_selection, store_A_form, store_B_form, store_C_form, store_D_form, store_E_form,
                            storage_navigation, storage_general):
     ctx = dash.callback_context
@@ -92,65 +92,63 @@ def update_storage_general(n, store_A_selection, store_B_selection, store_C_sele
         if 'index' in triggered_dict:
             index = triggered_dict['index']
 
+    if triggered_id.endswith('ion'):
+        # Update the central storage with non-None values from each page store
+        if storage_navigation:
+            print('navi called')
+            storage_general.update(storage_navigation)
+        if store_A_selection:
+            print('As called')
+            storage_general.update(store_A_selection)
+        if store_B_selection:
+            print('bs called')
+            storage_general.update(store_B_selection)
+        if store_C_selection:
+            print('cs called')
+            storage_general.update(store_C_selection)
+        if store_D_selection:
+            print('ds called')
+            storage_general.update(store_D_selection)
+        if store_E_selection:
+            print('es called')
+            storage_general.update(store_E_selection)
+        return storage_general, dash.no_update, *[dash.no_update] * len(
+            PAGES), dash.no_update, False, False
+    else:
+        if triggered_id.split('-')[2] == 'A':
+            print('af called', store_A_form)
+            storage_general.update(store_A_form)
+            check_complete = 'completed_introduction'
+            end_modal = False
+        elif triggered_id.split('-')[2] == 'B':
+            print('bf called', store_B_form)
+            storage_general.update(store_B_form)
+            check_complete = 'completed_alternative_pathways'
+            end_modal = False
+        elif triggered_id.split('-')[2] == 'C':
+            print('cf called', store_C_form)
+            storage_general.update(store_C_form)
+            check_complete = 'completed_pathways_robustness'
+            end_modal = False
+        elif triggered_id.split('-')[2] == 'D':
+            print('df called', store_D_form)
+            storage_general.update(store_D_form)
+            check_complete = 'completed_pathways_maps'
+            end_modal = False
+        elif triggered_id.split('-')[2] == 'E':
+            print('ef called', store_E_form)
+            storage_general.update(store_E_form)
+            check_complete = 'completed_system_analysis'
+            end_modal = True
+        else:
+            return storage_general, dash.no_update, *[dash.no_update] * len(
+                PAGES), dash.no_update, False, False
 
-    print(store_A_form)
-    # Update the central storage with non-None values from each page store
-    if storage_navigation:
-        print('ef called')
-        storage_general.update(storage_navigation)
-        check_complete = None
-    if store_A_selection:
-        print('As called')
-        storage_general.update(store_A_selection)
-        check_complete = None
-    if store_B_selection:
-        print('bs called')
-        storage_general.update(store_B_selection)
-        check_complete = None
-    if store_C_selection:
-        print('cs called')
-        storage_general.update(store_C_selection)
-        check_complete = None
-    if store_D_selection:
-        print('ds called')
-        storage_general.update(store_D_selection)
-        check_complete = None
-    if store_E_selection:
-        print('es called')
-        storage_general.update(store_E_selection)
-        check_complete = None
-    if store_A_form:
-        print('af1 called')
-        storage_general.update(store_A_form)
-        check_complete = 'completed_introduction'
-        end_modal = False
-    if store_B_form:
-        print('af called')
-        storage_general.update(store_B_form)
-        check_complete = 'completed_alternative_pathways'
-        end_modal = False
-    if store_C_form:
-        print('bf called')
-        storage_general.update(store_C_form)
-        check_complete = 'completed_pathways_robustness'
-        end_modal = False
-    if store_D_form:
-        print('cf called')
-        storage_general.update(store_D_form)
-        check_complete = 'completed_pathways_maps'
-        end_modal = False
-    if store_E_form:
-        print('df called')
-        storage_general.update(store_E_form)
-        check_complete = 'completed_system_analysis'
-        end_modal = True
+        try:
+            save_response_to_db(DATABASE_URL, storage_general['existing_id'], storage_general)
+        except Exception as e:
+            print(f"Error storing data: {e}")
 
-    try:
-        save_response_to_db(DATABASE_URL, storage_general['existing_id'], storage_general)
-    except Exception as e:
-        print(f"Error storing data: {e}")
-        
-    if check_complete != None:
         if storage_general[check_complete] == 'yes':
             current_step = get_step_from_pathname(storage_general.get('current_url', '/0-introduction'))
             new_step = min(current_step + 1, len(PAGES) - 1)
@@ -164,10 +162,11 @@ def update_storage_general(n, store_A_selection, store_B_selection, store_C_sele
             page_names = create_link_design(new_step)
 
             print('after', triggered_id, storage_general)
-            return storage_general, dash.no_update if index == 5 else content, *page_names, dash.no_update if index == 5 else storage_general['current_url'], False, end_modal
+            return storage_general, dash.no_update if triggered_id.split('-')[
+                                                          2] == 'E' else content, *page_names, dash.no_update if \
+            triggered_id.split('-')[2] == 'E' else storage_general['current_url'], False, end_modal
+
+            # return storage_general, content, *page_names, storage_general['current_url'], False, end_modal
         else:
             return storage_general, dash.no_update, *[dash.no_update] * len(
                 PAGES), dash.no_update, True, False
-    else:
-        return storage_general, dash.no_update, *[dash.no_update] * len(
-            PAGES), dash.no_update, False, False
