@@ -27,34 +27,51 @@ step_content_dict = {
         }
 
 DATABASE_URL = os.getenv('DATABASE_URL')
+print(DATABASE_URL)
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-def save_response_to_db(DATABASE_URL, user_id, data):
-    # Adjust the URL format if necessary
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+engine = create_engine(DATABASE_URL)
+Session = sessionmaker(bind=engine)
 
-    # Set up SQLAlchemy
-    engine = create_engine(DATABASE_URL)
-    Base = declarative_base()
+# Define the Base and SurveyResponse model once
+Base = declarative_base()
+# Create tables (if they don't exist) - should be called once, like at the app startup
+Base.metadata.create_all(engine)
 
-    Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
+class SurveyResponse(Base):
+    __tablename__ = TABLE_NAME
+    id = Column(Integer, primary_key=True)
+    user_id = Column(String, nullable=False)
+    data = Column(Text, nullable=False)
 
-    class SurveyResponse(Base):
-        __tablename__ = TABLE_NAME
-        id = Column(Integer, primary_key=True)
-        user_id = Column(String)
-        data = Column(Text)
 
+def save_response_to_db(user_id, data):
+    # Open a session
     session = Session()
-    response = session.query(SurveyResponse).filter_by(user_id=user_id).first()
-    if response:
-        response.data = json.dumps(data)
-    else:
-        response = SurveyResponse(user_id=user_id, data=json.dumps(data))
-        session.add(response)
-    session.commit()
-    session.close()
+
+    try:
+        # Check if the user has already submitted a response
+        response = session.query(SurveyResponse).filter_by(user_id=user_id).first()
+
+        if response:
+            # Update existing response
+            response.data = json.dumps(data)
+        else:
+            # Insert new response
+            response = SurveyResponse(user_id=user_id, data=json.dumps(data))
+            session.add(response)
+
+        # Commit the transaction
+        session.commit()
+
+    except Exception as e:
+        # Rollback in case of error
+        session.rollback()
+        print(f"Error storing data: {e}")
+    finally:
+        # Close the session
+        session.close()
 
 @app.callback(
     Output('storage-general', 'data'),
