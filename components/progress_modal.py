@@ -32,7 +32,7 @@ FINAL_MODAL = dbc.Modal(
                     "please reach out to ",
                 html.A("julius.schlumberger@deltares.nl", href="mailto:julius.schlumberger @ deltares.nl"),
                 "."]),
-            html.P(["Similarly, if you have other feedback or ideas regarding the Patahways Analysis Dashboard or the "
+            html.P(["Similarly, if you have other feedback or ideas regarding the Pathways Analysis Dashboard or the "
                 "visualizations used, feel free to share these via above email address. "
             ]),
             html.P("This research is a collaborative effort with Jeroen Aerts, Marleen de Ruiter, Robert Šakić "
