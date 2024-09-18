@@ -62,7 +62,7 @@ selection_options = html.Div([
                             'value': WHICH_OPTIONS[RANDOM_DEFAULT],
                         }
                     ],
-                    # value=random_default,  # Set the randomized value as the default
+                    value=None,  # Set the randomized value as the default
                 ),
             ], style={'marginBottom': '20px'}),
     html.Div([

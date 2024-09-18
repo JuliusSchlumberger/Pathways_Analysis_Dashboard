@@ -74,7 +74,7 @@ def save_response_to_db(user_id, data):
         session.close()
 
 @app.callback(
-    Output('storage-general', 'data'),
+    Output('storage-general', 'data', allow_duplicate=True),
      Output('page-content', 'children', allow_duplicate=True),
         *[Output(f"step-{i}-link", "children", allow_duplicate=True) for i in range(len(PAGES))],
         Output('url', 'pathname', allow_duplicate=True),

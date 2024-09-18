@@ -6,8 +6,9 @@ from callbacks import (navigation_pages, toggle_termsconditions,
                        to_store, update_general_store,
                        update_alternatives, \
                        update_robustness, \
-                       update_pathways, update_surveys, toggle_word_explanations, update_figure_description,
-                       toggle_system_analysis_legend, update_figure_system_analysis, update_system_analysis_layout
+                       update_pathways, update_surveys, toggle_word_explanations,
+                       toggle_system_analysis_legend, update_figure_system_analysis, update_system_analysis_layout,
+                        randomnized_plot
                        )
 
 from dashapp import app
