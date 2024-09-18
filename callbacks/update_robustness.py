@@ -60,8 +60,11 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
             else:
                 storage['robustness_plot'] = stored_data.get('robustness_plot', None)
             if interacting_sectors is not None:
+                if isinstance(interacting_sectors, list):
                 # print(options)
-                storage['interacting_sectors'] = interacting_sectors.split(',')
+                    storage['interacting_sectors'] = interacting_sectors
+                else:
+                    storage['interacting_sectors'] = interacting_sectors.split(',')
             else:
                 storage['interacting_sectors'] = stored_data.get('interacting_sectors', None)
 
