@@ -24,7 +24,8 @@ def update_dropdown_options(pathname, stored_data):
     if pathname == '/2-pathways-robustness':
         if stored_data.get('robustness_plot', None) == None:
             random_key = random.choice(list(WHICH_OPTIONS.keys()))
-            stored_data['robustness_plot'] = WHICH_OPTIONS[random_key]
+            # random_key = list(WHICH_OPTIONS.keys())[1]
+            # stored_data['robustness_plot'] = WHICH_OPTIONS[random_key]
             stored_data['drop_down_option'] = {random_key: WHICH_OPTIONS[random_key]}
 
         if stored_data.get('robustness_plot', None) == None:

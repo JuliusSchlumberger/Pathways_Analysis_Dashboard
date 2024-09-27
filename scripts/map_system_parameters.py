@@ -10,6 +10,11 @@ OBJECTIVE_PARAMETER_DICT = {'DamAgr_f_tot':'Impacted_Lifestock_[#]',
                             'DamShp_tot':'Delayed_Ships_[#]',
                             'cost_d_s':'Shipping_Costs_[MEUR]'}
 
+NORMALIZATION_BENCHMARKS = {'Farmer_Drought_Costs_[MEUR]': {'20': 25, '60': 100, '100': 180},
+                            'Municipality_Costs_[MEUR]': {'20': 330, '60': 550, '100': 720},
+                            'Shipping_Costs_[MEUR]': {'20': 1300, '60': 2150, '100': 3300},
+                            'Farmer_Flood_Costs_[MEUR]': {'20': 150, '60': 350, '100': 500}
+                            }
 
 AXIS_LABELS = {}
 for key, element in OBJECTIVE_PARAMETER_DICT.items():

@@ -3,6 +3,7 @@ from scripts.helperfunctions.add_measure_buttons import add_measure_buttons
 from scripts.design_choices.main_dashboard_dropdowns import ROH_DICT_INV
 from scripts.design_choices.main_dashboard_design_choices import FIG_DIMENSIONS, FONTS
 from scripts.main_central_path_directions import LEGENDS_LOCATION
+from scripts.map_system_parameters import NORMALIZATION_BENCHMARKS
 from scripts.helperfunctions.get_table_for_plot import get_table_for_plot_multi_risk
 from scripts.StackedBar.add_trace_one_bar import add_traces_oneBar_multi_risk
 from scripts.StackedBar.add_custom_legend import add_custom_legend

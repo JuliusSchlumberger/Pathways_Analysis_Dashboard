@@ -10,9 +10,9 @@ from dashapp import dash
 dash.register_page(__name__, path='/4-system_analysis')
 
 introduction_text = [
-    "Until now, we only considered the perspective from on actor and risk."
-    "However, other actors might do the same, so the question arises which combination of the shortlisted individual pathways go best together."
-    "This is what can be explored here. You can analyze how a specific combination of pathways perform across all relevant objectives and what this means"
+    "Until now, we only considered the perspective from on actor and risk. "
+    "However, other actors might do the same, so the question arises which combination of the shortlisted individual pathways go best together. "
+    "This is what can be explored here. You can analyze how a specific combination of pathways perform across all relevant objectives and what this means "
     "with regards to the timing of decision points."
 ]
 

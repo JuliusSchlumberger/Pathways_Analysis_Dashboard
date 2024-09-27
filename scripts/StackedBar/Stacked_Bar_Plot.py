@@ -3,6 +3,7 @@ from scripts.helperfunctions.add_measure_buttons import add_measure_buttons
 from scripts.design_choices.main_dashboard_dropdowns import ROH_DICT_INV
 from scripts.design_choices.main_dashboard_design_choices import FIG_DIMENSIONS, FONTS
 from scripts.main_central_path_directions import LEGENDS_LOCATION
+from scripts.map_system_parameters import NORMALIZATION_BENCHMARKS
 from scripts.helperfunctions.get_table_for_plot import get_table_for_plot
 from scripts.StackedBar.get_change_between_old_and_new import get_change_between_old_and_new
 from scripts.StackedBar.add_trace_one_bar import add_traces_oneBar
@@ -26,6 +27,19 @@ def Stacked_Bar_Plot(df, risk_owner_hazard, sector_objectives, figure_title, df_
     invert_replace_dict = {v: int(k) for k, v in replace_dict.items()}
 
     new_df = df.copy()
+    benchmark_for_normalization = new_df[new_df[risk_owner_hazard] == 0]['Value'].values
+    relevant_objectives = new_df['objective_parameter'].unique()
+
+    year_of_interest = new_df['year'].unique()
+    benchmark_dict = {}
+    for i,b in enumerate(benchmark_for_normalization):
+        if b == 0:
+            print(NORMALIZATION_BENCHMARKS[relevant_objectives[i]])
+            new_benchmark = NORMALIZATION_BENCHMARKS[relevant_objectives[i]][str(year_of_interest[0])]
+            benchmark_dict[relevant_objectives[i]] = new_benchmark
+        else:
+            benchmark_dict[relevant_objectives[i]] = b
+    new_df['normalized_values'] = new_df.apply(lambda row: round(row['Value']/benchmark_dict[row['objective_parameter']],2), axis=1)
 
     # Replace old values with new values in the 'risk_owner_hazard' column
     new_df[risk_owner_hazard] = new_df[risk_owner_hazard].replace(invert_replace_dict)
@@ -45,7 +59,11 @@ def Stacked_Bar_Plot(df, risk_owner_hazard, sector_objectives, figure_title, df_
     pivot_text_interaction_benchmark = None
 
     if df_interaction is not None:
+        df_interaction['normalized_values'] = df_interaction.apply(
+            lambda row: round(row['Value'] / benchmark_dict[row['objective_parameter']], 2), axis=1)
+
         df_interaction[risk_owner_hazard] = df_interaction[risk_owner_hazard].replace(invert_replace_dict)
+
         # Benchmark values for interaction
         interaction_benchmark_values = new_df.copy()
         pivot_interaction, pivot_interaction_text = get_table_for_plot(df_interaction, risk_owner_hazard)
@@ -77,6 +95,8 @@ def Stacked_Bar_Plot(df, risk_owner_hazard, sector_objectives, figure_title, df_
     fig = go.Figure()
 
     plot_df = plot_df.drop_duplicates()
+    print(plot_df)
+    print(text_df)
     text_df = text_df.drop_duplicates()
     text_df_benchmark = text_df_benchmark.drop_duplicates()
 

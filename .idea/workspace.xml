@@ -5,12 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c60c66b6-51d2-4150-b49d-e2c284deebe4" name="Changes" comment="'with tab description'">
-      <change afterPath="$PROJECT_DIR$/callbacks/randomnized_plot.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/analysis_feedback.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/update_figure_description.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_figure_description.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/navigation_pages.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/navigation_pages.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/callbacks/randomnized_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/randomnized_plot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/update_general_store.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_general_store.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pages/C_pathways_robustness.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/C_pathways_robustness.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/A_introduction.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/A_introduction.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/StackedBar/Stacked_Bar_Plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/StackedBar/Stacked_Bar_Plot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,12 +39,35 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Python.analysis_feedback.executor&quot;: &quot;Run&quot;,
     &quot;Python.app.executor&quot;: &quot;Run&quot;,
     &quot;Python.tester.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RunManager" selected="Python.app">
+    <configuration name="analysis_feedback" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PathwaysAnalysis_Dashboard_v2" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/analysis_feedback.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="PathwaysAnalysis_Dashboard_v2" />
       <option name="ENV_FILES" value="" />
@@ -91,6 +115,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.app" />
+        <item itemvalue="Python.analysis_feedback" />
         <item itemvalue="Python.tester" />
       </list>
     </recent_temporary>

@@ -27,7 +27,6 @@ step_content_dict = {
         }
 
 DATABASE_URL = os.getenv('DATABASE_URL')
-print(DATABASE_URL)
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
@@ -47,6 +46,7 @@ class SurveyResponse(Base):
 
 
 def save_response_to_db(user_id, data):
+    # pass
     # Open a session
     session = Session()
 

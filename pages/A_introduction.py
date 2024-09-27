@@ -48,8 +48,27 @@ introduction_text = [
                 "To test this dashboard, you will take on the role as a farmer interested in managing flood risk. You will be asked to answer questions "
                 "based on visualizations presented."),
             pathways_explanation,
-        ]
-    )
+        ]),
+    html.P("This Dashboard will guide you through the following analysis steps:"),
+    html.Ol([
+
+            html.Li([
+                html.B('Measure Sequences: '),
+                'You will learn about the measures you can take as a farmer and which sequences of these measures were considered as possible pathway alternatives.'
+            ]),
+            html.Li([
+                html.B('Pathways Performance: '),
+                'You will learn how these pathway alternatives perform under uncertainty.'
+            ]),
+            html.Li([
+                html.B('Pathways Maps: '),
+                'You will learn how different pathways map out in time.'
+            ]),
+            html.Li([
+                html.B('System Analysis: '),
+                'While you focused on your own interests as a farmer in the first three steps to identify pathways that work best for you, you will broaden this focus in the last step considering multiple actors and their objectives.'
+            ]),
+        ])
 ]
 
 step0_fig_explanation = [
