@@ -240,8 +240,8 @@ def add_actions(fig, data, line_width_marker, size_marker, risk_owner_hazard, co
                     marker=marker,
                     showlegend=False,
                     customdata=[point[4]],  # Full list of groups for each point without additional nesting
-                    text=hover_text,  # Display the pathways correctly
-                    hovertemplate="%{text}<extra></extra>",  # Ensure text is used in hover data
+                    # text=hover_text,  # Display the pathways correctly
+                    hovertemplate=hover_text,  # Ensure text is used in hover data
                     hoverinfo='none',  # Disable default hover info on the plot
                     # hovertemplate = hover_text,
                 ), row=row, col=col)
