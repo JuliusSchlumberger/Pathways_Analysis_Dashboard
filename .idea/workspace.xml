@@ -5,13 +5,30 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c60c66b6-51d2-4150-b49d-e2c284deebe4" name="Changes" comment="'with tab description'">
-      <change afterPath="$PROJECT_DIR$/analysis_feedback.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/navigation_pages.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/navigation_pages.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/analysis_feedback.py" beforeDir="false" afterPath="$PROJECT_DIR$/analysis_feedback.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/callbacks/randomnized_plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/randomnized_plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/callbacks/update_general_store.py" beforeDir="false" afterPath="$PROJECT_DIR$/callbacks/update_general_store.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/analysis_step_alternatives_pies.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/analysis_step_robustness_pies.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/analysis_step_system_analysis_pies.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/analysis_step_timing_pies.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/overview_objective_fit.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/overview_subjective_fit.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/overview_subjective_fit_correlation.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_alternatives.png" beforeDir="false" afterPath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_alternatives.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_alternatives_correlation.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_robustness.png" beforeDir="false" afterPath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_robustness.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_robustness_correlation.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_system_analysis.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_system_analysis_correlation.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_timing.png" beforeDir="false" afterPath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_timing.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/figures/output_analysis/subjective_fit_timing_correlation.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pages/A_introduction.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/A_introduction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/StackedBar/Stacked_Bar_Plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/StackedBar/Stacked_Bar_Plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/B_alternative_pathways.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/B_alternative_pathways.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/C_pathways_robustness.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/C_pathways_robustness.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/D_pathways_maps.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/D_pathways_maps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pages/E_system_analysis.py" beforeDir="false" afterPath="$PROJECT_DIR$/pages/E_system_analysis.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/survey_table_september_responses.csv" beforeDir="false" afterPath="$PROJECT_DIR$/survey_table_september_responses.csv" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +62,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager" selected="Python.app">
+  <component name="RunManager" selected="Python.analysis_feedback">
     <configuration name="analysis_feedback" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="PathwaysAnalysis_Dashboard_v2" />
       <option name="ENV_FILES" value="" />
@@ -114,8 +131,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.app" />
         <item itemvalue="Python.analysis_feedback" />
+        <item itemvalue="Python.app" />
         <item itemvalue="Python.tester" />
       </list>
     </recent_temporary>

@@ -10,7 +10,7 @@ from dashapp import dash
 dash.register_page(__name__, path='/4-system_analysis')
 
 introduction_text = [
-    "Until now, we only considered the perspective from on actor and risk. "
+    "Until now, we only considered the perspective from one actor and risk. "
     "However, other actors might do the same, so the question arises which combination of the shortlisted individual pathways go best together. "
     "This is what can be explored here. You can analyze how a specific combination of pathways perform across all relevant objectives and what this means "
     "with regards to the timing of decision points."
@@ -57,7 +57,7 @@ single_output_question(
         'number'
     ),
 single_output_question(
-        'Looking at Pathways Maps with the pathway combination Farmer Flood - Pathway 1, Farmer - Drought Pathway 5, Municipality - Flood Pathway 3 and Shipping - Drought Pathway 0: what are the expected Farmer - Flood Costs in a 4 \u2103 climate scenario?',
+        'Looking at Pathways Performance with the pathway combination Farmer Flood - Pathway 1, Farmer - Drought Pathway 5, Municipality - Flood Pathway 3 and Shipping - Drought Pathway 0: what are the expected Farmer - Flood Costs in a 4 \u2103 climate scenario?',
         'system_analysis_performance_1530-input',
         'number'
     ),
@@ -84,12 +84,12 @@ likkert_scale(
     ),
 
     likkert_scale(
-    'I am confident that I read the Pathways Maps Figure correctly to inform the decision-choice',
+    'I am confident that I read the Pathways Maps Figure correctly to inform my answer-choice',
     'likkert_use-system_analysis_pathways_confidence',
     ['totally disagree', '', '', '', 'totally\u00A0agree'],
     ),
 likkert_scale(
-    'I am confident that I read the Performance Robustness Figure correctly to inform the decision-choice',
+    'I am confident that I read the Performance Robustness Figure correctly to inform my answer-choice',
     'likkert_use-system_analysis_performance_confidence',
     ['totally disagree', '', '', '', 'totally\u00A0agree'],
     ),

@@ -57,7 +57,7 @@ introduction_text = [
                 'You will learn about the measures you can take as a farmer and which sequences of these measures were considered as possible pathway alternatives.'
             ]),
             html.Li([
-                html.B('Pathways Performance: '),
+                html.B('Pathways Performance Robustness: '),
                 'You will learn how these pathway alternatives perform under uncertainty.'
             ]),
             html.Li([

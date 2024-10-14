@@ -127,7 +127,7 @@ likkert_scale(
     ),
 
     likkert_scale(
-    'I am confident that I read this figure correctly to inform the decision-choice',
+    'I am confident that I read this figure correctly to inform my answer-choice',
     'likkert_use-pathways_maps_confidence',
     ['totally disagree', '', '', '', 'totally\u00A0agree'],
     ),

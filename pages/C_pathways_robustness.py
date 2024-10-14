@@ -14,9 +14,9 @@ introduction_text = [
     create_highlighted_word('robustness', "robustness_explanation"),
     " of the considered flood risk ",
     create_highlighted_word("pathways", "pathways_explanation"),
-    " for the farmer. Robustness is measured across multiple objectives. ",
+    " for the farmer. Robustness is measured across uncertainty for multiple objectives. ",
     " You can explore the robustness",
-    " of the pathways over different different time horizons and under different ",
+    " of the pathways over different time horizons and under different ",
     create_highlighted_word("climate scenarios", 'scenario_explanation'),
     ". Additionally, other actors are also implementing pathways which might have ",
     create_highlighted_word('interaction effects ', 'interaction_explanation'),
@@ -129,7 +129,7 @@ likkert_scale(
     ),
 
     likkert_scale(
-    'I am confident that I read this figure correctly to inform the decision-choice',
+    'I am confident that I read this figure correctly to inform my answer-choice',
     'likkert_use-robustness_confidence',
     ['totally disagree', '', '', '', 'totally\u00A0agree'],
     ),
