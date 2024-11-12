@@ -6,6 +6,7 @@ import math
 from scripts.Legends.insert_linebreaks import insert_linebreak
 import ast
 import seaborn as sns
+from wordcloud import WordCloud
 
 # Permanently changes the pandas settings
 pd.set_option('display.max_rows', None)
@@ -14,7 +15,8 @@ pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', None)
 
 # Define the list of IDs you want to filter by
-filter_ids = [1,2,3,4,5,6,34,67,71,73,74,102, 108, 109,110, 111,166, 232,233,265,332,333,334, 364,464,496,529,597]
+filter_ids = [1,2,3,4,5,6,34,67,71,73,74,75,102,104,105, 108, 109,110, 111,166, 232,233,265,332,333,334, 364,464,496,529,597, 602, 607,619,620, 621, 630, 661
+              ]
 fname = 'survey_table_september_responses.csv'
 
 all_columns = ['id', 'user_id', 'existing_id', 'current_url', 'completed_introduction',
@@ -89,23 +91,6 @@ likkert_feedback = [
 ]
 
 
-
-# quantitative_answers = {
-#     'alternatives': ['pathway_number', 'f_resilient_crops', 'long_term', 'flexibility',],
-#     'robustness': ['robustness_plot', 'coding', 'crop_loss', 'robustness', 'tradeoff', 'general_interactions', 'interaction_least_productivity_loss'],
-#     'timing': ['first_measure', 'number_measures', 'most_flexible15', 'most_flexible4', 'timing_shifts', 'ditch_shift'],
-#     'system_analysis': ['robustness_plot','system_analysis_pathways_1560', 'system_analysis_pathways_1530', 'system_analysis_pathways_which_better','system_analysis_performance_1560', 'system_analysis_performance_1530', 'system_analysis_performance_which_better',]
-# }
-#
-# correct_answers = {
-#     'alternatives': [7, 2, 'large_dikes', 'Flood_Resilient_Crops', ],
-#     'robustness': ['robustness_plot', 'chaos', 60, [3,4], [0], 'synergies', [0,1,2,3,4,5,6], ],
-#     'timing': [2052, 2, 'Flood_Resilient_Crops', 'Flood_Resilient_Crops', 'earlier', 3],
-#     'system_analysis': ['robustness_plot', 2, 1,
-#                         3, [10, 110, 150],
-#                         [0, 20, 30 ], 3, ]
-#
-# }
 subjective_fit_steps = {
     'alternatives': ['alternatives_easy',  'alternatives_confidence',  'alternatives_enough_information',  'alternatives_scalability'],
     'robustness': ['viztype_barchart',
@@ -205,8 +190,6 @@ def convert_str_to_list(df):
 def load_relevant_data(fname, filter_ids):
     # Load CSV data into a DataFrame
     df = pd.read_csv(fname)
-    # print(df)
-
 
     # Filter the DataFrame by the 'id' column
     filtered_df = df.copy()
@@ -225,100 +208,9 @@ def load_relevant_data(fname, filter_ids):
     final_df_filtered = final_df_filtered.rename(columns={'robustness_enough_information': 'robustness_confidence'})
     final_df_filtered = final_df_filtered.rename(columns={'robustness_enough_informationn': 'robustness_enough_information'})
 
-    final_df_filtered.to_excel('survey_results_table_clean.xlsx')
+    final_df_filtered.to_excel('survey_results_table_clean(3).xlsx')
 
 
-# def calculate_correct_answer_ratios_and_plot(final_df, quantitative_answers, correct_answers, questions):
-#     # Initialize an empty DataFrame to store the results
-#     results = pd.DataFrame(index=final_df.index)
-#
-#     # Iterate over the keys of the dictionaries
-#     for key in quantitative_answers:
-#         # Get the columns to subset for the current key
-#         columns = quantitative_answers[key]
-#         correct_vals = correct_answers[key]
-#         relevant_questions = questions[key]
-#         # Ensure correct_vals and columns have the same length
-#         if len(columns) != len(correct_vals):
-#             raise ValueError(f"Mismatch between columns and correct answers for key '{key}'")
-#
-#         # Prepare for subplots
-#         num_columns = len(columns)
-#         fig, axs = plt.subplots(1, num_columns, figsize=(5 * num_columns, 5))
-#         fig.suptitle(f"{key} (Total Rows: {len(final_df)})", fontsize=16)
-#
-#         # If there's only one subplot, convert axs to a list for consistency
-#         if num_columns == 1:
-#             axs = [axs]
-#
-#         # Iterate over each column
-#         for idx, (col, correct_val, q) in enumerate(zip(columns, correct_vals, relevant_questions)):
-#             correct_count = 0
-#             partial_count = 0
-#             wrong_count = 0
-#             not_completed = False
-#             ratios = []
-#
-#             # Iterate over each row in the DataFrame
-#             for row_idx, row in final_df.iterrows():
-#                 val = row[col]
-#
-#                 # Skip if the value is NaN, but only for scalar values, not lists or arrays
-#                 if not isinstance(val, (list, np.ndarray)) and pd.isna(val):
-#                     not_completed = True
-#                     continue
-#
-#                 # Check the correctness
-#                 if isinstance(correct_val, str):
-#                     if val == correct_val:
-#                         correct_count += 1
-#                     else:
-#                         wrong_count += 1
-#
-#                 elif isinstance(correct_val, int):
-#                     if np.abs(int(val)) == np.abs(correct_val):
-#                         correct_count += 1
-#                     else:
-#                         wrong_count += 1
-#
-#                 elif isinstance(correct_val, list):
-#                     if isinstance(val, list):
-#                         if set(val) == set(correct_val):
-#                             correct_count += 1
-#                         elif len(set(val) & set(correct_val)) > 0:
-#                             partial_count += 1
-#                         else:
-#                             wrong_count += 1
-#                     else:
-#                         if val in correct_val:
-#                             correct_count += 1
-#                         else:
-#                             wrong_count += 1
-#
-#             # Create a pie chart for this column
-#             labels = ['Correct', 'Partially Correct', 'Wrong']
-#             sizes = [correct_count, partial_count, wrong_count]
-#             total_columns = correct_count + partial_count * 2 + wrong_count
-#             colors = ['#66b3ff', '#ffcc99', '#ff9999']
-#
-#             axs[idx].pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors)
-#             axs[idx].axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle
-#             axs[idx].set_title(f'{q} (n={total_columns})')
-#
-#             if not_completed:
-#                 ratio = np.NaN
-#             else:
-#                 # Calculate the ratio of correct answers for the current row
-#                 ratio = correct_count / total_columns
-#             ratios.append(ratio)
-#
-#         plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-#         plt.savefig(f'figures/output_analysis/analysis_step_{key}_piecharts.png', dpi=300)
-#
-#         # Add the ratios as a new column in the results DataFrame
-#         results[key] = ratios
-#
-#     return results
 
 def create_pie_charts(df, relevant_questions):
     # Calculate the number of rows and columns needed
@@ -343,7 +235,7 @@ def create_pie_charts(df, relevant_questions):
         fig.delaxes(axes[j])
 
 
-def create_heatmap(df_dict, questions, quantitative_answers):
+def create_heatmap(df_dict, questions, quantitative_answers, expertise):
     for key in quantitative_answers:
         relevant_questions = questions[key]
         # create all plot no distinction between viztypes
@@ -369,9 +261,17 @@ def create_heatmap(df_dict, questions, quantitative_answers):
         plt.tick_params(axis='x', which='both', top=True, bottom=False, labeltop=True, labelbottom=False)
         plt.subplots_adjust(left=0.6)  # Increase left margin
 
-        plt.title(f'Objective fit evaluation for {key} (n={number_entries})')
+        title_dict = {
+            'alternatives': 'pathways options analysis',
+            'robustness': 'performance robustness analysis' ,
+            'timing': 'decision-timing analysis',
+            'system_analysis_pathways': 'system pathways analysis',
+            'system_analysis_performance': 'system performance robustness analysis',
+        }
+
+        plt.title(f'Objective fit evaluation for {title_dict[key]} (n={number_entries})')
         plt.tight_layout()
-        plt.savefig(f'figures/output_analysis/analysis_step_{key}_objective_fit.png', dpi=300)
+        plt.savefig(f'figures/output_analysis/{expertise}/analysis_step_{key}_objective_fit.png', dpi=300)
         plt.close()
         plt.clf()
         if key == 'robustness' or key == 'system_analysis_performance':
@@ -390,21 +290,21 @@ def create_heatmap(df_dict, questions, quantitative_answers):
                 sns.heatmap(df_normalized, ax=axes[i], annot=True, fmt=".1f", cmap="Blues", cbar=False,
                             xticklabels=df_normalized.columns,
                             yticklabels=[insert_linebreak(q, 60) for q in relevant_questions],
-                            linewidth=.5)
+                            linewidth=.5,
+                            vmin=0, vmax=1)
                 # Move x-axis labels to the top
                 axes[i].tick_params(axis='x', which='both', top=True, bottom=False, labeltop=True, labelbottom=False)
                 axes[i].set_title(f'{type} (n={number_entries})')
             # sns.set()
             plt.subplots_adjust(left=0.47)  # Increase left margin
 
-            fig.suptitle(f'Objective fit evaluation for {key})')
+            fig.suptitle(f'Objective fit evaluation for {title_dict[key]}')
             plt.tight_layout()
-            plt.savefig(f'figures/output_analysis/analysis_step_{key}_objective_fit.png', dpi=300)
+            plt.savefig(f'figures/output_analysis/{expertise}/analysis_step_{key}_objective_fit.png', dpi=300)
             plt.close()
             plt.clf()
 
-def analysis_step_pie_charts(final_df, quantitative_answers, correct_answers, questions):
-
+def analysis_step_pie_charts(final_df, quantitative_answers, correct_answers, questions, expertise):
 
     all_data = {}
     # Iterate over the keys of the dictionaries
@@ -474,7 +374,7 @@ def analysis_step_pie_charts(final_df, quantitative_answers, correct_answers, qu
             # Store the pie_df in the pie_data dictionary
             pie_data[key] = pie_df
         all_data[viztype] = pie_data
-    create_heatmap(all_data,questions, quantitative_answers)
+    create_heatmap(all_data,questions, quantitative_answers, expertise)
 
 
 
@@ -494,9 +394,11 @@ def calculate_correct_answer_ratios(final_df, quantitative_answers, correct_answ
 
         # List to store the correct answer ratios for each row
         ratios = []
+        expert_types = []
 
         # Iterate over each row in the DataFrame
         for idx, row in final_df.iterrows():
+            expert_type = row.expert_group
             correct_count = 0
             total_columns = len(columns)
             not_completed = False
@@ -552,78 +454,76 @@ def calculate_correct_answer_ratios(final_df, quantitative_answers, correct_answ
                 # Calculate the ratio of correct answers for the current row
                 ratio = correct_count / total_columns
             ratios.append(ratio)
+            expert_types.append(expert_type)
 
         # Add the ratios as a new column in the results DataFrame
         results[key] = ratios
-
+    results['system_analysis'] = (results['system_analysis_performance'] + results['system_analysis_pathways'])/2
+    results = results.drop(['system_analysis_performance', 'system_analysis_pathways'], axis=1)
+    results['expert_group'] = expert_types
     return results
 
-def plot_parallel_coordinates(results_df, quantitative_answers):
-    # Get the list of keys from quantitative_answers to use as axis labels
-    axis_labels = list(quantitative_answers.keys())
-    print(results_df)
+def violinplots(results_df, quantitative_answers, expertise):
 
-    # Calculate the average across all rows
-    avg_row = results_df.mean(axis=0)
-    print(avg_row)
-
-    # Set up the parallel coordinates plot
-    plt.figure(figsize=(10, 6))
-
-    # Plot each row in the results_df
-    for idx, row in results_df.iterrows():
-        plt.plot(axis_labels, row.values, color='blue', alpha=0.5)
-
-    # Plot the average row with distinct color and thicker line
-    plt.plot(axis_labels, avg_row, color='red', linewidth=3, label='Average')
-
-    # Set the axis labels
-    plt.xticks(rotation=45)
-    plt.xlabel('Questions')
-    plt.ylabel('Correct Answer Ratio')
-
-    # Add a legend to distinguish the average line
-    plt.legend()
-
-    # Show the plot
-    plt.title('Correctness of answers')
-    plt.tight_layout()
-    plt.savefig(f'figures/output_analysis/overview_objective_fit.png', dpi=300)
-
-
-def violinplots(results_df, quantitative_answers):
-    avg_row = results_df.mean(axis=0) * 100
-    print(avg_row)
     fig = plt.figure()
-    df_long = pd.melt(results_df, var_name='analysis', value_name='value')
+    plt.grid()
+    results_df = results_df.rename(
+        columns={'alternatives': 'pathways options', 'robustness': 'performance', 'system_analysis':'system analysis'})
+    df_all = results_df.drop('expert_group', axis=1)
+    df_long = pd.melt(df_all, var_name='analysis', value_name='value')
+
     df_long['value'] = df_long['value'] * 100
-    # sns.violinplot(data=df_long, x="analysis", y="value",cut=0, inner_kws=dict(box_width=15, whis_width=2, color=".8"), gridsize=300)
-    sns.swarmplot(data=df_long, x="analysis", y="value")
+    sns.swarmplot(data=df_long, x="analysis", y="value", color='tab:gray', zorder=0)
 
     # Plot the average row with distinct color and thicker line
-    axis_labels = list(quantitative_answers.keys())
-    plt.plot(axis_labels, avg_row, color='red', linewidth=2, label='Average')
+    axis_labels = ['pathways options', 'performance', 'timing', 'system analysis']
+    if expertise == 'all':
+        for expert in results_df.expert_group.unique():
+            results_subgroup = results_df[results_df.expert_group == expert].drop('expert_group', axis=1)
+            label_dict = {'dmdu': f'Avg. for DMDU experts (n={len(results_subgroup)})',
+                          'ccadrr': f'Avg. for Adaptation/DRM experts (n={len(results_subgroup)})',
+                          'other': f'Avg. for non-experts  (n={len(results_subgroup)})'}
+            marker_dict = {'dmdu': f'D',
+                           'ccadrr': 's',
+                           'other': 'v'}
+            color_dict = {'dmdu': f'tab:blue',
+                          'ccadrr': 'tab:orange',
+                          'other': 'tab:green',
+                          'all': 'tab:red'}
+
+            avg_row = results_subgroup.mean(axis=0) * 100
+            print(avg_row)
+            plt.plot(axis_labels, avg_row, linewidth=2, label=label_dict[expert], marker=marker_dict[expert],color=color_dict[expert], zorder=10)
+    else:
+        label_dict = {'dmdu': f'Avg. for DMDU experts (n={len(results_df)})',
+                      'ccadrr': f'Avg. for Adaptation/DRM experts (n={len(results_df)})',
+                      'other': f'Avg. for non-experts  (n={len(results_df)})'}
+        marker_dict = {'dmdu': f'D',
+                       'ccadrr': 's',
+                       'other': 'v'}
+        color_dict = {'dmdu': f'tab:blue',
+                      'ccadrr': 'tab:orange',
+                      'other': 'tab:green',
+                      'all': 'tab:red'}
+        avg_row = df_all.mean(axis=0) * 100
+        print(avg_row)
+        plt.plot(axis_labels, avg_row, linewidth=2, label=label_dict[expertise], color=color_dict[expertise], marker=marker_dict[expertise], zorder=10)
     # Set y-axis ticks to be every 0.1
     plt.yticks(np.arange(0, 110, 10))
-    plt.ylabel('correctness [%]')
-    plt.xlabel('analysis step')
+    plt.ylabel('Percentage of correct answers [%]')
+    plt.xlabel('Analysis step')
 
-    plt.grid()
+
     plt.legend()
     # Show the plot
-    plt.title('Correctness of answers')
+    plt.title('Objective fit of Dashboard')
     plt.tight_layout()
-    plt.savefig(f'figures/output_analysis/overview_objective_fit.png', dpi=300)
+    plt.savefig(f'figures/output_analysis/{expertise}/overview_objective_fit.png', dpi=300)
     plt.close()
     plt.clf()
 
-def calculate_number_inputs(df, allcolumns):
-    for col in allcolumns:
-        if col.startswith('completed_'):
-            counter = len(df[df[col] == 'yes'])
-            print(col, counter)
 
-def create_heatmap_one_plot(signal_words, cols, results_df, key):
+def create_swarm_one_plot(signal_words, cols, results_df, key, expertise):
     all_columns = []
     # Loop through the likkert_feedback to extract columns related to signal words
     for signal in signal_words:
@@ -634,16 +534,36 @@ def create_heatmap_one_plot(signal_words, cols, results_df, key):
     relevant_cols = [col[0] for col in all_columns]
     simplified_df = results_df[relevant_cols]
 
-    simplified_df.columns = ['easy', 'confidence', 'information', 'scalability']
+    simplified_df.columns = ['easy', 'confident', 'enough information', 'use again']
     simplified_df = simplified_df.dropna()
     df_long = pd.melt(simplified_df, var_name='analysis', value_name='value')
     fig = plt.figure()
-    sns.swarmplot(data=df_long, x="analysis", y="value")
+    sns.swarmplot(data=df_long, x="analysis", y="value", color='tab:gray', zorder=0)
     avg_row = simplified_df.mean(axis=0)
     number_inputs = len(simplified_df)
     # Plot the average row with distinct color and thicker line
-    plt.plot(['easy', 'confidence', 'information', 'scalability'], avg_row, color='red', linewidth=2, label='Average')
-    plt.title(f'{key} (n= {number_inputs})')
+    label_dict = {'dmdu': f'Avg. for DMDU experts',
+                  'ccadrr': f'Avg. for Adaptation/DRM experts',
+                  'other': f'Avg. for non-experts',
+                  'all': 'Avg. for all participants'}
+    marker_dict = {'dmdu': f'D',
+                   'ccadrr': 's',
+                   'other': 'v',
+                   'all': 'o'}
+    color_dict = {'dmdu': f'tab:blue',
+                   'ccadrr': 'tab:orange',
+                   'other': 'tab:green',
+                  'all': 'tab:red'}
+    title_dict = {
+        'alternatives': 'Subjective fit for analysis of pathways options',
+        'robustness': 'Subjective fit for analysis of pathways performance robustness',
+        'timing': 'Subjective fit for analysis of pathway maps',
+        'system_analysis_pathways': 'Subjective fit for analysis of system pathways options',
+        'system_analysis_performance': 'Subjective fit for analysis of system performance robustness',
+    }
+    
+    plt.plot(['easy', 'confident', 'enough information', 'use again'], avg_row, color=color_dict[expertise], linewidth=2, label=label_dict[expertise], marker=marker_dict[expertise], zorder=10)
+    plt.title(f'{title_dict[key]} (n= {number_inputs})')
     plt.grid()
     plt.ylabel('Scores')
     plt.xlabel('Categories')
@@ -652,7 +572,7 @@ def create_heatmap_one_plot(signal_words, cols, results_df, key):
 
     return fig
 
-def create_heatmap_with_subplots(signal_words, cols, results_df, ):
+def create_swarm_with_subplots(signal_words, cols, results_df, key, expertise ):
     all_columns = []
     # Loop through the likkert_feedback to extract columns related to signal words
     for signal in signal_words:
@@ -663,7 +583,7 @@ def create_heatmap_with_subplots(signal_words, cols, results_df, ):
     relevant_cols = [col[0] for col in all_columns if col]
     print(relevant_cols)
     simplified_df = results_df[relevant_cols]
-    simplified_df.columns = ['easy', 'confidence', 'information', 'scalability', 'plot_type']
+    simplified_df.columns = ['easy', 'confident', 'enough information', 'use again', 'plot_type']
     # Melt the dataframe, keeping 'plot_type' separate and combining the other four columns into 'analysis'
     df_long = pd.melt(simplified_df, id_vars=['plot_type'], var_name='analysis', value_name='value')
     fig = plt.figure()
@@ -672,13 +592,33 @@ def create_heatmap_with_subplots(signal_words, cols, results_df, ):
     # Create a figure and subplots
     fig, axes = plt.subplots(nrows=1, ncols=len(unique_plot_types), figsize=(15, 5), sharey=True, sharex=True)
 
+    label_dict = {'dmdu': f'Avg. for DMDU experts',
+                  'ccadrr': f'Avg. for Adaptation/DRM experts',
+                  'other': f'Avg. for non-experts',
+                  'all': 'Avg. for all participants'}
+    marker_dict = {'dmdu': f'D',
+                   'ccadrr': 's',
+                   'other': 'v',
+                   'all': 'o'}
+    color_dict = {'dmdu': f'tab:blue',
+                  'ccadrr': 'tab:orange',
+                  'other': 'tab:green',
+                  'all': 'tab:red'}
+    title_dict = {
+        'alternatives': 'Subjective fit for analysis of pathways options',
+        'robustness': 'Subjective fit for analysis of pathways performance robustness',
+        'timing': 'Subjective fit for analysis of pathway maps',
+        'system_analysis_pathways': 'Subjective fit for analysis of system pathways options',
+        'system_analysis_performance': 'Subjective fit for analysis of system performance robustness',
+    }
+
     # Loop through each unique 'plot_type' and create a subplot
     for i, plot_type in enumerate(unique_plot_types):
         # Subset the dataframe for the current 'plot_type'
         subset_df = df_long[df_long['plot_type'] == plot_type]
 
         # Create a swarmplot for the current subset
-        sns.swarmplot(data=subset_df, x="analysis", y="value", ax=axes[i])
+        sns.swarmplot(data=subset_df, x="analysis", y="value", ax=axes[i], color='tab:gray', zorder=0)
 
         avg_row = simplified_df[simplified_df.plot_type == plot_type]
         avg_row = avg_row.dropna()
@@ -686,8 +626,7 @@ def create_heatmap_with_subplots(signal_words, cols, results_df, ):
         avg_row = avg_row.drop(columns=['plot_type']).mean(axis=0)
 
         # Plot the average row with distinct color and thicker line
-        axes[i].plot(['easy', 'confidence', 'information', 'scalability'], avg_row, color='red', linewidth=2,
-                     label='Average')
+        axes[i].plot(['easy', 'confident', 'enough information', 'use again'], avg_row, color=color_dict[expertise], linewidth=2, label=label_dict[expertise], marker=marker_dict[expertise], zorder=10)
 
         # Set title for each subplot
         axes[i].set_title(f'{plot_type} (n= {number_inputs})')
@@ -695,12 +634,12 @@ def create_heatmap_with_subplots(signal_words, cols, results_df, ):
         axes[i].set_ylabel('Scores')
         axes[i].set_xlabel('Categories')
     plt.legend()
+    plt.suptitle(title_dict[key])
     plt.tight_layout()
 
     return fig
 
-def create_subjective_fit_boxplots(results_df, columns_of_interest):
-    print(results_df)
+def create_subjective_fit_boxplots(results_df, columns_of_interest, expertise):
     for key in columns_of_interest:
         print(key)
         cols = columns_of_interest[key]
@@ -710,53 +649,37 @@ def create_subjective_fit_boxplots(results_df, columns_of_interest):
                 signal_words = ['performance_easy', 'performance_confidence', 'performance_enough_information', 'performance_scalability', 'robustness_plot']
             else:
                 signal_words = ['easy', 'confidence', 'information', 'scalability', 'robustness_plot']
-            fig = create_heatmap_with_subplots(signal_words, cols, results_df, )
+            fig = create_swarm_with_subplots(signal_words, cols, results_df, key, expertise)
         else:
             if key == 'system_analysis_pathways':
                 signal_words = ['pathways_easy', 'pathways_confidence', 'pathways_enough_information',
                                 'pathways_scalability']
             else:
                 signal_words = ['easy', 'confidence', 'information', 'scalability']
-            fig = create_heatmap_one_plot(signal_words, cols, results_df, key)
+            fig = create_swarm_one_plot(signal_words, cols, results_df, key, expertise)
 
         # Show the plot
-        plt.savefig(f'figures/output_analysis/subjective_fit_{key}.png', dpi=300)
+        plt.savefig(f'figures/output_analysis/{expertise}/subjective_fit_{key}.png', dpi=300)
         plt.close()
         plt.clf()
 
-        # # Step 3: Create the correlation matrix
-        # correlation_matrix = simplified_df.corr('spearman')
-        #
-        # # Step 4: Visualize the correlation matrix using Matplotlib
-        # plt.figure(figsize=(8, 6))
-        #
-        # # Create the heatmap using imshow
-        # heatmap = plt.imshow(correlation_matrix, interpolation='nearest', cmap='coolwarm', vmin=-1, vmax=1)
-        #
-        # # Add color bar
-        # plt.colorbar(heatmap)
-        #
-        # # Add labels for the axes
-        # plt.xticks(np.arange(len(signal_words)), signal_words, rotation=45)
-        # plt.yticks(np.arange(len(signal_words)), signal_words)
-        #
-        # # # Add correlation coefficients as text on the heatmap
-        # # for i in range(len(signal_words)):
-        # #     for j in range(len(signal_words)):
-        # #         plt.text(j, i, f"{correlation_matrix.iloc[i, j]:.2f}",
-        # #                  ha='center', va='center', color='black')
-        #
-        # # Add a title to the heatmap
-        # plt.title('Correlation Matrix')
-        #
-        # # Show the plot
-        # plt.tight_layout()
-        # plt.savefig(f'figures/output_analysis/subjective_fit_{key}_correlation.png', dpi=300)
 
-def create_subjective_fit_overview(results_df):
+def make_word_cloud(expertise_text_updated, expertise):
+    # Generate a word cloud with the updated text
+    wordcloud_updated = WordCloud(width=800, height=400, background_color='white').generate(expertise_text_updated)
+
+    # Display the word cloud using matplotlib
+    plt.figure(figsize=(10, 5))
+    plt.imshow(wordcloud_updated, interpolation='bilinear')
+    plt.axis('off')
+    # plt.show()
+    plt.tight_layout()
+    plt.savefig(f'figures/output_analysis/{expertise}/word_cloud_expertise.png', dpi=300)
+
+def create_subjective_fit_overview(results_df, expertise):
 
     # Step 1: Create a simplified DataFrame with signal words as columns
-    signal_words = ['viztype', 'easy', 'confidence', 'information', 'scalability']
+    signal_words = ['easy', 'confidence', 'information', 'scalability']
     simplified_df = pd.DataFrame(index=results_df.index)
 
     # Loop through the likkert_feedback to extract columns related to signal words
@@ -767,19 +690,42 @@ def create_subjective_fit_overview(results_df):
         # If any columns were found, average them and add as a new column
         if relevant_columns:
             simplified_df[signal] = results_df[relevant_columns].mean(axis=1)
-    simplified_df.rename(columns={'viztype': 'prior viz experience'})
-    signal_words = ['viztype', 'easy', 'confidence', 'information', 'scalability']
+        simplified_df['expert_group'] = results_df['expert_group']
+    simplified_df = simplified_df.rename(columns={'confidence': 'confident', 'information': 'enough information', 'scalability': 'use again'})
+    signal_words = ['easy', 'confident', 'enough information', 'use again']
     # Step 2: Create a box-whisker plot from the simplified DataFrame
     fig = plt.figure()
-    df_long = pd.melt(simplified_df, var_name='analysis', value_name='value')
-    # sns.violinplot(data=df_long, x="analysis", y="value",cut=0, inner_kws=dict(box_width=15, whis_width=2, color=".8"), gridsize=300)
-    sns.swarmplot(data=df_long, x="analysis", y="value")
+    df_all = simplified_df.drop('expert_group', axis=1)
+    df_long = pd.melt(df_all, var_name='analysis', value_name='value')
+    sns.swarmplot(data=df_long, x="analysis", y="value", color='tab:gray', zorder=0)
 
-    mean_values = simplified_df.mean()
-    print(mean_values)
+    if expertise == 'all':
+        print(simplified_df)
+        for expert in results_df.expert_group.unique():
+            print(expert)
+            results_subgroup = simplified_df[simplified_df.expert_group == expert].drop('expert_group', axis=1)
+            print(results_subgroup)
+            label_dict = {'dmdu': f'Avg. for DMDU experts (n={len(results_subgroup)})',
+                          'ccadrr': f'Avg. for Adaptation/DRM experts (n={len(results_subgroup)})',
+                          'other': f'Avg. for non-experts  (n={len(results_subgroup)})'}
+            marker_dict = {'dmdu': f'D',
+                          'ccadrr': 's',
+                          'other': 'v'}
+            color_dict = {'dmdu': f'tab:blue',
+                          'ccadrr': 'tab:orange',
+                          'other': 'tab:green',
+                          'all': 'tab:red'}
 
-    # Plot the mean as a distinct line with a different color and thickness
-    plt.plot(signal_words, mean_values, color='red', linewidth=3, label='Mean')
+            mean_values = results_subgroup.mean()
+            print(mean_values)
+            plt.plot(signal_words, mean_values, linewidth=2, label=label_dict[expert], marker=marker_dict[expert], color=color_dict[expert], zorder=10)
+    else:
+        label_dict = {'dmdu': f'Avg. for DMDU experts (n={len(results_df)})',
+                      'ccadrr': f'Avg. for Adaptation/DRM experts (n={len(results_df)})',
+                      'other': f'Avg. for non-experts  (n={len(results_df)})'}
+        mean_values = df_all.mean()
+        print(mean_values)
+        plt.plot(signal_words, mean_values, color='red', linewidth=2, label=label_dict[expertise], zorder=10)
 
     plt.xlabel('Categories')
     plt.ylabel('Scores')
@@ -788,60 +734,64 @@ def create_subjective_fit_overview(results_df):
     plt.legend()
     plt.grid()
     # Show the plot
-    plt.title('Overview subjective fit in relation to prior visualization experience')
+    plt.title('Subjective fit of Dashboard')
     plt.tight_layout()
 
     # Show the plot
-    plt.savefig(f'figures/output_analysis/overview_subjective_fit.png', dpi=300)
+    plt.savefig(f'figures/output_analysis/{expertise}/overview_subjective_fit.png', dpi=300)
     plt.close()
 
-    # Step 3: Create the correlation matrix
-    correlation_matrix = simplified_df.corr('spearman')
+    # # Step 3: Create the correlation matrix
+    # correlation_matrix = simplified_df.corr('spearman')
+    #
+    # # Step 4: Visualize the correlation matrix using Matplotlib
+    # plt.figure(figsize=(8, 6))
+    #
+    # # Create the heatmap using imshow
+    # heatmap = plt.imshow(correlation_matrix, interpolation='nearest', cmap='coolwarm', vmin=-1, vmax=1)
+    #
+    # # Add color bar
+    # plt.colorbar(heatmap)
+    #
+    # # Add labels for the axes
+    # plt.xticks(np.arange(len(signal_words)), signal_words, rotation=45)
+    # plt.yticks(np.arange(len(signal_words)), signal_words)
+    #
+    # # Add correlation coefficients as text on the heatmap
+    # for i in range(len(signal_words)):
+    #     for j in range(len(signal_words)):
+    #         plt.text(j, i, f"{correlation_matrix.iloc[i, j]:.2f}",
+    #                  ha='center', va='center', color='black')
+    #
+    # # Add a title to the heatmap
+    # plt.title('Correlation Matrix')
+    #
+    # # Show the plot
+    # plt.tight_layout()
+    # plt.savefig(f'figures/output_analysis/{expertise}/overview_subjective_fit_correlation.png', dpi=300)
 
-    # Step 4: Visualize the correlation matrix using Matplotlib
-    plt.figure(figsize=(8, 6))
-
-    # Create the heatmap using imshow
-    heatmap = plt.imshow(correlation_matrix, interpolation='nearest', cmap='coolwarm', vmin=-1, vmax=1)
-
-    # Add color bar
-    plt.colorbar(heatmap)
-
-    # Add labels for the axes
-    plt.xticks(np.arange(len(signal_words)), signal_words, rotation=45)
-    plt.yticks(np.arange(len(signal_words)), signal_words)
-
-    # Add correlation coefficients as text on the heatmap
-    for i in range(len(signal_words)):
-        for j in range(len(signal_words)):
-            plt.text(j, i, f"{correlation_matrix.iloc[i, j]:.2f}",
-                     ha='center', va='center', color='black')
-
-    # Add a title to the heatmap
-    plt.title('Correlation Matrix')
-
-    # Show the plot
-    plt.tight_layout()
-    plt.savefig(f'figures/output_analysis/overview_subjective_fit_correlation.png', dpi=300)
-
+fname = 'survey_table_september_responses(3).csv'
 # load_relevant_data(fname, filter_ids)
-df = pd.read_excel('survey_results_table_clean_evaluated.xlsx')
-df = convert_str_to_list(df)
-# print(df[qualitative_feedback])
 # print(error)
+for expertise in ['all', 'dmdu', 'ccadrr', 'other']:
+    print("expertse", expertise)
+    df = pd.read_excel('survey_results_table_clean_evaluated(3).xlsx')
+    df = convert_str_to_list(df)
+    if expertise != 'all':
+        df = df[df.expert_group == expertise]
 
-#
-# calculate_number_inputs(df, all_columns)
-#
+    # Split the column on ',' or ';', flatten the resulting lists into a single list of strings
+    split_strings = df['expertise'].replace('"', '').replace("'", '').str.split('[,;]', expand=False).apply(lambda x: [item.strip() for item in x]).sum()
+    multiline_string = '"""\n' + '\n'.join(split_strings) + '\n"""'
+    # print(multiline_string)
 
+    make_word_cloud(multiline_string, expertise)
 
+    results = calculate_correct_answer_ratios(df, quantitative_answers, correct_answers)
 
-# results = calculate_correct_answer_ratios(df, quantitative_answers, correct_answers)
-# # plot_parallel_coordinates(results, quantitative_answers)
-# violinplots(results, quantitative_answers)
-# create_subjective_fit_overview(df)
+    violinplots(results, quantitative_answers, expertise)
+    create_subjective_fit_overview(df, expertise)
 
-
-# Individual steps analysis
-analysis_step_pie_charts(df, quantitative_answers, correct_answers, questions)
-create_subjective_fit_boxplots(df, columns_of_interest=subjective_fit_steps)
+    # Individual steps analysis
+    analysis_step_pie_charts(df, quantitative_answers, correct_answers, questions, expertise)
+    create_subjective_fit_boxplots(df, columns_of_interest=subjective_fit_steps, expertise=expertise)
