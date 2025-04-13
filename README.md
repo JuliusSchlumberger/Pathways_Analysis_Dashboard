@@ -11,14 +11,10 @@ An interactive web application designed to analyze and visualize pathway data, f
 
 ## Live Dashboard & Publication
 
-- 🚀 **Try the Live Dashboard**: [Access the deployed app here](https://pad.myriadproject.eu)
+- 🚀 **Try the Live Dashboard**: [https://www.pathways-analysis-dashboard.net/](https://www.pathways-analysis-dashboard.net/))
 - 📄 **Related Publication**: Findings from this research are published at [https://doi.org/10.5194/egusphere-2024-3655](https://doi.org/10.5194/egusphere-2024-3655)
 
 ## About
-
-Welcome to the Pathways Analysis Dashboard (PAD)!
-
-Interactive visualizations can empower stakeholders to explore complex data, make better decisions, and build trust in those decisions. We have developed this dashboard based on scientific insights to support the analysis of Adaptation Pathways in complex systems.
 
 This research is conducted as part of the HORIZON 2020 [MYRIAD-EU project](https://www.myriadproject.eu/). If you have any questions regarding this study or the project, please reach out to [julius.schlumberger@deltares.nl](mailto:julius.schlumberger@deltares.nl).
 
