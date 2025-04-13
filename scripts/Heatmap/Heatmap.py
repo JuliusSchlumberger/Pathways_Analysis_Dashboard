@@ -50,7 +50,7 @@ def Heatmap(df, risk_owner_hazard, sector_objectives, figure_title, df_interacti
         )
 
     if df_interaction is not None:
-        print(len(df_interaction))
+        # print(len(df_interaction))
         # Replace old values with new values in the 'risk_owner_hazard' column
         df_interaction_new = df_interaction.copy()
         df_interaction_new[risk_owner_hazard] = df_interaction_new[risk_owner_hazard].replace(invert_replace_dict)

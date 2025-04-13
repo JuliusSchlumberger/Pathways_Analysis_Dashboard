@@ -26,52 +26,52 @@ step_content_dict = {
             # 5: layout_F
         }
 
-DATABASE_URL = os.getenv('DATABASE_URL')
-if DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+# DATABASE_URL = os.getenv('DATABASE_URL')
+# if DATABASE_URL.startswith("postgres://"):
+#     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+#
+# engine = create_engine(DATABASE_URL)
+# Session = sessionmaker(bind=engine)
+#
+# # Define the Base and SurveyResponse model once
+# Base = declarative_base()
+# # Create tables (if they don't exist) - should be called once, like at the app startup
+# Base.metadata.create_all(engine)
 
-engine = create_engine(DATABASE_URL)
-Session = sessionmaker(bind=engine)
-
-# Define the Base and SurveyResponse model once
-Base = declarative_base()
-# Create tables (if they don't exist) - should be called once, like at the app startup
-Base.metadata.create_all(engine)
-
-class SurveyResponse(Base):
-    __tablename__ = TABLE_NAME
-    id = Column(Integer, primary_key=True)
-    user_id = Column(String, nullable=False)
-    data = Column(Text, nullable=False)
-
-
-def save_response_to_db(user_id, data):
-    # pass
-    # Open a session
-    session = Session()
-
-    try:
-        # Check if the user has already submitted a response
-        response = session.query(SurveyResponse).filter_by(user_id=user_id).first()
-
-        if response:
-            # Update existing response
-            response.data = json.dumps(data)
-        else:
-            # Insert new response
-            response = SurveyResponse(user_id=user_id, data=json.dumps(data))
-            session.add(response)
-
-        # Commit the transaction
-        session.commit()
-
-    except Exception as e:
-        # Rollback in case of error
-        session.rollback()
-        print(f"Error storing data: {e}")
-    finally:
-        # Close the session
-        session.close()
+# class SurveyResponse(Base):
+#     __tablename__ = TABLE_NAME
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(String, nullable=False)
+#     data = Column(Text, nullable=False)
+#
+#
+# def save_response_to_db(user_id, data):
+#     # pass
+#     # Open a session
+#     session = Session()
+#
+#     try:
+#         # Check if the user has already submitted a response
+#         response = session.query(SurveyResponse).filter_by(user_id=user_id).first()
+#
+#         if response:
+#             # Update existing response
+#             response.data = json.dumps(data)
+#         else:
+#             # Insert new response
+#             response = SurveyResponse(user_id=user_id, data=json.dumps(data))
+#             session.add(response)
+#
+#         # Commit the transaction
+#         session.commit()
+#
+#     except Exception as e:
+#         # Rollback in case of error
+#         session.rollback()
+#         print(f"Error storing data: {e}")
+#     finally:
+#         # Close the session
+#         session.close()
 
 @app.callback(
     Output('storage-general', 'data', allow_duplicate=True),
@@ -161,10 +161,10 @@ def update_storage_general(store_A_selection, store_B_selection, store_C_selecti
             return storage_general, dash.no_update, *[dash.no_update] * len(
                 PAGES), dash.no_update, False, False
 
-        try:
-            save_response_to_db(storage_general['existing_id'], storage_general)
-        except Exception as e:
-            print(f"Error storing data: {e}")
+        # try:
+        #     save_response_to_db(storage_general['existing_id'], storage_general)
+        # except Exception as e:
+        #     print(f"Error storing data: {e}")
 
         if storage_general[check_complete] == 'yes':
             current_step = get_step_from_pathname(storage_general.get('current_url', '/0-introduction'))

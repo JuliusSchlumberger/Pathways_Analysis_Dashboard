@@ -34,7 +34,7 @@ def Stacked_Bar_Plot(df, risk_owner_hazard, sector_objectives, figure_title, df_
     benchmark_dict = {}
     for i,b in enumerate(benchmark_for_normalization):
         if b == 0:
-            print(NORMALIZATION_BENCHMARKS[relevant_objectives[i]])
+            # print(NORMALIZATION_BENCHMARKS[relevant_objectives[i]])
             new_benchmark = NORMALIZATION_BENCHMARKS[relevant_objectives[i]][str(year_of_interest[0])]
             benchmark_dict[relevant_objectives[i]] = new_benchmark
         else:
@@ -95,8 +95,8 @@ def Stacked_Bar_Plot(df, risk_owner_hazard, sector_objectives, figure_title, df_
     fig = go.Figure()
 
     plot_df = plot_df.drop_duplicates()
-    print(plot_df)
-    print(text_df)
+    # print(plot_df)
+    # print(text_df)
     text_df = text_df.drop_duplicates()
     text_df_benchmark = text_df_benchmark.drop_duplicates()
 

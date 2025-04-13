@@ -56,12 +56,14 @@ selection_options = html.Div([
                 dbc.Select(
                     id='options',
                     # # Comment out the rest
-                    options=[
-                        {
-                            'label': RANDOM_DEFAULT,
-                            'value': WHICH_OPTIONS[RANDOM_DEFAULT],
-                        }
-                    ],
+                    options=WHICH_OPTIONS,
+                    # [
+                    #         WHICH_OPTIONS
+                    #     # {
+                    #     #     'label': RANDOM_DEFAULT,
+                    #     #     'value': WHICH_OPTIONS[RANDOM_DEFAULT],
+                    #     # }
+                    # ],
                     value=None,  # Set the randomized value as the default
                 ),
             ], style={'marginBottom': '20px'}),

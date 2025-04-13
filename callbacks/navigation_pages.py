@@ -89,17 +89,25 @@ def display_page(prev_clicks, next_clicks, url, viewport, stored_data, current_p
         to_page = get_step_from_pathname(url)
         print(PAGES[to_page]['check'], stored_data.get(PAGES[to_page - 1]['check'], 'no'), stored_data.get(PAGES[to_page]['check'],
                                                                                           'no'), to_page)
-        # Two cases: 1) previous page has successfully been completed 2) Jumping back to another one
-        if stored_data.get(PAGES[to_page - 1]['check'], 'no') == 'yes' or stored_data.get(PAGES[to_page]['check'],
-                                                                                          'no') == 'yes':
-            print('page updated')
-            page_names = create_link_design(to_page)
-            content = step_content_dict.get(to_page, layout_A)
-            storage['current_url'] = url
-            return content, *page_names, storage['current_url'], storage, 0, 0, False, False
-        else:
-            return (
-                dash.no_update, *[dash.no_update] * len(PAGES), dash.no_update, dash.no_update, 0, 0, True, False)
+        # No survey alternative
+        print('page updated')
+        page_names = create_link_design(to_page)
+        content = step_content_dict.get(to_page, layout_A)
+        storage['current_url'] = url
+        return content, *page_names, storage['current_url'], storage, 0, 0, False, False
+        #Survey alternative: Two cases: 1) previous page has successfully been completed 2) Jumping
+        # back to
+        # another one
+        # if stored_data.get(PAGES[to_page - 1]['check'], 'no') == 'yes' or stored_data.get(PAGES[to_page]['check'],
+        #                                                                                   'no') == 'yes':
+        #     print('page updated')
+        #     page_names = create_link_design(to_page)
+        #     content = step_content_dict.get(to_page, layout_A)
+        #     storage['current_url'] = url
+        #     return content, *page_names, storage['current_url'], storage, 0, 0, False, False
+        # else:
+        #     return (
+        #         dash.no_update, *[dash.no_update] * len(PAGES), dash.no_update, dash.no_update, 0, 0, True, False)
 
     # Manage if navigation via buttons
     from_page = get_step_from_pathname(current_path)
@@ -107,26 +115,46 @@ def display_page(prev_clicks, next_clicks, url, viewport, stored_data, current_p
     if triggered_id == 'next-btn' and next_clicks > 0 and from_page <= len(PAGES) - 1:
         to_page = min(from_page + 1, len(PAGES) - 1)
         print('# Manage if navigation via buttons', PAGES[from_page]['check'], next_clicks)
-        if stored_data.get(PAGES[from_page]['check'], 'no') == 'yes':
-            new_url = PAGES[to_page]['url']
-            storage['current_url'] = new_url
-            if viewport is not None:
-                storage['viewport_size'] = viewport
 
-            # Select the correct layout based on the new step
-            content = step_content_dict.get(to_page, layout_A)  # Default to layout_A in case of an invalid step
-            page_names = create_link_design(to_page)
-            if from_page == len(PAGES) - 1:
-                print('test')
-                return dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, dash.no_update, 0, 0, False, True
-            else:
-                print('testw')
-                return content, *page_names, new_url, storage, 0, 0, False, False
-        else:
-            print('test4')
+        # No survey alternative
+        new_url = PAGES[to_page]['url']
+        storage['current_url'] = new_url
+        if viewport is not None:
+            storage['viewport_size'] = viewport
+
+        # Select the correct layout based on the new step
+        content = step_content_dict.get(to_page,
+                                        layout_A)  # Default to layout_A in case of an invalid step
+        page_names = create_link_design(to_page)
+        if from_page == len(PAGES) - 1:
+            print('test')
             return dash.no_update, *[dash.no_update] * len(
-                PAGES), dash.no_update, dash.no_update, 0, 0, True, False
+                PAGES), dash.no_update, dash.no_update, 0, 0, False, True
+        else:
+            print('testw')
+            return content, *page_names, new_url, storage, 0, 0, False, False
+
+        # Survey alternative
+        # if stored_data.get(PAGES[from_page]['check'], 'no') == 'yes':
+        #     new_url = PAGES[to_page]['url']
+        #     storage['current_url'] = new_url
+        #     if viewport is not None:
+        #         storage['viewport_size'] = viewport
+        #
+        #     # Select the correct layout based on the new step
+        #     content = step_content_dict.get(to_page, layout_A)  # Default to layout_A in case of an invalid step
+        #     page_names = create_link_design(to_page)
+        #     if from_page == len(PAGES) - 1:
+        #         print('test')
+        #         return dash.no_update, *[dash.no_update] * len(
+        #         PAGES), dash.no_update, dash.no_update, 0, 0, False, True
+        #     else:
+        #         print('testw')
+        #         return content, *page_names, new_url, storage, 0, 0, False, False
+        # else:
+        #     print('test4')
+        #     return dash.no_update, *[dash.no_update] * len(
+        #         PAGES), dash.no_update, dash.no_update, 0, 0, True, False
     if triggered_id == 'prev-btn' and prev_clicks > 0 and from_page > 0:
         print('# Manage if navigation via buttons')
         storage['viewport_size'] = viewport

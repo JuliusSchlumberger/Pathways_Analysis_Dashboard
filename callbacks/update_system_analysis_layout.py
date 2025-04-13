@@ -116,11 +116,7 @@ def set_up_layout(focus, stored_data):
                 dbc.Select(
                     id='options',
                     # # Comment out the rest
-                    options=[{
-                            'label': RANDOM_DEFAULT,
-                            'value': WHICH_OPTIONS[RANDOM_DEFAULT],
-                        }
-                    ],
+                    options=WHICH_OPTIONS,
                     value=stored_data['robustness_plot']
                     # value=random_default,  # Set the randomized value as the default
                 ),

@@ -6,7 +6,7 @@ from utilities.generate_missing_message import generate_missing_input_message
 from utilities.scale_figure import scale_figure
 from assets.static_inputs import CUSTOM_LEGEND_CHANGE
 from scripts.figures_pathways_robustness import pathways_robustness, pathways_robustness_with_interactions
-
+from scripts.design_choices.main_dashboard_dropdowns import WHICH_OPTIONS
 
 @app.callback(
     [
@@ -17,6 +17,7 @@ from scripts.figures_pathways_robustness import pathways_robustness, pathways_ro
         Output('options', 'value', allow_duplicate=True),
         Output('multi_sectoral_interactions_robustness', 'value', allow_duplicate=True),
         Output('store-page-C-selection', 'data'),
+        Output('dynamic-figure-paragraph', 'children'),
     ],
     [
         Input('timehorizon', 'value'),
@@ -41,6 +42,7 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
         if pathname == '/2-pathways-robustness':
             print('robustness', stored_data)
             # print(timehorizon, scenarios, robustness_metric)
+
             if timehorizon is not None:
                 storage['timehorizon'] = timehorizon
             else:
@@ -55,10 +57,45 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
             else:
                 storage['robustness_metric'] = stored_data.get('robustness_metric', None)
             if options is not None:
-                # print(options)
-                storage['robustness_plot'] = options
+                storage['robustness_plot'] = WHICH_OPTIONS[options]
+                stored_data['robustness_plot'] = WHICH_OPTIONS[options]
+                print(options, storage['robustness_plot'])
+
             else:
                 storage['robustness_plot'] = stored_data.get('robustness_plot', None)
+
+            if stored_data.get('robustness_plot', None) == 'PCP':
+                fig_description = [html.Div([
+                    html.P(
+                        "In this plot, each pathway corresponds to one polyline spanning a set of parallel axes, one for "
+                        "each objective."),
+                    html.P(
+                        "At each parallel axes you can select a range of acceptable values to filter out lines (pathways) "
+                        "that do not meet this requirement. Double click on an axis with selected range resets the range."
+                    )]
+                )]
+            elif stored_data.get('robustness_plot', None)  == 'StackedBar':
+                fig_description = [
+                    html.P(
+                        "This figure displays the performance robustness of pathways with regards to multiple "
+                        "objectives. The length of the bar represents the performance robustness. A shorter bar, "
+                        "represents higher robustness. The length of each colored bar for a given pathway is determined "
+                        "relative to the baseline scenario (when no measures are implemented)."
+                    ),
+                ]
+            elif stored_data.get('robustness_plot', None) == 'Heatmap':
+                fig_description = [
+                    html.P(
+                        "This figure uses colors to highlight relatively better performance robustness across multiple "
+                        "objectives (y-axis) of different pathways (y-axis)."
+                    )
+                ]
+            else:
+                fig_description = [
+                    html.P(
+                        f"You need to select a figure type first."
+                    )]
+
             if interacting_sectors is not None:
                 if isinstance(interacting_sectors, list):
                 # print(options)
@@ -73,20 +110,14 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
                 ('Robustness metric', storage.get('robustness_metric', None)),
                 ('Visualization option', storage.get('robustness_plot', None)),
                 ('Climate Scenario', storage.get('scenarios', None)))
-
+            print(message)
             if message:
-                return html.Div('Specify the focus of the analysis (see left), to see a visualization',
+                return (html.Div('Specify the focus of the analysis (see left), to see a visualization',
                                 style={'color': 'red', 'fontSize': '1vw', 'fontWeight': 'bold', 'marginTop': '20px',
-                                       'textAlign': 'center'}), *[dash.no_update] * 4, dash.no_update, stored_data
+                                       'textAlign': 'center'}), *[dash.no_update] * 4,
+                        dash.no_update, stored_data, fig_description)
 
             if storage['interacting_sectors'] == None or storage['interacting_sectors'] == ['no_interactions']:
-                # Assume we have necessary details in stored_data to generate the figure
-                # file_path = f'assets/figures/{stored_data["robustness_plot"]}/' \
-                #             f'{stored_data["risk_owner_hazard"]}/' \
-                #             f'plot_{stored_data["timehorizon"]}_{ stored_data["scenarios"]}_{stored_data["robustness_metric"]}.json'
-                #
-                # with open(file_path, 'r') as f:
-                #     fig = pio.from_json(f.read())
                 fig = pathways_robustness([storage['scenarios']], storage["robustness_plot"], stored_data['risk_owner_hazard'], storage['robustness_metric'],
                                                       storage['timehorizon'])
 
@@ -111,24 +142,17 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
                                            "overflow": "hidden"  # Prevent scrollbars from appearing
                                            }
                                     )]), storage['timehorizon'], storage['scenarios'],
-                storage['robustness_metric'], storage['robustness_plot'], dash.no_update,
-                            storage)
+                            storage['robustness_metric'], storage['robustness_plot'], dash.no_update,
+                            storage, fig_description)
                 else:
                     return ([dcc.Graph(figure=fig, responsive=False, config={
                     'displayModeBar': False})], storage['timehorizon'], storage['scenarios'],
                     storage['robustness_metric'], storage['robustness_plot'], dash.no_update,
-                                storage)
+                                storage, fig_description)
 
 
             else:
                 interacting_sector_string = stored_data["risk_owner_hazard"] + '&' + '&'.join(storage['interacting_sectors'])
-                # file_path = f'assets/figures/{stored_data["robustness_plot"]}/' \
-                #                         f'{stored_data["risk_owner_hazard"]}/' \
-                #                     f'plot_{stored_data["timehorizon"]}_{ stored_data["scenarios"]}_{stored_data["robustness_metric"]}_combi_{interacting_sector_string}.json'
-                #
-                # with open(file_path, 'r') as f:
-                #     fig = pio.from_json(f.read())
-
                 fig = pathways_robustness_with_interactions([storage['scenarios']], storage["robustness_plot"], stored_data['risk_owner_hazard'], storage['robustness_metric'],
                                                       storage['timehorizon'], interacting_sector_string)
 
@@ -154,9 +178,10 @@ def update_robustness_graph(timehorizon, scenarios, robustness_metric, options, 
                                            }
                                     )]), storage['timehorizon'], storage['scenarios'],
                 storage['robustness_metric'], storage['robustness_plot'], storage['interacting_sectors'],
-                            storage)
+                            storage, fig_description)
                 else:
                     return ([dcc.Graph(figure=fig, responsive=False)], storage['timehorizon'], storage['scenarios'],
                 storage['robustness_metric'], storage['robustness_plot'], storage['interacting_sectors'],
-                            storage)
-        return dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update
+                            storage, fig_description)
+        return (dash.no_update, dash.no_update, dash.no_update, dash.no_update, dash.no_update,
+                dash.no_update, dash.no_update, dash.no_update)

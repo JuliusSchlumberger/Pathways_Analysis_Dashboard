@@ -120,6 +120,33 @@ ROH_DICT[ROH_DICT_LIST[3]]: [
 ],
 }
 
+INTERACTIONS_static = {ROH_DICT[ROH_DICT_LIST[0]]: [
+    {'No interactions': ['no_interactions']},
+    {ROH_DICT_LIST[1]: [ROH_DICT[ROH_DICT_LIST[1]]]},
+{ROH_DICT_LIST[2]: [ROH_DICT[ROH_DICT_LIST[2]]]},
+{ROH_DICT_LIST[3]: [ROH_DICT[ROH_DICT_LIST[3]]]},
+],
+ROH_DICT[ROH_DICT_LIST[1]]: [
+{'No interactions': ['no_interactions']},
+    {ROH_DICT_LIST[0]: [ROH_DICT[ROH_DICT_LIST[0]]]},
+{ROH_DICT_LIST[2]: [ROH_DICT[ROH_DICT_LIST[2]]]},
+{ROH_DICT_LIST[3]: [ROH_DICT[ROH_DICT_LIST[3]]]},
+],
+ROH_DICT[ROH_DICT_LIST[2]]: [
+{'No interactions': ['no_interactions']},
+    {ROH_DICT_LIST[1]: [ROH_DICT[ROH_DICT_LIST[1]]]},
+{ROH_DICT_LIST[0]: [ROH_DICT[ROH_DICT_LIST[0]]]},
+{ROH_DICT_LIST[3]: [ROH_DICT[ROH_DICT_LIST[3]]]},
+],
+ROH_DICT[ROH_DICT_LIST[3]]: [
+{'No interactions': ['no_interactions']},
+    {ROH_DICT_LIST[1]: [ROH_DICT[ROH_DICT_LIST[1]]]},
+{ROH_DICT_LIST[2]: [ROH_DICT[ROH_DICT_LIST[2]]]},
+{ROH_DICT_LIST[0]: [ROH_DICT[ROH_DICT_LIST[0]]]},
+],
+}
+
+
 
 
 RANDOM_DEFAULT = random.choice(list(WHICH_OPTIONS.keys()))

@@ -42,6 +42,7 @@ Input('show_figure_pathways', 'n_clicks')
     prevent_initial_call=True
 )
 def update_graph_fig_pathways(pathway1, pathway2, pathway3, pathway4, scenario, n_clicks, stored_data, focus, viewport):
+    print('update_graph_fig_pathways')
     storage = {}
     ctx = dash.callback_context
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
@@ -93,6 +94,7 @@ State('viewport-size', 'data'),
     prevent_initial_call=True
 )
 def update_graph_fig_robustness(pathway1, pathway2, pathway3, pathway4, timehorizon, scenarios, robustness_metric, options,n_clicks, stored_data, focus, viewport):
+    print('updated_graph_fig_robustenss_called')
     storage = {}
     ctx = dash.callback_context
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]

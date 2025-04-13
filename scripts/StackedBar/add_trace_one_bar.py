@@ -81,7 +81,7 @@ def add_traces_oneBar(plot_objectives, sector_objectives, plot_df, text_df, text
             # print(error)
             # Add individual trace for each row
 
-            print(rgb_tuple)
+            # print(rgb_tuple)
             traces.append(go.Bar(
                 name=groupname,
                 x=[plot_df.at[i, col]],

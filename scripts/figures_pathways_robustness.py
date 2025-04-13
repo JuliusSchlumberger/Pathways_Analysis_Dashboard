@@ -29,8 +29,8 @@ def extract_identifier(filename):
     return None
 
 def pathways_robustness(scenarios, plot_type, risk_owner_hazard, robustness_metric, timehorizon):
-    if len(scenarios) == 1:
-        scenarios_title = f'{SCENARIOS_INV[scenarios[0]]} climate scenario'
+    if isinstance(scenarios, str):
+        scenarios_title = f'{SCENARIOS_INV[scenarios]} climate scenario'
     else:
         better_names = [SCENARIOS_INV[scen] for scen in scenarios]
         scenarios_title = 'across multiple climate scenarios [' + ' & '.join(better_names) + ']'
@@ -39,6 +39,7 @@ def pathways_robustness(scenarios, plot_type, risk_owner_hazard, robustness_metr
 
     #  Load Data for normal figure
     robustness_path_of_interest = f'{INPUT_ROBUSTNESS_NO_INTERACTION}/robustness_{risk_owner_hazard}_no_interactions.csv'
+    print(robustness_path_of_interest)
     robustness_df_of_interest = pd.read_csv(f'{robustness_path_of_interest}')
 
     if plot_type == 'PCP':
@@ -73,8 +74,8 @@ def pathways_robustness(scenarios, plot_type, risk_owner_hazard, robustness_metr
 
 
 def pathways_robustness_with_interactions(scenarios, plot_type, risk_owner_hazard, robustness_metric, timehorizon, interacting_sector_string):
-    if len(scenarios) == 1:
-        scenarios_title = f'{SCENARIOS_INV[scenarios[0]]} climate scenario'
+    if isinstance(scenarios, str):
+        scenarios_title = f'{SCENARIOS_INV[scenarios]} climate scenario'
     else:
         better_names = [SCENARIOS_INV[scen] for scen in scenarios]
         scenarios_title = 'across multiple climate scenarios [' + ' & '.join(better_names) + ']'

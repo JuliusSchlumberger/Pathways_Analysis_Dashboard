@@ -6,8 +6,12 @@ import json
 def filter_dataframe_for_visualization(df, risk_owner_hazard, timehorizon, scenarios, robustness_metric, sector_focus=None):
 
     # Filter the dataframe based on selections
-    selected_scenarios = '&'.join(scenarios)
-
+    if isinstance(scenarios,list):
+        selected_scenarios = '&'.join(scenarios)
+    else:
+        selected_scenarios = scenarios
+    if scenarios == 'Wp':
+        print(df['scenario_of_interest'].unique(), selected_scenarios)
     if sector_focus is None:
         filtered_df = df[
             (df['year'].isin([int(timehorizon)])) &  # Assuming timehorizon is a single selection, not a list
@@ -15,7 +19,7 @@ def filter_dataframe_for_visualization(df, risk_owner_hazard, timehorizon, scena
             (df['robustness_metric'].isin(robustness_metric)) &
             (df.objective_parameter.isin(SECTOR_OBJECTIVES[risk_owner_hazard]))
             ].copy()
-
+        # print(ROH_LIST, filtered_df.pw_combi.str.split('_', expand=True))
         filtered_df[ROH_LIST] = filtered_df.pw_combi.str.split('_', expand=True)
 
 
